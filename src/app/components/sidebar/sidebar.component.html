@@ -1,0 +1,56 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <div class="logo">
+      <mat-icon class="material-symbols-outlined">assignment</mat-icon>
+      Taskly
+    </div>
+
+    <div class="profile">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
+           alt="Profile">
+      <div class="info">
+        <p>Name</p>
+        <span>Workspace Account</span>
+      </div>
+    </div>
+
+    <mat-selection-list>
+      <mat-list-item [routerLink]="['home']">
+        <mat-icon class="material-symbols-outlined">home</mat-icon>
+        <span>Home</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="['alltasks']">
+        <mat-icon class="material-symbols-outlined">assignment</mat-icon>
+        <span>All my tasks</span>
+      </mat-list-item>
+    </mat-selection-list>
+
+    <p class="section-title">
+      My boards
+      <mat-icon class="material-symbols-outlined add-board-btn">add</mat-icon>
+    </p>
+    <mat-selection-list>
+      @for (board of boards; track $index) {
+        <mat-list-item [routerLink]="['kanban']">
+          <img
+            src="{{ board.background }}"
+            alt="" class="background">
+          <span>{{ board.name }}</span>
+        </mat-list-item>
+      }
+    </mat-selection-list>
+
+    <p class="section-title">Invited boards</p>
+    <mat-selection-list>
+      @for (board of invitedBoards; track $index) {
+        <mat-list-item>
+          <img
+            src="{{ board.background }}"
+            alt="" class="background">
+          <span>{{ board.name }}</span>
+        </mat-list-item>
+      }
+    </mat-selection-list>
+  </mat-drawer>
+</mat-drawer-container>

@@ -1,0 +1,65 @@
+<mat-toolbar class="navbar">
+  <div class="input-container">
+    <!-- Span that turns into input when clicked -->
+    @if (!isEditing) {
+    <span (click)="enableEditing()" class="editable-text">
+    {{ inputValue}}
+  </span>
+    }
+
+    <!-- Input field for editing -->
+    @if (isEditing) {
+      <input
+        #textInput
+        type="text"
+        [(ngModel)]="inputValue"
+        (input)="adjustWidth()"
+        (blur)="disableEditing()"
+        (keydown.enter)="disableEditing()"
+        [style.width.px]="inputWidth"
+        maxlength="30"
+      />
+    }
+
+    <!-- Hidden span for measuring text width -->
+    <span #textMeasurer class="text-measurer">
+    {{ inputValue || placeholder }}
+  </span>
+  </div>
+
+  <div class="divider"></div>
+
+  <button mat-button>
+    <mat-icon class="material-symbols-outlined">filter_list</mat-icon> Filter
+  </button>
+
+  <div class="divider"></div>
+
+
+  <button mat-button [matMenuTriggerFor]="menu"><mat-icon>fullscreen</mat-icon>View</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Kanban</button>
+    <button mat-menu-item>Table</button>
+  </mat-menu>
+
+
+  <div class="divider"></div>
+
+  <button mat-button>
+    <mat-icon class="material-symbols-outlined">wallpaper</mat-icon> Background
+  </button>
+
+  <span class="spacer"></span>
+
+  <button mat-icon-button>
+    <mat-icon class="material-symbols-outlined">group</mat-icon>
+  </button>
+
+  <button mat-icon-button>
+    <mat-icon class="material-symbols-outlined">notifications</mat-icon>
+  </button>
+
+  <button mat-icon-button>
+    <img class="avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s" alt="Profile">
+  </button>
+</mat-toolbar>
