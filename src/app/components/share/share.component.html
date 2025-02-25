@@ -1,1 +1,30 @@
-<p>share works!</p>
+<div class="container">
+  <h2 mat-dialog-title>Share board</h2>
+  <mat-dialog-content>
+    <div class="share">
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <mat-label>Invite members</mat-label>
+          <input matInput placeholder="Hinted search text" value="">
+        </mat-form-field>
+        <div class="divider">
+          <button mat-flat-button>Share</button>
+        </div>
+      </form>
+
+      <div class = "user-container">
+        <button mat-icon-button>
+          <img class="avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s" alt="Profile">
+        </button>
+        <div class="user-info">
+          <p class="user-name">Trinh Tu Hao</p>
+          <span class="user-email">hhaoz&#64;gmail.com</span>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+<!--  <mat-dialog-actions>-->
+<!--    <button mat-button mat-dialog-close>No</button>-->
+<!--    <button mat-button mat-dialog-close>Ok</button>-->
+<!--  </mat-dialog-actions>-->
+</div>
