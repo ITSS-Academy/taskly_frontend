@@ -1,0 +1,50 @@
+.container {
+  background-color: var(--md-sys-color-surface-container-lowest);
+  width: 400px;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.share {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.example-form {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.user-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+mat-form-field {
+  border-radius: 15px;
+  max-width: 80%;
+  width: 80%;
+}
+
+.divider {
+  display: table-cell;
+  max-width: 600px;
+  margin: 15px;
+  //background-color: var(--md-sys-color-primary-container);
+}
+
+
+
+.avatar {
+  width: 24px;
+  border-radius: 100%;
+}
+
+.user-email {
+  font-size: 12px;
+
+}
+
