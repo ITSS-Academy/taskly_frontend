@@ -1,1 +1,65 @@
-<p>list-tasks works!</p>
+<div class="listTask">
+  <!-- To do List -->
+  <div class="example-container">
+    <div class="listTask-title">To do</div>
+
+    <div
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="todo"
+      [cdkDropListConnectedTo]="[doneList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of todo; track item) {
+        <div class="example-box" cdkDrag>{{ item }}</div>
+      }
+    </div>
+
+    <!-- Add task input for Todo list -->
+    @if (todoInputVisible) {
+      <div class="task-input-container">
+        <input type="text" [(ngModel)]="newTodoTask" placeholder="New task..." class="task-input">
+        <div class="task-input-buttons">
+          <button class="save-button" (click)="saveTask('todo')">Save</button>
+          <button class="cancel-button" (click)="cancelTask('todo')">Cancel</button>
+        </div>
+      </div>
+    } @else {
+      <div class="addTask-container" (click)="addTask('todo')">
+        <span>➕ Add task</span>
+      </div>
+    }
+  </div>
+
+  <!-- Done List -->
+  <div class="example-container">
+    <div class="listTask-title">Done</div>
+
+    <div
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="done"
+      [cdkDropListConnectedTo]="[todoList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of done; track item) {
+        <div class="example-box" cdkDrag>{{ item }}</div>
+      }
+    </div>
+
+    <!-- Add task input for Done list -->
+    @if (doneInputVisible) {
+      <div class="task-input-container">
+        <input type="text" [(ngModel)]="newDoneTask" placeholder="New task..." class="task-input">
+        <div class="task-input-buttons">
+          <button class="save-button" (click)="saveTask('done')">Save</button>
+          <button class="cancel-button" (click)="cancelTask('done')">Cancel</button>
+        </div>
+      </div>
+    } @else {
+      <div class="addTask-container" (click)="addTask('done')">
+        <span>➕ Add task</span>
+      </div>
+    }
+  </div>
+</div>

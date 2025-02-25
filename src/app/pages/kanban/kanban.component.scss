@@ -1,0 +1,9 @@
+#list-products{
+  padding-top: 8px;
+  margin: 0 auto 0 16px;
+  width: 90%;
+  height: fit-content;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 2fr));
+}
