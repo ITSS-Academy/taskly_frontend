@@ -37,6 +37,10 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatDialogModule} from '@angular/material/dialog';
+import {
+  CdkDrag,
+  CdkDropList,
+} from '@angular/cdk/drag-drop';
 
 const materialModules = [
   CdkTreeModule,
@@ -76,6 +80,9 @@ const materialModules = [
   MatNativeDateModule,
   ScrollingModule,
   MatDialogModule,
+  CdkDrag,
+  CdkDropList,
+
 ];
 
 @NgModule({
