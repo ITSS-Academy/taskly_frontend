@@ -31,5 +31,10 @@ mat-list {
   display: flex;
   justify-content: flex-end !important;
   align-items: flex-start !important;
+}
+
+::ng-deep.cdk-overlay-pane.mat-mdc-dialog-panel {
+  position: inherit !important;
+  right: 20px;
   top: 47px;
 }

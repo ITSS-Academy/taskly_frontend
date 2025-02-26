@@ -4,6 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsComponent} from '../notifications/notifications.component';
 import {NotificationsButtonComponent} from '../notifications-button/notifications-button.component';
+import {ShareComponent} from '../share/share.component';
 
 @Component({
   selector: 'app-navbar',
@@ -50,7 +51,14 @@ export class NavbarComponent {
     }
   }
 
+  readonly dialog = inject(MatDialog);
+  openShareDialog() {
+    const dialogRef = this.dialog.open(ShareComponent);
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
 }
 
