@@ -2,6 +2,16 @@
   <h2 mat-dialog-title>Notifications</h2>
   <mat-dialog-content class="mat-typography notifications">
     <mat-list>
+      <mat-list-item class="invite-noti">
+        <mat-icon matListItemIcon>group</mat-icon>
+        <div matListItemTitle>Invitation to join Taskly</div>
+        <div matListItemLine>Accept or decline the invitation</div>
+        <div class="btns">
+          <button mat-stroked-button>Decline</button>
+          <button mat-flat-button>Accept</button>
+        </div>
+      </mat-list-item>
+      
       @for (folder of folders; track folder) {
         <mat-list-item>
           <mat-icon matListItemIcon>folder</mat-icon>
