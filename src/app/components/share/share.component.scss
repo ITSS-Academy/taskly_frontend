@@ -1,0 +1,96 @@
+.container {
+  background-color: var(--md-sys-color-surface-container-lowest);
+  width: 400px;
+  border-radius: 10px;
+
+  mat-dialog-content {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    .share {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .example-form {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    mat-form-field {
+      border-radius: 15px;
+      max-width: 80%;
+      width: 80%;
+    }
+
+    .divider {
+      display: table-cell;
+      max-width: 600px;
+      margin: 15px;
+      //background-color: var(--md-sys-color-primary-container);
+    }
+
+    .share-btn {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+
+    .users-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+
+      .user {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .avatar {
+          width: 36px;
+          border-radius: 100%;
+        }
+
+        .user-info {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .user-name {
+            font-size: 16px;
+            line-height: 16px;
+          }
+
+          .user-email {
+            font-size: 12px;
+            line-height: 12px;
+          }
+        }
+      }
+    }
+
+  }
+}
+
+::ng-deep.cdk-overlay-dark-backdrop {
+  background: none;
+}
+
+::ng-deep.cdk-global-overlay-wrapper {
+  display: flex;
+  justify-content: flex-end !important;
+  align-items: flex-start !important;
+}
+
+::ng-deep.cdk-overlay-pane.mat-mdc-dialog-panel {
+  position: inherit !important;
+  right: 60px;
+  top: 47px;
+}

@@ -1,1 +1,32 @@
-<p>share works!</p>
+<div class="container">
+  <h2 mat-dialog-title>Share board</h2>
+  <mat-dialog-content>
+    <div class="share">
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <mat-label>Invite members</mat-label>
+          <input matInput placeholder="Member email" value="">
+        </mat-form-field>
+        <button mat-flat-button class="share-btn">Share</button>
+      </form>
+
+      <div class="users-container">
+        @for (user of users; track $index) {
+          <div class="user">
+            <img class="avatar"
+                 [src]="user.avatar"
+                 alt="Profile">
+            <div class="user-info">
+              <p class="user-name">{{ user.name }}</p>
+              <span class="user-email">{{ user.email }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </mat-dialog-content>
+  <!--  <mat-dialog-actions>-->
+  <!--    <button mat-button mat-dialog-close>No</button>-->
+  <!--    <button mat-button mat-dialog-close>Ok</button>-->
+  <!--  </mat-dialog-actions>-->
+</div>

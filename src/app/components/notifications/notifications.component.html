@@ -1,1 +1,15 @@
-<p>notifications works!</p>
+<div class="container">
+  <h2 mat-dialog-title>Notifications</h2>
+  <mat-dialog-content class="mat-typography notifications">
+    <mat-list>
+      @for (folder of folders; track folder) {
+        <mat-list-item>
+          <mat-icon matListItemIcon>folder</mat-icon>
+          <div matListItemTitle>{{ folder.name }}</div>
+          <div matListItemLine>{{ folder.updated }}</div>
+        </mat-list-item>
+      }
+    </mat-list>
+  </mat-dialog-content>
+
+</div>

@@ -1,11 +1,15 @@
-import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, inject, ViewChild} from '@angular/core';
 import {MaterialModule} from "../../shared/modules/material.module";
 import {FormsModule} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+import {NotificationsComponent} from '../notifications/notifications.component';
+import {NotificationsButtonComponent} from '../notifications-button/notifications-button.component';
+import {ShareComponent} from '../share/share.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [MaterialModule, FormsModule],
+  imports: [MaterialModule, FormsModule, NotificationsButtonComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
@@ -15,10 +19,11 @@ export class NavbarComponent {
   isEditing: boolean = false;
   inputWidth: number = 12;
 
-  @ViewChild('textInput', { static: false }) textInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('textMeasurer', { static: true }) textMeasurer!: ElementRef<HTMLSpanElement>;
+  @ViewChild('textInput', {static: false}) textInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('textMeasurer', {static: true}) textMeasurer!: ElementRef<HTMLSpanElement>;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) {
+  }
 
   ngAfterViewInit() {
     this.adjustWidth();
@@ -45,4 +50,15 @@ export class NavbarComponent {
       this.inputWidth = this.textMeasurer.nativeElement.offsetWidth;
     }
   }
+
+  readonly dialog = inject(MatDialog);
+  openShareDialog() {
+    const dialogRef = this.dialog.open(ShareComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
 }
+
