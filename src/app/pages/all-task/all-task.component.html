@@ -1,7 +1,7 @@
-<div class="content">
+<div class="content" [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}">
   <app-navbar></app-navbar>
   <div class="table">
-  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
 
     <!-- Title Column -->
@@ -19,6 +19,12 @@
       </mat-cell>
     </ng-container>
 
+      <!-- Member Column -->
+      <ng-container matColumnDef="member">
+        <mat-header-cell *matHeaderCellDef> Member</mat-header-cell>
+        <mat-cell class="member-hover" *matCellDef="let element"> {{ element.member }}
+        </mat-cell>
+      </ng-container>
     <!-- Member Column -->
     <ng-container matColumnDef="member">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef> Member </mat-header-cell>
@@ -28,6 +34,17 @@
       </mat-cell>
     </ng-container>
 
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> Status</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="status">
+
+            <mat-chip-option selected>{{ element.status }}</mat-chip-option>
+
+          </mat-chip-listbox>
+        </mat-cell>
+      </ng-container>
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell class="mat-header-cell" *matHeaderCellDef> Status </mat-header-cell>

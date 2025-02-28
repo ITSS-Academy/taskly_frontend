@@ -5,26 +5,28 @@
       <form class="example-form">
         <mat-form-field class="example-full-width">
           <mat-label>Invite members</mat-label>
-          <input matInput placeholder="Hinted search text" value="">
+          <input matInput placeholder="Member email" value="">
         </mat-form-field>
-        <div class="divider">
-          <button mat-flat-button>Share</button>
-        </div>
+        <button mat-flat-button class="share-btn">Share</button>
       </form>
 
-      <div class = "user-container">
-        <button mat-icon-button>
-          <img class="avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s" alt="Profile">
-        </button>
-        <div class="user-info">
-          <p class="user-name">Trinh Tu Hao</p>
-          <span class="user-email">hhaoz&#64;gmail.com</span>
-        </div>
+      <div class="users-container">
+        @for (user of users; track $index) {
+          <div class="user">
+            <img class="avatar"
+                 [src]="user.avatar"
+                 alt="Profile">
+            <div class="user-info">
+              <p class="user-name">{{ user.name }}</p>
+              <span class="user-email">{{ user.email }}</span>
+            </div>
+          </div>
+        }
       </div>
     </div>
   </mat-dialog-content>
-<!--  <mat-dialog-actions>-->
-<!--    <button mat-button mat-dialog-close>No</button>-->
-<!--    <button mat-button mat-dialog-close>Ok</button>-->
-<!--  </mat-dialog-actions>-->
+  <!--  <mat-dialog-actions>-->
+  <!--    <button mat-button mat-dialog-close>No</button>-->
+  <!--    <button mat-button mat-dialog-close>Ok</button>-->
+  <!--  </mat-dialog-actions>-->
 </div>
