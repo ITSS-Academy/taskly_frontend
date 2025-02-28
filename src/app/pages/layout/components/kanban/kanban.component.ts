@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {of} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {TaskComponent} from './components/list-tasks/components/task/task.component';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {ForDirective} from '../../../../shared/for.directive';
 import {NgForOf} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
+import {BoardState} from '../../../../ngrx/board/board.state';
+import {Store} from '@ngrx/store';
+import * as boardActions from '../../../../ngrx/board/board.actions';
 
 interface Task {
   id: string;
@@ -38,7 +42,27 @@ export class KanbanComponent implements OnInit {
   inProgress: Task[] = [];
   done: Task[] = [];
 
+  subscriptions: Subscription[] = [];
+
+  constructor(private activatedRoute: ActivatedRoute,
+              private store: Store<{ board: BoardState }>) {
+
+    this.activatedRoute.params.subscribe(params => {
+      const id = params['id'];
+      console.log(id);
+      this.store.dispatch(boardActions.getBoard({boardId: id}));
+    });
+  }
+
+
   ngOnInit(): void {
+
+    this.subscriptions.push(
+      this.store.select('board', 'board').subscribe((board) => {
+        console.log(board)
+      })
+    )
+
     // Sample data - replace with your actual data service
     this.todo = [
       {
