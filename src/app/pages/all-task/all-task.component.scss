@@ -23,13 +23,16 @@
 
 .mat-mdc-table {
   width: 100%;
-  max-height: 80%;
+  max-height: 100%;
   overflow: auto;
   color: var(--md-sys-color-on-background);
 
   background-color: var(--md-sys-color-surface);
-  border-radius: 8px;
-  height: 80%;
+  //border-radius: 8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  height: 100%;
+  box-shadow: none;
 
 }
 
@@ -50,10 +53,6 @@
   user-select: none;
 }
 
-.member-hover:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
-
 .note-hover {
   position: relative;
   cursor: pointer;
@@ -72,22 +71,12 @@
   color: var(--md-sys-color-on-background);
 }
 
-.note-hover:hover {
-  background-color: var(--md-sys-color-surface-container-high);
+mat-row:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important; /* Change color on hover */
 }
 
 
-.note-hover:hover .material-symbols-outlined {
-  display: inline;
+mat-paginator {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
-
-
-.option:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
-
-
-.chip:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
-
