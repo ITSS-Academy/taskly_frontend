@@ -1,1 +1,33 @@
-<p>background works!</p>
+<div id="change-background">
+  <h2>Backgrounds</h2>
+
+  <div class="background">
+    <p>Background</p>
+    <div class="background-image">
+      <div class="background-image-1">
+
+      </div>
+      <div class="background-image-2">
+
+
+      </div>
+    </div>
+
+
+    <div class="custom">
+      <p>Custom</p>
+      <div class="add-custom">
+      <span class="material-symbols-outlined">add
+</span>
+      </div>
+    </div>
+
+    <button mat-button   class="btn-change" >Change</button>
+
+  </div>
+</div>
+
+<h2 mat-dialog-title>Change background</h2>
+<mat-dialog-content>
+  <input type="file" (change)="onImageUpload($event)" accept="image/*">
+</mat-dialog-content>

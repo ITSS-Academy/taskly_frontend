@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {catchError, from, of} from 'rxjs';
 import {Auth, GoogleAuthProvider, signInWithPopup, signOut} from '@angular/fire/auth';

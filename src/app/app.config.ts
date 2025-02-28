@@ -15,7 +15,8 @@ export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({eventCoalescing: true}), provideHttpClient(), provideRouter(routes), provideAnimationsAsync(),
     provideStore({
       auth: authReducer
-    }), provideEffects([
+    }),
+    provideEffects([
       authEffects
     ]),
     provideFirebaseApp(() => initializeApp({
