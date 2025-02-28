@@ -14,25 +14,7 @@
       <ng-container matColumnDef="list">
         <mat-header-cell *matHeaderCellDef> List</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <mat-form-field>
-            <mat-label>{{ element.selected }}</mat-label>
-
-            <mat-select [(value)]="selected">
-              <div class="option">
-                <mat-option>None</mat-option>
-              </div>
-              <div class="option">
-                <mat-option value="To Do">To Do</mat-option>
-              </div>
-              <div class="option">
-                <mat-option value="Doing">Doing</mat-option>
-              </div>
-              <div class="option">
-                <mat-option value="Done">Done</mat-option>
-              </div>
-            </mat-select>
-
-          </mat-form-field>
+          {{ element.list }}
         </mat-cell>
       </ng-container>
 
@@ -55,6 +37,7 @@
         </mat-cell>
       </ng-container>
 
+
       <!-- Note Column -->
       <ng-container matColumnDef="note">
         <mat-header-cell *matHeaderCellDef> Note</mat-header-cell>
@@ -70,6 +53,11 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
     </mat-table>
+
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+
   </div>
 </div>
 
