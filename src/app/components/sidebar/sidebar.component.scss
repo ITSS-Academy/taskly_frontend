@@ -1,5 +1,6 @@
 * {
   user-select: none;
+  box-sizing: border-box;
 }
 
 mat-icon {
@@ -20,20 +21,14 @@ mat-list {
   flex-direction: column;
   height: 100vh;
   width: 260px;
-  //background-color: rgba(1, 1, 1, 0.24);
-  //backdrop-filter: blur(10px);
-  background-color: var(--md-sys-color-surface);
-  color: var(--md-sys-color-on-surface);
+  padding: 12px;
 }
 
 mat-drawer {
   width: 260px;
-  //background: #f5f7f9;
   padding: 12px;
   border: none;
   border-radius: unset;
-  //background-color: rgba(0, 0, 0, 0.03);
-
 }
 
 .logo {
