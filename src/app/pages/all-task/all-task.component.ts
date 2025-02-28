@@ -1,4 +1,4 @@
-import {Component, signal, ViewChild, OnInit} from '@angular/core';
+import {Component, signal, ViewChild, OnInit, AfterViewInit} from '@angular/core';
 import {HomeNavComponent} from "../home/home-nav/home-nav.component";
 import {SidebarComponent} from "../../components/sidebar/sidebar.component";
 import {NavbarComponent} from "../../components/navbar/navbar.component";
@@ -16,12 +16,12 @@ import {BackgroundColorService} from '../../services/background-color/background
     NavbarComponent,
     MaterialModule,
     ReactiveFormsModule,
-    NgStyle
+    NgStyle,
   ],
   templateUrl: './all-task.component.html',
   styleUrl: './all-task.component.scss'
 })
-export class AllTaskComponent implements OnInit {
+export class AllTaskComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['title', 'list', 'member', 'status', 'note'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   readonly panelOpenState = signal(false);
@@ -45,6 +45,8 @@ export class AllTaskComponent implements OnInit {
       this.backgroundImage = imageUrl;
     });
   }
+
+
 }
 
 
@@ -54,7 +56,6 @@ export interface PeriodicElement {
   member: string;
   status: string;
   note: string;
-
 
 }
 
