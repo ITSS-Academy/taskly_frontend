@@ -52,7 +52,7 @@ export class SidebarComponent implements OnInit {
     },
   ];
 
-  sidebarColor: string = '--md-sys-color-on-secondary-container'; // Default color
+  sidebarColor: string = '#F5FFF8'; // Default color
   sidebarTextColor: string = '--md-sys-color-on-surface'; // Default text color
 
   ngOnInit() {

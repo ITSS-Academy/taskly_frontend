@@ -1,29 +1,41 @@
-<h2 mat-dialog-title>Create board</h2>
-<mat-dialog-content>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Board title</mat-label>
-    <input matInput placeholder="Add your board title">
-  </mat-form-field>
+<div class="container">
+  <h2 mat-dialog-title>Create board</h2>
+  <mat-dialog-content>
+    <mat-form-field class="full-width">
+      <mat-label>Board title</mat-label>
+      <input matInput placeholder="Add your board title">
+    </mat-form-field>
 
-  <h4>Background</h4>
-  <div class="background-options">
-    <div class="image-options">
-      <img class="background" src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg" alt="Background image" >
-      <img class="background" src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg" alt="Background image" >
-      <img class="background" src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg" alt="Background image" >
-      <img class="background" src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg" alt="Background image" >
-    </div>
-    <div class="color-options">
-      <div *ngFor="let color of colorBackgrounds" [style.background]="color" class="color-box" (click)="selectBackground(color)">
+    <div class="backgrounds">
+      <p class="background-title">Background</p>
+      <div class="background-images">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
       </div>
-      <div class="color-box add-color">
-        <mat-icon>add</mat-icon>
+      <div class="background-colors">
+        @for (color of colorBackgrounds; track $index) {
+          <div class="color-box" [style.background]="color" (click)="selectBackground(color)"></div>
+        }
+        <div class="color-box add-color">
+          <mat-icon>add</mat-icon>
+        </div>
       </div>
     </div>
-  </div>
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button disabled>Create</button>
-  <button mat-flat-button color="primary">Continue with template</button>
-</mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button mat-flat-button disabled>Create</button>
+    <button mat-flat-button color="primary">Continue with template</button>
+  </mat-dialog-actions>
+
+</div>

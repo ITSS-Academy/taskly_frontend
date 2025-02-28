@@ -1,15 +1,17 @@
-#change-background{
+#change-background {
   width: 400px;
   height: 401px;
-  background-color:var(--md-sys-color-surface);
+  background-color: var(--md-sys-color-surface);
   padding: 10px 20px;
   border-radius: 10px;
   border: none;
 }
-.background{
+
+.background-container {
   width: 100%;
   height: 90%;
 }
+
 .background-image {
 
   width: 100%;
@@ -19,7 +21,47 @@
   justify-content: center;
 }
 
-.background-image-1{
+.backgrounds {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+
+  .background-title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .background-images,
+  .background-colors {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+
+    .background {
+      width: 70px;
+      border-radius: 8px;
+    }
+
+    .color-box {
+      width: 55px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .add-color {
+      background-color: var(--md-sys-color-outline-variant);
+    }
+  }
+}
+
+.background-image-1 {
   //background-image: url(public/assets/images/background1.jpg);
   background-size: cover;
   background-position: center;
@@ -38,12 +80,14 @@
   border-radius: 10px;
   cursor: pointer;
 }
-.custom{
+
+.custom {
   width: 100%;
   height: 30%;
   margin-bottom: 10px;
 }
-.btn-change{
+
+.btn-change {
   width: 100%;
   height: 10%;
   display: flex;
@@ -53,13 +97,15 @@
   color: white;
   border: none;
 
-  border-radius: 50px;}
+  border-radius: 50px;
+}
+
 .btn-change:hover {
   background-color: var(--md-sys-color-primary-fixed);
 
 }
 
-.add-custom{
+.add-custom {
   width: 100px;
   height: 60px;
   border-radius: 5px;

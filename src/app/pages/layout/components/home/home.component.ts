@@ -24,14 +24,10 @@ import * as authActions from '../../../../ngrx/auth/auth.actions';
 export class HomeComponent {
   isSlideBarVisible = false;
 
-  constructor(private store: Store<{ auth: AuthState }>) {
+  constructor() {
   }
 
   onLinkActivated(): void {
     this.isSlideBarVisible = false;
-  }
-
-  login() {
-    this.store.dispatch(authActions.login())
   }
 }

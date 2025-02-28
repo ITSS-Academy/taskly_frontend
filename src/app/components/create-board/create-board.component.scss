@@ -1,51 +1,100 @@
-body {
-  width: 100vw;
-  height: 100vh;
-  //box-shadow: #0a0b0b;
+.container {
+  width: 400px;
+
+  p {
+    margin: 0
+  }
+
+  mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .full-width {
+      width: 100%;
+    }
+
+    .backgrounds {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+
+      .background-title {
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .background-images,
+      .background-colors {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+
+        .background {
+          width: 70px;
+          border-radius: 8px;
+        }
+
+        .color-box {
+          width: 55px;
+          height: 40px;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        .add-color {
+          background-color: var(--md-sys-color-outline-variant);
+        }
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .button {
+      width: 100%;
+    }
+
+    ::ng-deep.mat-mdc-button-base + .mat-mdc-button-base,
+    ::ng-deep.mat-mdc-unelevated-button {
+      width: 100%;
+      margin: 0;
+    }
+  }
 }
 
-mat-dialog-content {
+::ng-deep.cdk-overlay-dark-backdrop {
+  background: none;
+}
+
+::ng-deep.cdk-global-overlay-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
+  justify-content: flex-end !important;
+  align-items: flex-start !important;
 }
 
-.full-width {
-  width: 100%;
-}
-.background {
-  width: 70px;
-}
-.background-options {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
+::ng-deep.cdk-overlay-pane.mat-mdc-dialog-panel {
+  position: inherit !important;
+  left: 260px;
+  top: 25%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 18px;
 }
 
-.image-options {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
+::ng-deep.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: unset !important;
 }
 
-
-.color-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.color-options {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
+::ng-deep.mdc-text-field {
+  padding: 0 4px !important;
 }

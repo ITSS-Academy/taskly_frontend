@@ -5,7 +5,7 @@ import {BehaviorSubject} from 'rxjs';
   providedIn: 'root'
 })
 export class BackgroundColorService {
-  private sidebarColorSource = new BehaviorSubject<string>('#ffffff'); // Default: White
+  private sidebarColorSource = new BehaviorSubject<string>('#F5FFF8'); // Default: White
   private textColorSource = new BehaviorSubject<string>('#000000'); // Default: Black
   private backgroundImageSource = new BehaviorSubject<string | null>(null); // Default: No Image
 
@@ -32,7 +32,7 @@ export class BackgroundColorService {
 
   private getContrastingColor(rgbColor: string): string {
     const rgbValues = rgbColor.match(/\d+/g);
-    if (!rgbValues) return '#ffffff';
+    if (!rgbValues) return '#F5FFF8';
 
     const r = parseInt(rgbValues[0], 10);
     const g = parseInt(rgbValues[1], 10);

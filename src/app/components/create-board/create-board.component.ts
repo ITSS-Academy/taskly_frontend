@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
@@ -32,7 +32,8 @@ export class CreateBoardComponent {
   ];
   colorBackgrounds = ['#D3D3D3', '#A8E6CF', '#377D6A', '#1D4F73'];
 
-  constructor(public dialogRef: MatDialogRef<CreateBoardComponent>) {}
+  constructor(public dialogRef: MatDialogRef<CreateBoardComponent>) {
+  }
 
   selectBackground(background: string) {
     console.log('Selected background:', background);

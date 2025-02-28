@@ -1,28 +1,18 @@
 <div class="login-container">
-  <div class="login-background">
+  <div class="login-left">
+    <img src="/assets/images/login-image.png" alt="">
+  </div>
+  <div class="login-right">
     <div class="logo-title">
-          <h1>Taskly</h1>
-          <p>Welcome to Taskly!</p>
-    </div>
-    <div class="login-box">
-      <button class="btn-google">
-        <img src="https://static-00.iconduck.com/assets.00/google-icon-512x512-yk2xx8br.png" alt="Google Icon" />
-            login with Google
-      </button>
-      <div class="or-text">
-        <div class="line"></div><span>or</span><div class="line"></div>
+      <img class="logo" src="/assets/images/logo.png" alt="">
+      <div class="title-text">
+        <p class="welcome">Welcome to <b>Taskly</b>!</p>
+        <p class="slogan">Make it snappy, Taskly keeps you happy!</p>
       </div>
-      <button class="btn-guest">
-            Continue as Guest
-      </button>
     </div>
-</div>
-    <div class="illustration-left">
-      <img src="https://s3-alpha-sig.figma.com/img/379a/9989/ce0a9ae0b86134b2d947e91507131bfb?Expires=1741564800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=nZJue93a3Jhtam-Aqe1jYB-6UISLckAgwxEHJj5RBQrsDPvSyZ4yBpQFWHOZeSR6iWjX8fhegZpu2G-4GFlLdE778f4u2oFCv4RDj9pHcqm6D4GBe~qLJRbo6De8lhzr6bXD3mrWMkD2uq2HJ-PwILZbG53xdqE4FwMZZ5QnABnmL82YT0cP~uDchgY~s0KPRMvvfJp1i9PbKHyv23VRrKz9anzoCg06YgaihZHp1TsldffgfUXYRhM3YeDThJMeA8wFYJDH7EZPyNCfobtXL0pNOEgKfqOL7JFAZdaKJK6wulrgP4B~VzazcQqxk4XKp5r3EAIHshI08U5~-oS8Bw__" alt="Left Illustration" />
-    </div>
-
-    <!-- Hình minh họa phải -->
-    <div class="illustration-right">
-      <img src="https://s3-alpha-sig.figma.com/img/5483/6487/e6750ac05fc9b15f6e0c835412e5842e?Expires=1741564800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=o9zgwWvQwtFx8uOzYOf9qGx58ORDkXNw5kr4ozK5X1PjkdZqXbsgzmBrXhA60zUx4hRfqVOYvtWoXghVg-8trvxoKivD6nzVuoLwd6~qF782pbytx21ZWkvnyak8s4zSKP0-u5RYlq0apupwZ46HUu9REJhbAsuAQ37r-bZE-uBFolGpvDVjoGR4SxzZ~SU72mfY9AD-BJCt63AyOcppLTsrM4LSC2rwKqYkW9BHfeLbco7myhu-js6~5ClnL-JqS9ePpm1c-UxhdY6yKNR0ttQU8fNG9PTzdCZ8Ef4FtJaVrOvTf2LA1v5MozxI-yNDfxuBK3gBZWl3~sKcCzPOpg__" alt="Right Illustration" />
-    </div>
+    <button (click)="login()" mat-flat-button class="btn-google">
+      <img src="/assets/images/logo-google.png" alt="Google Icon"/>
+      <p>Login with Google</p>
+    </button>
+  </div>
 </div>

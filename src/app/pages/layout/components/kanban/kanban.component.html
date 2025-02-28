@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="kanban-container">
   <div class="list-column">
     <h2>Todo</h2>
@@ -12,7 +13,8 @@
       <app-task *ngFor="let task of todo" [task]="task" cdkDrag></app-task>
     </div>
     <button mat-button class="add-task-button" (click)="addTask('todo')">
-      <mat-icon>add</mat-icon> Add task
+      <mat-icon>add</mat-icon>
+      Add task
     </button>
   </div>
 
@@ -29,7 +31,8 @@
       <app-task *ngFor="let task of inProgress" [task]="task" cdkDrag></app-task>
     </div>
     <button mat-button class="add-task-button" (click)="addTask('inProgress')">
-      <mat-icon>add</mat-icon> Add task
+      <mat-icon>add</mat-icon>
+      Add task
     </button>
   </div>
 
@@ -46,13 +49,15 @@
       <app-task *ngFor="let task of done" [task]="task" cdkDrag></app-task>
     </div>
     <button mat-button class="add-task-button" (click)="addTask('done')">
-      <mat-icon>add</mat-icon> Add task
+      <mat-icon>add</mat-icon>
+      Add task
     </button>
   </div>
 
   <div class="list-column add-list-column">
     <button mat-button class="add-list-button" (click)="addNewList()">
-      <mat-icon>add</mat-icon> Add list
+      <mat-icon>add</mat-icon>
+      Add list
     </button>
   </div>
 </div>

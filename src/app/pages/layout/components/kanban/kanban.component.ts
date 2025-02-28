@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {of, Subscription} from 'rxjs';
 import {TaskComponent} from './components/list-tasks/components/task/task.component';
@@ -10,6 +10,7 @@ import {ActivatedRoute} from '@angular/router';
 import {BoardState} from '../../../../ngrx/board/board.state';
 import {Store} from '@ngrx/store';
 import * as boardActions from '../../../../ngrx/board/board.actions';
+import {NavbarComponent} from '../../../../components/navbar/navbar.component';
 
 interface Task {
   id: string;
@@ -33,7 +34,8 @@ interface Task {
     MatButton,
     CdkDrag,
     ForDirective,
-    NgForOf
+    NgForOf,
+    NavbarComponent
   ],
   styleUrls: ['./kanban.component.scss']
 })

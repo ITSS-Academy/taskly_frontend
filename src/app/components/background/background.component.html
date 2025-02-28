@@ -1,38 +1,50 @@
-<div id="change-background">
-  <h2>Backgrounds</h2>
-
-  <div class="background">
-    <p>Background</p>
-    <div class="background-image">
-      <div class="background-image-1">
-
-      </div>
-      <div class="background-image-2">
-
-
-      </div>
-    </div>
-
-
-    <div class="custom">
-      <p>Custom</p>
-      <div class="add-custom">
-      <span class="material-symbols-outlined">add
-</span>
-      </div>
-    </div>
-
-    <button mat-button class="btn-change">Change</button>
-
-  </div>
-</div>
-
 <h2 mat-dialog-title>Change background</h2>
 <mat-dialog-content>
-  <input type="file" (change)="onImageUpload($event)" accept="image/*">
+  <!--  <h2>Backgrounds</h2>-->
+
+  <div class="background-container">
+    <div class="backgrounds">
+      <p class="background-title">Backgrounds</p>
+      <div class="background-images">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
+        <img class="background"
+             src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
+             alt="Background image">
+      </div>
+      <div class="background-colors">
+        @for (color of colorBackgrounds; track $index) {
+          <div class="color-box" [style.background]="color"></div>
+        }
+        <div class="color-box add-color">
+          <mat-icon>add</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="custom">
+      <p>Custom</p>
+      <div class="color-box add-color">
+        <mat-icon>add</mat-icon>
+      </div>
+    </div>
+
+    <button mat-button class="btn-change">
+      <input type="file" (change)="onImageUpload($event)" accept="image/*">
+      Change
+    </button>
+  </div>
+
 </mat-dialog-content>
 
-// mat Input for board name
+
+<!--// mat Input for board name-->
 <mat-label>Board name</mat-label>
 <input matInput [(ngModel)]="boardName">
 

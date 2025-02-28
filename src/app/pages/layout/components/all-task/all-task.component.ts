@@ -5,18 +5,19 @@ import {
   OnInit,
   AfterViewInit,
 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { NgStyle } from '@angular/common';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {NgStyle} from '@angular/common';
 import {NavbarComponent} from '../../../../components/navbar/navbar.component';
 import {MaterialModule} from '../../../../shared/modules/material.module';
 import {BackgroundColorService} from '../../../../services/background-color/background-color.service';
+import {HomeNavComponent} from '../home/components/home-nav/home-nav.component';
 
 @Component({
   selector: 'app-all-task',
   standalone: true,
-  imports: [NavbarComponent, MaterialModule, ReactiveFormsModule, NgStyle],
+  imports: [NavbarComponent, MaterialModule, ReactiveFormsModule, NgStyle, HomeNavComponent],
   templateUrl: './all-task.component.html',
   styleUrl: './all-task.component.scss',
 })
@@ -36,7 +37,8 @@ export class AllTaskComponent implements OnInit, AfterViewInit {
   backgroundImage: string | null =
     'https://images.unsplash.com/photo-1542435503-956c469947f6?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVza3RvcHxlbnwwfHwwfHx8MA%3D%3D';
 
-  constructor(private backgroundService: BackgroundColorService) {}
+  constructor(private backgroundService: BackgroundColorService) {
+  }
 
   ngOnInit(): void {
     this.backgroundService.backgroundImage$.subscribe((imageUrl) => {
