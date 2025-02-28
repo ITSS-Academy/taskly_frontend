@@ -25,15 +25,13 @@
         </mat-cell>
       </ng-container>
 
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <mat-header-cell *matHeaderCellDef> Status</mat-header-cell>
+      <!-- Label Column -->
+      <ng-container matColumnDef="label">
+        <mat-header-cell *matHeaderCellDef> Label</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="status">
-
-            <mat-chip-option selected>{{ element.status }}</mat-chip-option>
-
-          </mat-chip-listbox>
+          <mat-chip aria-label="label">
+            {{ element.label }}
+          </mat-chip>
         </mat-cell>
       </ng-container>
 
@@ -41,10 +39,8 @@
       <!-- Note Column -->
       <ng-container matColumnDef="note">
         <mat-header-cell *matHeaderCellDef> Note</mat-header-cell>
-        <mat-cell class="note-hover" *matCellDef="let element"> {{ element.note }}
-          <span class="material-symbols-outlined">
-          add
-        </span>
+        <mat-cell class="note-hover" *matCellDef="let element">
+          {{ element.note }}
         </mat-cell>
       </ng-container>
 
