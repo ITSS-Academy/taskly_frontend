@@ -6,56 +6,45 @@
 
     <!-- Title Column -->
     <ng-container matColumnDef="title">
-      <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+      <mat-header-cell class="mat-header-cell" *matHeaderCellDef> Title </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
     </ng-container>
 
     <!-- List Column -->
     <ng-container matColumnDef="list">
-      <mat-header-cell *matHeaderCellDef> List </mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <mat-form-field>
-          <mat-label>{{element.selected}}</mat-label>
+      <mat-header-cell class="mat-header-cell" *matHeaderCellDef> List </mat-header-cell>
+      <mat-cell class="list" *matCellDef="let element">
+        {{element.list}}
 
-          <mat-select [(value)]="selected">
-            <div class="option">
-            <mat-option>None</mat-option>
-            </div>
-            <div class="option"><mat-option value="To Do">To Do</mat-option></div>
-            <div class="option"><mat-option value="Doing">Doing</mat-option></div>
-            <div class="option"><mat-option value="Done">Done</mat-option></div>
-          </mat-select>
-
-        </mat-form-field>
       </mat-cell>
     </ng-container>
 
     <!-- Member Column -->
     <ng-container matColumnDef="member">
-      <mat-header-cell *matHeaderCellDef> Member </mat-header-cell>
-      <mat-cell class="member-hover" *matCellDef="let element"> {{element.member}}
+      <mat-header-cell class="mat-header-cell" *matHeaderCellDef> Member </mat-header-cell>
+      <mat-cell class="member" *matCellDef="let element">
+        <span class="material-symbols-outlined">account_circle</span>
+        {{element.member}}
       </mat-cell>
     </ng-container>
 
     <!-- Status Column -->
     <ng-container matColumnDef="status">
-      <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <mat-chip-listbox class="mat-mdc-chip-set-stacked"  aria-label="status">
+      <mat-header-cell class="mat-header-cell" *matHeaderCellDef> Status </mat-header-cell>
+      <mat-cell class="status" *matCellDef="let element"> {{element.status}}
+<!--        <mat-chip-listbox class="mat-mdc-chip-set-stacked"  aria-label="status">-->
 
-          <mat-chip-option  selected>{{element.status}}</mat-chip-option>
+<!--          <mat-chip-option  selected>{{element.status}}</mat-chip-option>-->
 
-        </mat-chip-listbox>
+<!--        </mat-chip-listbox>-->
       </mat-cell>
     </ng-container>
 
     <!-- Note Column -->
     <ng-container matColumnDef="note">
-      <mat-header-cell *matHeaderCellDef> Note </mat-header-cell>
-      <mat-cell class="note-hover"  *matCellDef="let element"> {{element.note}}
-        <span class="material-symbols-outlined">
-          add
-        </span>
+      <mat-header-cell class="mat-header-cell" *matHeaderCellDef> Note </mat-header-cell>
+      <mat-cell class="note"   *matCellDef="let element"> {{element.note}}
+
       </mat-cell>
     </ng-container>
 
@@ -64,7 +53,10 @@
     <mat-header-row class="mat-header-fixed" *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
+
   </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
   </div>
 </div>
 

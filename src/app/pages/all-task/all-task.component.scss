@@ -8,7 +8,7 @@
 
 .table{
   display: flex;
-
+  flex-direction: column;
   width: 98%;
   height: calc(100vh - 70px);
   padding: 10px 10px;
@@ -25,7 +25,7 @@
 
   background-color: var(--md-sys-color-surface);
   border-radius: 8px;
-
+  height: 100%;
 
 }
 
@@ -39,50 +39,32 @@
   font-size: 16px;
 
 }
-.member-hover {
-  cursor: pointer;
-  user-select: none;
-}
-.member-hover:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
-
-.note-hover {
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-
+.mat-header-cell{
+  color: var(--md-sys-color-on-background);
 
 }
-
-.material-symbols-outlined {
-  display: none;
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
+.member{
+  color: var(--md-sys-color-on-background);
+  gap: 10px;
+}
+.list{
+  color: var(--md-sys-color-on-background);
+}
+.status{
+  color: var(--md-sys-color-on-background);
+}
+.note{
   color: var(--md-sys-color-on-background);
 }
 
-.note-hover:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
-
-
-.note-hover:hover .material-symbols-outlined {
-  display: inline;
-}
-
-
-.option:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
 
 
 
 
-.chip:hover {
-  background-color: var(--md-sys-color-surface-container-high);
-}
+
+
+
+
+
+
 

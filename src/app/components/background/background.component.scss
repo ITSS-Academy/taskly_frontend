@@ -1,0 +1,75 @@
+#change-background{
+  width: 400px;
+  height: 401px;
+  background-color:var(--md-sys-color-surface);
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+}
+.background{
+  width: 100%;
+  height: 90%;
+}
+.background-image {
+
+  width: 100%;
+  height: 30%;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.background-image-1{
+  background-image: url(public/assets/images/background1.jpg);
+  background-size: cover;
+  background-position: center;
+  width: 40%;
+  height: 80%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.background-image-2 {
+  background-image: url(public/assets/images/background2.jpg);
+  background-size: cover;
+  background-position: center;
+  width: 40%;
+  height: 80%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.custom{
+  width: 100%;
+  height: 30%;
+  margin-bottom: 10px;
+}
+.btn-change{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--md-sys-color-primary);
+  color: white;
+  border: none;
+
+  border-radius: 50px;}
+.btn-change:hover {
+  background-color: var(--md-sys-color-primary-fixed);
+
+}
+
+.add-custom{
+  width: 100px;
+  height: 60px;
+  border-radius: 5px;
+  background-color: var(--md-sys-color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+
+}
+
+
+
