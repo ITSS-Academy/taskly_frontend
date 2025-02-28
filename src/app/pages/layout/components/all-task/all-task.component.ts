@@ -5,15 +5,13 @@ import {
   OnInit,
   AfterViewInit,
 } from '@angular/core';
-import { HomeNavComponent } from '../home/home-nav/home-nav.component';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { MaterialModule } from '../../shared/modules/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NgStyle } from '@angular/common';
-import { BackgroundColorService } from '../../services/background-color/background-color.service';
+import {NavbarComponent} from '../../../../components/navbar/navbar.component';
+import {MaterialModule} from '../../../../shared/modules/material.module';
+import {BackgroundColorService} from '../../../../services/background-color/background-color.service';
 
 @Component({
   selector: 'app-all-task',

@@ -10,14 +10,22 @@ import {getAuth, provideAuth} from '@angular/fire/auth';
 import {provideHttpClient} from '@angular/common/http';
 import {authReducer} from './ngrx/auth/auth.reducer';
 import * as authEffects from './ngrx/auth/auth.effects';
+import {boardReducer} from './ngrx/board/board.reducer';
+import * as boardEffects from './ngrx/board/board.effects';
+import {userReducer} from './ngrx/user/user.reducer';
+import * as userEffects from './ngrx/user/user.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({eventCoalescing: true}), provideHttpClient(), provideRouter(routes), provideAnimationsAsync(),
     provideStore({
-      auth: authReducer
+      auth: authReducer,
+      board: boardReducer,
+      user: userReducer
     }),
     provideEffects([
-      authEffects
+      authEffects,
+      boardEffects,
+      userEffects
     ]),
     provideFirebaseApp(() => initializeApp({
       "projectId": "kanban-246",

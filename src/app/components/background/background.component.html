@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <button mat-button   class="btn-change" >Change</button>
+    <button mat-button class="btn-change">Change</button>
 
   </div>
 </div>
@@ -31,3 +31,9 @@
 <mat-dialog-content>
   <input type="file" (change)="onImageUpload($event)" accept="image/*">
 </mat-dialog-content>
+
+// mat Input for board name
+<mat-label>Board name</mat-label>
+<input matInput [(ngModel)]="boardName">
+
+<button mat-button (click)="createBoard()">Create</button>

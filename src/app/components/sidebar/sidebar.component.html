@@ -32,10 +32,10 @@
       <mat-icon (click)="openDialog()" [ngStyle]="{'color': sidebarTextColor}" class="material-symbols-outlined add-board-btn">add</mat-icon>
     </p>
     <mat-selection-list>
-      @for (board of boards; track $index) {
-        <mat-list-item [routerLink]="['kanban']">
+      @for (board of (boards$ | async); track $index) {
+        <mat-list-item [routerLink]="['kanban', board.id]">
           <img
-            src="{{ board.background }}"
+            src="{{ board.backgroundId !| background | async }}"
             alt="" class="background">
           <span [ngStyle]="{'color': sidebarTextColor}">{{ board.name }}</span>
         </mat-list-item>

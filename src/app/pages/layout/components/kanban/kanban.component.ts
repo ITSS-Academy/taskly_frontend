@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {of} from 'rxjs';
-import {TaskComponent} from './components/list-tasks/task/task.component';
+import {TaskComponent} from './components/list-tasks/components/task/task.component';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
-import {ForDirective} from '../../shared/for.directive';
+import {ForDirective} from '../../../../shared/for.directive';
 import {NgForOf} from '@angular/common';
 
 interface Task {

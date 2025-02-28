@@ -4,7 +4,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatInput} from "@angular/material/input";
-import {NotificationsButtonComponent} from '../../../components/notifications-button/notifications-button.component';
+import {NotificationsButtonComponent} from '../../../../../../components/notifications-button/notifications-button.component';
 
 @Component({
   selector: 'app-home-nav',

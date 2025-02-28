@@ -2,11 +2,16 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
+import {FormsModule} from '@angular/forms';
+import {BoardModel} from '../../models/board.model';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../ngrx/auth/auth.state';
+import * as boardActions from '../../ngrx/board/board.actions';
 
 @Component({
   selector: 'app-background',
   standalone: true,
-  imports: [MaterialModule],
+  imports: [MaterialModule, FormsModule],
   templateUrl: './background.component.html',
   styleUrl: './background.component.scss'
 })
@@ -15,7 +20,8 @@ export class BackgroundComponent {
 
   constructor(
     private backgroundColorService: BackgroundColorService,
-    private dialogRef: MatDialogRef<BackgroundComponent> // Inject MatDialogRef
+    private dialogRef: MatDialogRef<BackgroundComponent>,// Inject MatDialogRef
+    private store: Store<{ auth: AuthState }>
   ) {
   }
 
@@ -24,13 +30,14 @@ export class BackgroundComponent {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       const reader = new FileReader();
+      this.file = file;
 
       reader.onload = () => {
         const imageUrl = reader.result as string;
         this.backgroundColorService.setBackgroundImage(imageUrl); // ✅ Update the home background image
         setTimeout(() => {
           this.extractPrimaryColor(imageUrl);
-          this.dialogRef.close(); // ✅ Auto-close the dialog
+          // this.dialogRef.close(); // ✅ Auto-close the dialog
         }, 100);
       };
 
@@ -73,5 +80,17 @@ export class BackgroundComponent {
       this.backgroundColorService.setSidebarColor(primaryColor);
       this.backgroundColorService.setNavbarTextColor(primaryColor);
     };
+  }
+
+  //
+  file: File | null = null;
+  boardName!: string;
+
+  createBoard() {
+    const newBoard: BoardModel = {
+      name: this.boardName,
+      background: this.file
+    }
+    this.store.dispatch(boardActions.createBoard({board: newBoard}));
   }
 }

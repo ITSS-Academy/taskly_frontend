@@ -1,7 +1,6 @@
-import { Routes } from '@angular/router';
-import {HomeComponent} from './pages/home/home.component';
-import {AllTaskComponent} from './pages/all-task/all-task.component';
-import {KanbanComponent} from './pages/kanban/kanban.component';
+import {Routes} from '@angular/router';
+import {LoginComponent} from './pages/login/login.component';
+import {authGuard} from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -10,15 +9,16 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'home',
-    component: HomeComponent,
+    path: '',
+    canActivateChild: [authGuard],
+    loadChildren: () => import('./pages/layout/layout.routes').then(m => m.LayoutRoutes),
   },
   {
-    path: 'alltasks',
-    component: AllTaskComponent
+    path: 'login',
+    component: LoginComponent,
   },
   {
-    path: 'kanban',
-    component: KanbanComponent
+    path: '**',
+    redirectTo: 'home',
   }
 ];

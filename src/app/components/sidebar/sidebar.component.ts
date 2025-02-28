@@ -1,23 +1,38 @@
-import {Component, inject, OnInit,ViewChild} from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {MaterialModule} from "../../shared/modules/material.module";
 import {MatSidenav} from "@angular/material/sidenav";
 import {RouterLink} from '@angular/router';
+import {AsyncPipe, NgStyle} from '@angular/common';
+import {BackgroundColorService} from '../../services/background-color/background-color.service';
+import {Store} from '@ngrx/store';
+import {BoardState} from '../../ngrx/board/board.state';
+import {Observable, Subscription} from 'rxjs';
+import {BoardModel} from '../../models/board.model';
+import * as boardActions from '../../ngrx/board/board.actions';
+import {BackgroundPipe} from '../../shared/pipes/background.pipe'
 import {MatDialog} from '@angular/material/dialog';
 import {CreateBoardComponent} from '../create-board/create-board.component';
-import {NgStyle} from '@angular/common';
-import {BackgroundColorService} from '../../services/background-color/background-color.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [MaterialModule, RouterLink, NgStyle],
+  imports: [MaterialModule, RouterLink, NgStyle, AsyncPipe, BackgroundPipe],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
 
 
 export class SidebarComponent implements OnInit {
-  constructor(private backgroundColorService: BackgroundColorService) {}
+
+  supcriptions!: Subscription[];
+  boards$ !: Observable<BoardModel[] | null>
+
+  constructor(private backgroundColorService: BackgroundColorService,
+              private store: Store<{
+                board: BoardState
+              }>) {
+    this.store.dispatch(boardActions.getBoards());
+  }
 
   readonly dialog = inject(MatDialog);
 
@@ -28,19 +43,6 @@ export class SidebarComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-
-  boards = [
-    {
-      name: 'Work',
-      background:
-        'https://images.unsplash.com/photo-1542435503-956c469947f6?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVza3RvcHxlbnwwfHwwfHx8MA%3D%3D',
-    },
-    {
-      name: 'Personal',
-      background:
-        'https://media.istockphoto.com/id/1285308242/photo/to-do-list-text-on-notepad.jpg?s=612x612&w=0&k=20&c=p85bCVQZwvkrqqqNOJGg2QuPDu6ynTlQHkASQOTELh8=',
-    },
-  ];
 
   invitedBoards = [
     {
@@ -53,7 +55,9 @@ export class SidebarComponent implements OnInit {
   sidebarColor: string = '--md-sys-color-on-secondary-container'; // Default color
   sidebarTextColor: string = '--md-sys-color-on-surface'; // Default text color
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.boards$ = this.store.select('board', 'boards');
+
     this.backgroundColorService.sidebarColor$.subscribe(color => {
       this.sidebarColor = color;
     });
