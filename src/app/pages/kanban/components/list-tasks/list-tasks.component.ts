@@ -1,30 +1,51 @@
-import { Component } from '@angular/core';
-import {MaterialModule} from '../../../../shared/modules/material.module';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem
-} from '@angular/cdk/drag-drop';
-import {FormsModule} from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {TaskComponent} from './task/task.component';
+import {MatIcon} from '@angular/material/icon';
+import {of} from 'rxjs';
+import {MatButton} from '@angular/material/button';
+import {ForDirective} from '../../../../shared/for.directive';
+import {NgForOf} from '@angular/common';
+
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  assignees: string[];
+  date: Date;
+  progress: number;
+  totalSubtasks: number;
+  completedSubtasks: number;
+}
 
 @Component({
   selector: 'app-list-tasks',
-  standalone: true,
-  imports: [MaterialModule, FormsModule],
   templateUrl: './list-tasks.component.html',
-  styleUrl: './list-tasks.component.scss'
+  standalone: true,
+  imports: [
+    CdkDropList,
+    TaskComponent,
+    MatIcon,
+    MatButton,
+    ForDirective,
+    CdkDrag,
+    NgForOf
+  ],
+  styleUrls: ['./list-tasks.component.scss']
 })
-export class ListTasksComponent {
-  todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
-  done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
+export class ListTasksComponent implements OnInit {
+  @Input() tasks: Task[] = [];
+  @Input() listTitle: string = '';
+  @Input() listId: string = '';
+  @Input() connectedTo: string[] = [];
 
-  todoInputVisible = false;
-  doneInputVisible = false;
-  newTask = '';
-  newDoneTask = '';
-  protected newTodoTask: any;
+  constructor() { }
 
-  drop(event: CdkDragDrop<string[]>) {
+  ngOnInit(): void {
+    // Initialize component
+  }
+
+  drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -37,35 +58,10 @@ export class ListTasksComponent {
     }
   }
 
-  addTask(listType: string) {
-    if (listType === 'todo') {
-      this.todoInputVisible = true;
-      this.doneInputVisible = false;
-    } else if (listType === 'done') {
-      this.doneInputVisible = true;
-      this.todoInputVisible = false;
-    }
+  addTask() {
+    // Implement logic to add a new task
+    console.log('Adding task to', this.listTitle);
   }
 
-  saveTask(listType: string) {
-    if (listType === 'todo' && this.newTodoTask.trim()) {
-      this.todo.push(this.newTodoTask);
-      this.newTodoTask = '';
-      this.todoInputVisible = false;
-    } else if (listType === 'done' && this.newDoneTask.trim()) {
-      this.done.push(this.newDoneTask);
-      this.newDoneTask = '';
-      this.doneInputVisible = false;
-    }
-  }
-
-  cancelTask(listType: string) {
-    if (listType === 'todo') {
-      this.newTodoTask = '';
-      this.todoInputVisible = false;
-    } else if (listType === 'done') {
-      this.newDoneTask = '';
-      this.doneInputVisible = false;
-    }
-  }
+  protected readonly of = of;
 }
