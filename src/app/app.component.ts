@@ -2,12 +2,13 @@ import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {NotificationsComponent} from './components/notifications/notifications.component';
-import {LoginComponent} from './components/login/login.component';
+import {CreateBoardComponent} from './components/create-board/create-board.component';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, NotificationsComponent, LoginComponent],
+  imports: [RouterOutlet, SidebarComponent, NotificationsComponent, CreateBoardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

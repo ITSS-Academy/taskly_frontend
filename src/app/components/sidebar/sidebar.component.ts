@@ -1,7 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnInit,ViewChild} from '@angular/core';
 import {MaterialModule} from "../../shared/modules/material.module";
 import {MatSidenav} from "@angular/material/sidenav";
 import {RouterLink} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {CreateBoardComponent} from '../create-board/create-board.component';
 import {NgStyle} from '@angular/common';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
 
@@ -15,7 +17,16 @@ import {BackgroundColorService} from '../../services/background-color/background
 
 
 export class SidebarComponent implements OnInit {
-  constructor(private backgroundColorService: BackgroundColorService) {
+  constructor(private backgroundColorService: BackgroundColorService) {}
+
+  readonly dialog = inject(MatDialog);
+
+  openDialog() {
+    const dialogRef = this.dialog.open(CreateBoardComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   boards = [
