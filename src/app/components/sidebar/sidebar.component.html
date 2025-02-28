@@ -28,7 +28,7 @@
 
     <p class="section-title">
       My boards
-      <mat-icon class="material-symbols-outlined add-board-btn">add</mat-icon>
+      <mat-icon (click)="openDialog()" class="material-symbols-outlined add-board-btn">add</mat-icon>
     </p>
     <mat-selection-list>
       @for (board of boards; track $index) {

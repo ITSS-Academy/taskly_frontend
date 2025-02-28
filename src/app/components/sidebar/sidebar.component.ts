@@ -1,7 +1,9 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {MaterialModule} from "../../shared/modules/material.module";
 import {MatSidenav} from "@angular/material/sidenav";
 import {RouterLink} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {CreateBoardComponent} from '../create-board/create-board.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,6 +15,20 @@ import {RouterLink} from '@angular/router';
 
 
 export class SidebarComponent {
+
+  readonly dialog = inject(MatDialog);
+
+  constructor() {
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(CreateBoardComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
   boards = [
     {
       name: 'Work',
