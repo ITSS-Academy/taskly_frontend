@@ -82,6 +82,7 @@ export const boardReducer = createReducer(
   }),
   on(boardActions.getBoardSuccess, (state, {type, board}) => {
     console.log(type)
+    console.log(board)
     return {
       ...state,
       board,

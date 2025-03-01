@@ -32,14 +32,13 @@ export class BackgroundComponent {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       const reader = new FileReader();
-      this.file = file;
 
       reader.onload = () => {
         const imageUrl = reader.result as string;
         this.backgroundColorService.setBackgroundImage(imageUrl); // ✅ Update the home background image
         setTimeout(() => {
           this.extractPrimaryColor(imageUrl);
-          // this.dialogRef.close(); // ✅ Auto-close the dialog
+          this.dialogRef.close(); // ✅ Auto-close the dialog
         }, 100);
       };
 
@@ -84,15 +83,5 @@ export class BackgroundComponent {
     };
   }
 
-  //
-  file: File | null = null;
-  boardName!: string;
 
-  createBoard() {
-    const newBoard: BoardModel = {
-      name: this.boardName,
-      background: this.file
-    }
-    this.store.dispatch(boardActions.createBoard({board: newBoard}));
-  }
 }
