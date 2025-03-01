@@ -2,7 +2,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {inject} from '@angular/core';
 import {BoardService} from '../../services/board/board.service';
 import * as boardActions from './board.actions';
-import {catchError, forkJoin, map, of, switchMap} from 'rxjs';
+import {catchError, exhaustMap, forkJoin, map, of, switchMap} from 'rxjs';
 import {BoardModel} from '../../models/board.model';
 import {ListService} from '../../services/list/list.service';
 import {ListModel} from '../../models/list.model';
@@ -40,31 +40,20 @@ export const getBoardsEffect = createEffect(
 );
 
 export const getBoard$ = createEffect(
-  (actions$ = inject(Actions), boardService = inject(BoardService), listService = inject(ListService)) => {
+  (actions$ = inject(Actions), boardService = inject(BoardService)) => {
     return actions$.pipe(
       ofType(boardActions.getBoard),
-      switchMap(({boardId}) =>
-        forkJoin({
-          board: boardService.getBoard(boardId),
-          lists: listService.getLists(boardId)
-        }).pipe(
-          map(({board, lists}) => {
-            if (!board) {
-              throw new Error('Board not found');
-            }
-            console.log(board);
-            return boardActions.getBoardSuccess({
-              board: {
-                ...board,
-                lists: lists || [] as ListModel[]
-              }
-            });
-          }),
-          catchError((error) => {
-            console.error('Error fetching board:', error);
-            return of(boardActions.getBoardFailure({errorMessage: error.message || 'Unknown error'}));
-          })
-        )
+      exhaustMap(({boardId}) => {
+          return boardService.getBoard(boardId).pipe(
+            map((board: any) => {
+              // console.log(board);
+              return boardActions.getBoardSuccess({board})
+            }),
+            catchError((error) => {
+              return of(boardActions.getBoardFailure({errorMessage: error.message}));
+            })
+          );
+        }
       )
     );
   },

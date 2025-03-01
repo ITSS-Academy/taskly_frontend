@@ -1,16 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {of, Subscription} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {TaskComponent} from './components/list-tasks/components/task/task.component';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
-import {ForDirective} from '../../../../shared/for.directive';
+import {ForDirective} from '../../../../../../shared/for.directive';
 import {NgForOf} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
-import {BoardState} from '../../../../ngrx/board/board.state';
+import {ActivatedRoute, RouterOutlet} from '@angular/router';
+import {BoardState} from '../../../../../../ngrx/board/board.state';
 import {Store} from '@ngrx/store';
-import * as boardActions from '../../../../ngrx/board/board.actions';
-import {NavbarComponent} from '../../../../components/navbar/navbar.component';
+import * as boardActions from '../../../../../../ngrx/board/board.actions';
+import {NavbarComponent} from '../../../../../../components/navbar/navbar.component';
+import {BoardModel} from '../../../../../../models/board.model';
 
 interface Task {
   id: string;
@@ -35,7 +36,8 @@ interface Task {
     CdkDrag,
     ForDirective,
     NgForOf,
-    NavbarComponent
+    NavbarComponent,
+    RouterOutlet
   ],
   styleUrls: ['./kanban.component.scss']
 })
@@ -56,14 +58,12 @@ export class KanbanComponent implements OnInit {
     });
   }
 
+  board$!: Observable<BoardModel | null>
 
   ngOnInit(): void {
 
-    this.subscriptions.push(
-      this.store.select('board', 'board').subscribe((board) => {
-        console.log(board)
-      })
-    )
+    this.board$ = this.store.select('board', 'board')
+
 
     // Sample data - replace with your actual data service
     this.todo = [

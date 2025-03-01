@@ -10,6 +10,9 @@ import {BackgroundColorService} from '../../services/background-color/background
 import {NgStyle} from '@angular/common';
 import {FilterComponent} from '../filter/filter.component';
 import {LogoutComponent} from '../logout/logout.component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {BoardState} from '../../ngrx/board/board.state';
 
 @Component({
   selector: 'app-navbar',
@@ -24,12 +27,22 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   placeholder: string = "Board Name";
   isEditing: boolean = false;
   inputWidth: number = 12;
+  id!: string;
 
   @ViewChild('textInput', {static: false}) textInput!: ElementRef<HTMLInputElement>;
   @ViewChild('textMeasurer', {static: true}) textMeasurer!: ElementRef<HTMLSpanElement>;
 
   constructor(private cdr: ChangeDetectorRef,
-              private backgroundColorService: BackgroundColorService) {
+              private backgroundColorService: BackgroundColorService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private store: Store<{ board: BoardState }>) {
+    this.store.select('board', 'board').subscribe((board) => {
+      if (board) {
+        this.id = board.id!;
+        this.inputValue = board.name!;
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -99,6 +112,16 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       enterAnimationDuration,
       exitAnimationDuration,
     });
+  }
+  
+  routeKanban() {
+    console.log(this.id);
+    this.router.navigate(['/board/kanban', this.id]);
+  }
+
+  routeTable() {
+    console.log(this.id);
+    this.router.navigate(['/board/table', this.id]);
   }
 }
 

@@ -1,5 +1,6 @@
 <mat-toolbar class="navbar" [ngStyle]="{'color': textColor}">
   <div class="input-container">
+    
     <!-- Span that turns into input when clicked -->
     @if (!isEditing) {
       <span (click)="enableEditing()" class="editable-text">
@@ -42,8 +43,8 @@
     View
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>Kanban</button>
-    <button mat-menu-item>Table</button>
+    <button mat-menu-item (click)="routeKanban()">Kanban</button>
+    <button mat-menu-item (click)="routeTable()">Table</button>
   </mat-menu>
 
 

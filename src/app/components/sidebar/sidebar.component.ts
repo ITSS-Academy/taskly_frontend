@@ -32,6 +32,7 @@ export class SidebarComponent implements OnInit {
                 board: BoardState
               }>) {
     this.store.dispatch(boardActions.getBoards());
+
   }
 
   readonly dialog = inject(MatDialog);
@@ -57,6 +58,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.boards$ = this.store.select('board', 'boards');
+
 
     this.backgroundColorService.sidebarColor$.subscribe(color => {
       this.sidebarColor = color;
