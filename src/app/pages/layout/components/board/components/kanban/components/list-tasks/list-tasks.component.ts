@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {TaskComponent} from './components/task/task.component';
 import {MatIcon} from '@angular/material/icon';
 import {of} from 'rxjs';
 import {MatButton} from '@angular/material/button';
-import {ForDirective} from '../../../../../../shared/for.directive';
+import {ForDirective} from '../../../../../../../../shared/for.directive';
 import {NgForOf} from '@angular/common';
 
 interface Task {
@@ -39,7 +39,8 @@ export class ListTasksComponent implements OnInit {
   @Input() listId: string = '';
   @Input() connectedTo: string[] = [];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
     // Initialize component

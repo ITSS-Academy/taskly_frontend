@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {DatePipe, NgIf} from '@angular/common';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {of} from 'rxjs';
 import {MatIconButton} from '@angular/material/button';
-import {ForDirective} from '../../../../../../../../shared/for.directive';
+import {ForDirective} from '../../../../../../../../../../shared/for.directive';
 
 interface Task {
   id: string;

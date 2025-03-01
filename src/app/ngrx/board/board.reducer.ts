@@ -74,12 +74,14 @@ export const boardReducer = createReducer(
   on(boardActions.getBoard, (state) => {
     return {
       ...state,
+      board: null,
       isGettingBoard: true,
       isGettingBoardSuccess: false,
       getBoardError: ''
     };
   }),
-  on(boardActions.getBoardSuccess, (state, {board}) => {
+  on(boardActions.getBoardSuccess, (state, {type, board}) => {
+    console.log(type)
     return {
       ...state,
       board,

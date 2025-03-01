@@ -11,6 +11,4 @@ export interface BoardModel {
     fileLocation?: string | null;
   } | File | null;
   createdAt?: Date | null;
-
-  lists?: ListModel[] | null;
 }
