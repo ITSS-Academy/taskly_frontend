@@ -29,7 +29,7 @@
 
   <div class="divider"></div>
 
-  <button mat-button [ngStyle]="{'color': textColor}">
+  <button mat-button (click)="openFilterDialog('0ms', '0ms')" [ngStyle]="{'color': textColor}">
     <mat-icon class="material-symbols-outlined">filter_list</mat-icon>
     Filter
   </button>
@@ -49,7 +49,7 @@
 
   <div class="divider"></div>
 
-  <button mat-button (click)="openDialog('0ms', '0ms')" [ngStyle]="{'color': textColor}" x>
+  <button mat-button (click)="openBackgroundDialog('0ms', '0ms')" [ngStyle]="{'color': textColor}" x>
     <mat-icon class="material-symbols-outlined">wallpaper</mat-icon>
     Background
   </button>
@@ -61,7 +61,7 @@
   </button>
 
   <app-notifications-button></app-notifications-button>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="openLogoutDialog('0ms', '0ms')">
     <img class="avatar"
          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
          alt="Profile">

@@ -1,0 +1,46 @@
+::ng-deep.mat-mdc-dialog-container .mat-mdc-dialog-content {
+  padding: 0;
+}
+
+mat-dialog-content {
+  height: fit-content;
+  overflow-y: hidden;
+}
+
+button {
+  width: 100%;
+  background-color: unset;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep.mat-mdc-list-item.mdc-list-item.invite-noti.mdc-list-item--with-leading-icon.mdc-list-item--with-three-lines {
+  height: fit-content;
+}
+
+.mat-mdc-list-item-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+::ng-deep.cdk-overlay-dark-backdrop {
+  background: none;
+}
+
+::ng-deep.cdk-global-overlay-wrapper {
+  display: flex;
+  justify-content: flex-end !important;
+  align-items: flex-start !important;
+}
+
+::ng-deep.cdk-overlay-pane.mat-mdc-dialog-panel {
+  position: inherit !important;
+  right: 0;
+  top: 47px;
+}
+
+::ng-deep.mat-mdc-dialog-content {
+  max-height: 100%;
+}

@@ -8,6 +8,8 @@ import {ShareComponent} from '../share/share.component';
 import {BackgroundComponent} from '../background/background.component';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
 import {NgStyle} from '@angular/common';
+import {FilterComponent} from '../filter/filter.component';
+import {LogoutComponent} from '../logout/logout.component';
 
 @Component({
   selector: 'app-navbar',
@@ -73,9 +75,26 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   }
 
   readonly backgroundDialog = inject(MatDialog);
+  readonly filterDialog = inject(MatDialog);
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openBackgroundDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.backgroundDialog.open(BackgroundComponent, {
+      // width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+  openFilterDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.filterDialog.open(FilterComponent, {
+      // width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+  openLogoutDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.backgroundDialog.open(LogoutComponent, {
       // width: '250px',
       enterAnimationDuration,
       exitAnimationDuration,
