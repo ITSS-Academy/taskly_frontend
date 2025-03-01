@@ -30,3 +30,22 @@ export const login$ = createEffect(
     functional: true
   }
 )
+
+export const logout$ = createEffect(
+  (actions$ = inject(Actions), authService = inject(AuthService)) => {
+    return actions$.pipe(
+      ofType(authActions.logout),
+      switchMap(() => {
+          return authService.logout().pipe(
+            map(() => authActions.logoutSuccess()),
+            catchError((error) => {
+              return of(authActions.logoutFailure({error: error.message}));
+            })
+          );
+        }
+      )
+    )
+  }, {
+    functional: true
+  }
+)

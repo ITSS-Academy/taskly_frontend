@@ -7,6 +7,7 @@ import {LoginComponent} from '../../../login/login.component';
 import {AuthState} from '../../../../ngrx/auth/auth.state';
 import {Store} from '@ngrx/store';
 import * as authActions from '../../../../ngrx/auth/auth.actions';
+import {logout} from '../../../../ngrx/auth/auth.actions';
 
 @Component({
   selector: 'app-home',
@@ -24,10 +25,14 @@ import * as authActions from '../../../../ngrx/auth/auth.actions';
 export class HomeComponent {
   isSlideBarVisible = false;
 
-  constructor() {
+  constructor(private store: Store<{ auth: AuthState }>) {
   }
 
   onLinkActivated(): void {
     this.isSlideBarVisible = false;
+  }
+
+  logout() {
+    this.store.dispatch(logout());
   }
 }
