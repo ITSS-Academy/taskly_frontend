@@ -20,6 +20,22 @@ export const addList$ = createEffect(
   }
 );
 
+export const getLists$ = createEffect(
+  (action$ = inject(Actions), listService = inject(ListService)) => {
+    return action$.pipe(
+      ofType(listActions.getLists),
+      switchMap(({boardId}) => {
+        return listService.getLists(boardId).pipe(
+          map((lists: any) => listActions.getListsSuccess({lists})),
+          catchError((error) => of(listActions.getListsFailure({error: error.message || 'Unknown error'})))
+        );
+      })
+    );
+  }, {
+    functional: true
+  }
+);
+
 export const updatePosition$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(

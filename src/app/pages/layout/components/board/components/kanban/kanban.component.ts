@@ -1,17 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {Observable, of, Subscription} from 'rxjs';
 import {TaskComponent} from './components/list-tasks/components/task/task.component';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {ForDirective} from '../../../../../../shared/for.directive';
-import {NgForOf} from '@angular/common';
+import {AsyncPipe, NgForOf} from '@angular/common';
 import {ActivatedRoute, RouterOutlet} from '@angular/router';
 import {BoardState} from '../../../../../../ngrx/board/board.state';
 import {Store} from '@ngrx/store';
 import * as boardActions from '../../../../../../ngrx/board/board.actions';
 import {NavbarComponent} from '../../../../../../components/navbar/navbar.component';
 import {BoardModel} from '../../../../../../models/board.model';
+import {ListModel} from '../../../../../../models/list.model';
+import * as listActions from '../../../../../../ngrx/list/list.actions';
+import {ListState} from '../../../../../../ngrx/list/list.state';
 
 interface Task {
   id: string;
@@ -37,7 +40,8 @@ interface Task {
     ForDirective,
     NgForOf,
     NavbarComponent,
-    RouterOutlet
+    RouterOutlet,
+    AsyncPipe
   ],
   styleUrls: ['./kanban.component.scss']
 })
@@ -49,20 +53,30 @@ export class KanbanComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
   constructor(private activatedRoute: ActivatedRoute,
-              private store: Store<{ board: BoardState }>) {
+              private store: Store<{
+                board: BoardState,
+                list: ListState
+              }>) {
 
     this.activatedRoute.params.subscribe(params => {
       const id = params['id'];
       console.log(id);
       this.store.dispatch(boardActions.getBoard({boardId: id}));
+      this.store.dispatch(listActions.getLists({boardId: id}));
     });
   }
 
   board$!: Observable<BoardModel | null>
+  lists$!: Observable<ListModel[] | null>
 
   ngOnInit(): void {
 
+    this.lists$ = this.store.select('list', 'lists')
     this.board$ = this.store.select('board', 'board')
+
+    this.lists$.subscribe(lists => {
+      console.log('lists', lists)
+    })
 
 
     // Sample data - replace with your actual data service
@@ -161,7 +175,7 @@ export class KanbanComponent implements OnInit {
     }
   }
 
-  addTask(listType: string) {
+  addTask(listType: string | null) {
     // Implement logic to add a new task to the specified list
     console.log('Adding task to', listType);
   }

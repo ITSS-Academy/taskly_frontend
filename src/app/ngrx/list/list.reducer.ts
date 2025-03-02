@@ -67,7 +67,8 @@ export const listReducer = createReducer(
       getListsError: ''
     };
   }),
-  on(listActions.getListsSuccess, (state, {lists}) => {
+  on(listActions.getListsSuccess, (state, {type, lists}) => {
+    console.log(type)
     return {
       ...state,
       lists: lists,
