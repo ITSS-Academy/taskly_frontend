@@ -66,4 +66,22 @@ export class ListService {
       headers: { Authorization: this.accesToken },
     });
   }
+
+  addTask(title: string, listId: string) {
+    console.log(title, listId);
+    return this.httpClient.post(
+      `http://localhost:3000/card`,
+      {
+        title,
+        listId,
+      },
+      { headers: { Authorization: this.accesToken } },
+    );
+  }
+
+  deleteTask(cardId: string) {
+    return this.httpClient.delete(`http://localhost:3000/card/${cardId}`, {
+      headers: { Authorization: this.accesToken },
+    });
+  }
 }

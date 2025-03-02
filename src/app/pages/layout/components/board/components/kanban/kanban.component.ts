@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -12,7 +19,7 @@ import { TaskComponent } from './components/list-tasks/components/task/task.comp
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { ForDirective } from '../../../../../../shared/for.directive';
-import { AsyncPipe, NgForOf } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { BoardState } from '../../../../../../ngrx/board/board.state';
 import { Store } from '@ngrx/store';
@@ -22,6 +29,8 @@ import { BoardModel } from '../../../../../../models/board.model';
 import { ListModel } from '../../../../../../models/list.model';
 import * as listActions from '../../../../../../ngrx/list/list.actions';
 import { ListState } from '../../../../../../ngrx/list/list.state';
+import { MaterialModule } from '../../../../../../shared/modules/material.module';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 interface Task {
   id: string;
@@ -50,17 +59,18 @@ interface Task {
     RouterOutlet,
     AsyncPipe,
     CdkDropListGroup,
+    NgClass,
+    MaterialModule,
+    ReactiveFormsModule,
   ],
   styleUrls: ['./kanban.component.scss'],
 })
 export class KanbanComponent implements OnInit, OnDestroy {
-  todo: Task[] = [];
-  inProgress: Task[] = [];
-  done: Task[] = [];
-
   board$!: Observable<BoardModel | null>;
-  lists: ListModel[] = [];
+  lists: (ListModel & { isInEditMode?: boolean })[] = [];
   boardId!: string;
+
+  cardName = new FormControl('', [Validators.required]);
 
   subscriptions: Subscription[] = [];
 
@@ -87,82 +97,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     );
 
     this.board$ = this.store.select('board', 'board');
-
-    // Sample data - replace with your actual data service
-    this.todo = [
-      {
-        id: '1',
-        title: 'Lorem Ipsum is s...',
-        description:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        assignees: ['user1', 'user2'],
-        date: new Date('2022-11-12'),
-        progress: 33,
-        totalSubtasks: 3,
-        completedSubtasks: 2,
-      },
-      {
-        id: '2',
-        title: 'Lorem Ipsum is s...',
-        description:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        assignees: ['user1', 'user2'],
-        date: new Date('2022-11-12'),
-        progress: 66,
-        totalSubtasks: 3,
-        completedSubtasks: 2,
-      },
-    ];
-
-    this.inProgress = [
-      {
-        id: '3',
-        title: 'Lorem Ipsum is s...',
-        description:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        assignees: ['user1', 'user2'],
-        date: new Date('2022-11-12'),
-        progress: 66,
-        totalSubtasks: 3,
-        completedSubtasks: 2,
-      },
-    ];
-
-    this.done = [
-      {
-        id: '4',
-        title: 'Lorem Ipsum is s...',
-        description:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        assignees: ['user1', 'user2'],
-        date: new Date('2022-11-12'),
-        progress: 100,
-        totalSubtasks: 3,
-        completedSubtasks: 3,
-      },
-      {
-        id: '5',
-        title: 'Lorem Ipsum is s...',
-        description:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        assignees: ['user1', 'user2'],
-        date: new Date('2022-11-12'),
-        progress: 100,
-        totalSubtasks: 3,
-        completedSubtasks: 3,
-      },
-      {
-        id: '6',
-        title: 'Lorem Ipsum is s...',
-        description:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        assignees: ['user1', 'user2'],
-        date: new Date('2022-11-12'),
-        progress: 100,
-        totalSubtasks: 3,
-        completedSubtasks: 3,
-      },
-    ];
   }
 
   // drop(event: CdkDragDrop<Task[]>) {
@@ -194,9 +128,18 @@ export class KanbanComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  addTask(listType: string | null) {
-    // Implement logic to add a new task to the specified list
-    console.log('Adding task to', listType);
+  addTask(listId: string) {
+    // find in lists, then switch isInEditMode to true
+    this.lists = this.lists.map((list) => {
+      if (list.id === listId) {
+        return { ...list, isInEditMode: true };
+      }
+      if (list.isInEditMode) {
+        this.cardName.reset();
+        return { ...list, isInEditMode: false };
+      }
+      return list;
+    });
   }
 
   addNewList() {
@@ -313,5 +256,36 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  createNewTask(listId: string) {
+    if (this.cardName.errors) {
+      return;
+    }
+    this.store.dispatch(
+      listActions.addCard({ card: this.cardName.value!, listId }),
+    );
+    this.cardName.reset();
+    this.lists = this.lists.map((list) => {
+      if (list.id === listId) {
+        return { ...list, isInEditMode: false };
+      }
+      return list;
+    });
+  }
+
+  cancelEdit(listId: string) {
+    this.lists = this.lists.map((list) => {
+      if (list.id === listId) {
+        return { ...list, isInEditMode: false };
+      }
+      return list;
+    });
+  }
+
+  onEnterPress(event: any, listId: string) {
+    if (event.keyCode === 13) {
+      this.createNewTask(listId);
+    }
   }
 }

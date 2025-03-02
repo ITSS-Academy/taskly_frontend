@@ -128,3 +128,51 @@ export const updateCard$ = createEffect(
     functional: true,
   },
 );
+
+export const addCard$ = createEffect(
+  (action$ = inject(Actions), listService = inject(ListService)) => {
+    return action$.pipe(
+      ofType(listActions.addCard),
+      switchMap(({ card, listId }) => {
+        return listService.addTask(card, listId).pipe(
+          map((card: any) => {
+            return listActions.addCardSuccess({ card: card.data[0], listId });
+          }),
+          catchError((error) =>
+            of(
+              listActions.addCardFailure({
+                error: error.message || 'Unknown error',
+              }),
+            ),
+          ),
+        );
+      }),
+    );
+  },
+  {
+    functional: true,
+  },
+);
+
+export const deleteCard$ = createEffect(
+  (action$ = inject(Actions), listService = inject(ListService)) => {
+    return action$.pipe(
+      ofType(listActions.deleteCard),
+      switchMap(({ cardId }) => {
+        return listService.deleteTask(cardId).pipe(
+          map(() => listActions.deleteCardSuccess({ cardId })),
+          catchError((error) =>
+            of(
+              listActions.deleteCardFailure({
+                error: error.message || 'Unknown error',
+              }),
+            ),
+          ),
+        );
+      }),
+    );
+  },
+  {
+    functional: true,
+  },
+);

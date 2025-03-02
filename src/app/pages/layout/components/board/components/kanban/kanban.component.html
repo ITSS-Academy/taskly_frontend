@@ -83,7 +83,37 @@
         @for (card of list.cards; track $index) {
           <app-task [task]="card" cdkDrag></app-task>
         }
+
       </div>
+      @if (!list.isInEditMode) {
+        <button mat-button class="add-task-button" (click)="addTask(list.id!)">
+          <mat-icon>add</mat-icon>
+          Add task
+        </button>
+      } @else {
+        <div class="input-container">
+          <mat-form-field>
+            <mat-label>Input</mat-label>
+            <input matInput [formControl]="cardName" (keydown)="onEnterPress($event,list.id!)">
+          </mat-form-field>
+          <div class="btn-container">
+            <button mat-stroked-button (click)="cancelEdit(list.id!)">Cancel</button>
+            <button mat-button (click)="createNewTask(list.id!)">
+              <mat-icon>add</mat-icon>
+              Add
+            </button>
+          </div>
+
+        </div>
+
+
+      }
     </div>
   }
+  <div class="list-column add-list-column">
+    <button mat-button class="add-list-button" (click)="addNewList()">
+      <mat-icon>add</mat-icon>
+      Add list
+    </button>
+  </div>
 </div>

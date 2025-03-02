@@ -75,4 +75,33 @@ export const deleteListFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const addCard = createAction(
+  '[Card] Add Card',
+  props<{ card: string; listId: string }>(),
+);
+
+export const addCardSuccess = createAction(
+  '[Card] Add Card Success',
+  props<{ card: ListCard; listId: string }>(),
+);
+
+export const addCardFailure = createAction(
+  '[Card] Add Card Failure',
+  props<{ error: string }>(),
+);
+
+export const deleteCard = createAction(
+  '[Card] Delete Card',
+  props<{ cardId: string }>(),
+);
+
+export const deleteCardSuccess = createAction(
+  '[Card] Delete Card Success',
+  props<{ cardId: string }>(),
+);
+
+export const deleteCardFailure = createAction(
+  '[Card] Delete Card Failure',
+  props<{ error: string }>(),
+);
 export const clearListStore = createAction('[List] Clear List Store');

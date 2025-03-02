@@ -23,6 +23,14 @@ const initialState: ListState = {
   isDeletingList: false,
   isDeletingListSuccess: false,
   deleteListError: '',
+
+  isAddingCard: false,
+  isAddingCardSuccess: false,
+  addCardError: '',
+
+  isDeletingCard: false,
+  isDeletingCardSuccess: false,
+  deleteCardError: '',
 };
 
 export const listReducer = createReducer(
@@ -188,5 +196,68 @@ export const listReducer = createReducer(
   on(listActions.clearListStore, (state) => {
     console.log('clearListStore');
     return initialState;
+  }),
+
+  on(listActions.addCard, (state, { card, listId }) => {
+    return {
+      ...state,
+      isAddingCard: true,
+      isAddingCardSuccess: false,
+      addCardError: '',
+    };
+  }),
+  on(listActions.addCardSuccess, (state, { card, listId }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        if (list.id === listId && list.cards) {
+          return { ...list, cards: [...list.cards, card] };
+        }
+        return list;
+      }),
+      isAddingCard: false,
+      isAddingCardSuccess: true,
+      addCardError: '',
+    };
+  }),
+
+  on(listActions.addCardFailure, (state, { error }) => {
+    return {
+      ...state,
+      isAddingCard: false,
+      isAddingCardSuccess: false,
+      addCardError: error,
+    };
+  }),
+
+  on(listActions.deleteCard, (state, { cardId }) => {
+    return {
+      ...state,
+      isDeletingCard: true,
+      isDeletingCardSuccess: false,
+    };
+  }),
+  on(listActions.deleteCardSuccess, (state, { cardId }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        return {
+          ...list,
+          cards: list.cards
+            ? list.cards.filter((card) => card.id !== cardId)
+            : [],
+        };
+      }),
+      isDeletingCard: false,
+      isDeletingCardSuccess: true,
+    };
+  }),
+  on(listActions.deleteCardFailure, (state, { error }) => {
+    return {
+      ...state,
+      isDeletingCard: false,
+      isDeletingCardSuccess: false,
+      deleteCardError: error,
+    };
   }),
 );
