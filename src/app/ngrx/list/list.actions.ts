@@ -38,7 +38,7 @@ export const updatePosition = createAction(
 );
 export const updatePositionSuccess = createAction(
   '[Card] Update Position Success',
-  props<{ list: ListModel[] }>(),
+  props<{ lists: ListModel[] }>(),
 );
 export const updatePositionFailure = createAction(
   '[Card] Update Position Failure',

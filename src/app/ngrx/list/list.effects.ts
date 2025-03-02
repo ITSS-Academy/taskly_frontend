@@ -56,9 +56,9 @@ export const updatePosition$ = createEffect(
       ofType(listActions.updatePosition),
       switchMap(({ list, boardId }) => {
         return listService.updateLists(list, boardId).pipe(
-          map((list: any) => {
-            console.log(list);
-            return listActions.updatePositionSuccess({ list });
+          map((lists: any) => {
+            console.log(lists);
+            return listActions.updatePositionSuccess({ lists });
           }),
           catchError((error) =>
             of(

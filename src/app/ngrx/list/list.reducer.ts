@@ -95,17 +95,29 @@ export const listReducer = createReducer(
       updateListsError: '',
     };
   }),
-  on(listActions.updatePositionSuccess, (state, { list, type }) => {
+  on(listActions.updatePositionSuccess, (state, { lists, type }) => {
     console.log(type);
-    console.log(list);
+    console.log(lists);
+
+    // Giữ lại những card trong lists
+    const newList = lists.map((list) => {
+      if (state.lists) {
+        const foundList = state.lists.find((l) => l.id === list.id);
+        const cards = foundList ? foundList.cards : []; // Nếu không tìm thấy, gán rỗng
+        return { ...list, cards };
+      }
+      return list;
+    });
+
     return {
       ...state,
-      lists: list,
+      lists: newList, // Cập nhật lại danh sách mới
       isUpdatingLists: false,
       isUpdatingListsSuccess: true,
       updateListsError: '',
     };
   }),
+
   on(listActions.updatePositionFailure, (state, { error, type }) => {
     return {
       ...state,
