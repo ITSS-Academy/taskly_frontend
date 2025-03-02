@@ -8,8 +8,8 @@ export const addList$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.addNewList),
-      switchMap(({ list, boardId }) => {
-        return listService.addNewList(list, boardId).pipe(
+      switchMap(({ listName, boardId }) => {
+        return listService.addNewList(listName, boardId).pipe(
           map((list: any) => listActions.addNewListSuccess({ list })),
           catchError((error) =>
             of(

@@ -35,7 +35,7 @@ const initialState: ListState = {
 
 export const listReducer = createReducer(
   initialState,
-  on(listActions.addNewList, (state, { type, list, boardId }) => {
+  on(listActions.addNewList, (state, { type, listName, boardId }) => {
     console.log(type);
     return {
       ...state,

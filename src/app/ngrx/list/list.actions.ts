@@ -3,7 +3,7 @@ import { ListCard, ListModel } from '../../models/list.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
-  props<{ list: ListModel; boardId: string }>(),
+  props<{ listName: string; boardId: string }>(),
 );
 export const addNewListSuccess = createAction(
   '[List] Add New List Success',

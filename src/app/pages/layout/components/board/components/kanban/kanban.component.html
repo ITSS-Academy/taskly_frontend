@@ -71,12 +71,18 @@
 >
   @for (list of lists; track $index) {
     <div class="list-column" cdkDrag>
-      <h2>{{ list.title }}</h2>
+      <div class="list-header">
+        <h2>{{ list.title }}</h2>
+
+        <button mat-icon-button (click)="removeList(list.id!)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
 
       <div
         cdkDropList
         (cdkDropListDropped)="onCardDrop($event)"
-        [cdkDropListData]="list.cards"
+        [cdkDropListData]="list.cards || []"
         [id]="indexToString($index)"
         class="task-list">
 
@@ -110,10 +116,30 @@
       }
     </div>
   }
-  <div class="list-column add-list-column">
-    <button mat-button class="add-list-button" (click)="addNewList()">
-      <mat-icon>add</mat-icon>
-      Add list
-    </button>
-  </div>
+  @if (!isAddingList) {
+    <div class="list-column add-list-column">
+      <button mat-button class="add-list-button" (click)="onBtnAddList()">
+        <mat-icon>add</mat-icon>
+        Add list
+      </button>
+    </div>
+  } @else {
+    <div>
+      <div class="addlist-container">
+        <mat-form-field>
+          <mat-label>Input</mat-label>
+          <input matInput [formControl]="listName">
+        </mat-form-field>
+        <div class="btn-container">
+          <button mat-stroked-button (click)="cancelAddList()">Cancel</button>
+          <button mat-flat-button (click)="addNewList()">
+            <mat-icon>add</mat-icon>
+            Add
+          </button>
+        </div>
+      </div>
+
+
+    </div>
+  }
 </div>

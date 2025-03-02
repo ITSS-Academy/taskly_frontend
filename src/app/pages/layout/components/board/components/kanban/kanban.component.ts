@@ -69,8 +69,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
   board$!: Observable<BoardModel | null>;
   lists: (ListModel & { isInEditMode?: boolean })[] = [];
   boardId!: string;
+  isAddingList = false;
 
   cardName = new FormControl('', [Validators.required]);
+  listName = new FormControl('', [Validators.required]);
 
   subscriptions: Subscription[] = [];
 
@@ -99,35 +101,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.board$ = this.store.select('board', 'board');
   }
 
-  // drop(event: CdkDragDrop<Task[]>) {
-  //   if (event.previousContainer === event.container) {
-  //     moveItemInArray(
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex,
-  //     );
-  //   } else {
-  //     transferArrayItem(
-  //       event.previousContainer.data,
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex,
-  //     );
-  //
-  //     // Update task status based on the new container
-  //     const movedTask = event.container.data[event.currentIndex];
-  //     if (event.container.id === 'todo-list') {
-  //       // Update progress logic for todo items
-  //     } else if (event.container.id === 'in-progress-list') {
-  //       // Update progress logic for in-progress items
-  //     } else if (event.container.id === 'done-list') {
-  //       // Update progress logic for done items
-  //       movedTask.progress = 100;
-  //       movedTask.completedSubtasks = movedTask.totalSubtasks;
-  //     }
-  //   }
-  // }
-
   addTask(listId: string) {
     // find in lists, then switch isInEditMode to true
     this.lists = this.lists.map((list) => {
@@ -143,8 +116,12 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   addNewList() {
-    // Implement logic to add a new list column
-    console.log('Adding new list');
+    this.store.dispatch(
+      listActions.addNewList({
+        listName: this.listName.value!,
+        boardId: this.boardId,
+      }),
+    );
   }
 
   onColumnDrop($event: CdkDragDrop<any>) {
@@ -180,9 +157,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected readonly of = of;
-
-  onCardDrop(event: CdkDragDrop<any[] | null, any>) {
+  onCardDrop(event: CdkDragDrop<any[], any>) {
     console.log(event);
 
     //get list Index
@@ -225,6 +200,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       const previousContainer = [
         ...event.previousContainer.data.map((item: any) => ({ ...item })),
       ];
+      console.log(event.container!.data);
       const container = [
         ...event.container!.data!.map((item: any) => ({ ...item })),
       ];
@@ -252,10 +228,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   indexToString(index: number): string {
     return index.toString();
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   createNewTask(listId: string) {
@@ -287,5 +259,21 @@ export class KanbanComponent implements OnInit, OnDestroy {
     if (event.keyCode === 13) {
       this.createNewTask(listId);
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  cancelAddList() {
+    this.isAddingList = false;
+  }
+
+  onBtnAddList() {
+    this.isAddingList = true;
+  }
+
+  removeList(listId: string) {
+    this.store.dispatch(listActions.deleteList({ listId }));
   }
 }

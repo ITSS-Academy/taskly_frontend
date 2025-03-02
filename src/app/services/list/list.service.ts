@@ -21,11 +21,11 @@ export class ListService {
     });
   }
 
-  addNewList(list: ListModel, boardId: string) {
+  addNewList(listName: string, boardId: string) {
     return this.httpClient.post(
       `http://localhost:3000/list/new-list`,
       {
-        list,
+        listName,
         boardId,
       },
       { headers: { Authorization: this.accesToken } },
