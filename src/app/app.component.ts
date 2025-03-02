@@ -25,6 +25,7 @@ export class AppComponent {
       if (user) {
         this.router.navigate(['/home']);
         const token = await user.getIdToken();
+        console.log(token)
         this.store.dispatch(authActions.storeAccessToken({accessToken: token}));
       } else {
         console.log('UserModel is logged out');

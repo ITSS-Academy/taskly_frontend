@@ -1,5 +1,5 @@
-import {ListState} from './list.state';
-import {createReducer, on} from '@ngrx/store';
+import { ListState } from './list.state';
+import { createReducer, on } from '@ngrx/store';
 import * as listActions from './list.actions';
 
 const initialState: ListState = {
@@ -22,152 +22,159 @@ const initialState: ListState = {
 
   isDeletingList: false,
   isDeletingListSuccess: false,
-  deleteListError: ''
+  deleteListError: '',
 };
 
 export const listReducer = createReducer(
   initialState,
-  on(listActions.addNewList, (state, {type, list, boardId}) => {
-    console.log(type)
+  on(listActions.addNewList, (state, { type, list, boardId }) => {
+    console.log(type);
     return {
       ...state,
       isAddingList: true,
       isAddingListSuccess: false,
-      addListError: ''
+      addListError: '',
     };
   }),
-  on(listActions.addNewListSuccess, (state, {list}) => {
+  on(listActions.addNewListSuccess, (state, { list }) => {
     return {
       ...state,
       lists: [...state.lists, list],
       isAddingList: false,
       isAddingListSuccess: true,
-      addListError: ''
+      addListError: '',
     };
   }),
-  on(listActions.addNewListFailure, (state, {error}) => {
+  on(listActions.addNewListFailure, (state, { error }) => {
     return {
       ...state,
       isAddingList: false,
       isAddingListSuccess: false,
-      addListError: error
+      addListError: error,
     };
   }),
-  on(listActions.storeLists, (state, {lists}) => {
+  on(listActions.storeLists, (state, { lists }) => {
     return {
       ...state,
       lists: lists,
     };
   }),
-  on(listActions.getLists, (state, {type, boardId}) => {
+  on(listActions.getLists, (state, { type, boardId }) => {
     return {
       ...state,
       isGettingLists: true,
       isGettingListsSuccess: false,
-      getListsError: ''
+      getListsError: '',
     };
   }),
-  on(listActions.getListsSuccess, (state, {type, lists}) => {
-    console.log(type)
+  on(listActions.getListsSuccess, (state, { type, lists }) => {
+    console.log(type);
+    console.log(lists);
     return {
       ...state,
       lists: lists,
       isGettingLists: false,
       isGettingListsSuccess: true,
-      getListsError: ''
+      getListsError: '',
     };
   }),
-  on(listActions.getListsFailure, (state, {error}) => {
+  on(listActions.getListsFailure, (state, { error }) => {
     return {
       ...state,
       isGettingLists: false,
       isGettingListsSuccess: false,
-      getListsError: error
+      getListsError: error,
     };
   }),
-  on(listActions.updatePosition, (state, {type, list, boardId}) => {
-    console.log(type)
+  on(listActions.updatePosition, (state, { type, list, boardId }) => {
+    console.log(type);
     return {
       ...state,
       isUpdatingLists: true,
       isUpdatingListsSuccess: false,
-      updateListsError: ''
+      updateListsError: '',
     };
   }),
-  on(listActions.updatePositionSuccess, (state, {list, type}) => {
-    console.log(type)
-    console.log(list)
+  on(listActions.updatePositionSuccess, (state, { list, type }) => {
+    console.log(type);
+    console.log(list);
     return {
       ...state,
       lists: list,
       isUpdatingLists: false,
       isUpdatingListsSuccess: true,
-      updateListsError: ''
+      updateListsError: '',
     };
   }),
-  on(listActions.updatePositionFailure, (state, {error, type}) => {
+  on(listActions.updatePositionFailure, (state, { error, type }) => {
     return {
       ...state,
       isUpdatingLists: false,
       isUpdatingListsSuccess: false,
-      updateListsError: error
+      updateListsError: error,
     };
   }),
-  on(listActions.updateCard, (state, {type, previousList, list, boardId}) => {
-    console.log(type)
-    console.log(previousList)
-    console.log(list)
+
+  on(listActions.updateCard, (state, { type }) => {
     return {
       ...state,
-      isUpdatingLists: false,
       isUpdatingCard: true,
       isUpdatingCardSuccess: false,
-      updateCardError: ''
+      updateCardError: '',
     };
   }),
-  on(listActions.updateCardSuccess, (state, {list, type}) => {
-    console.log(type)
-    console.log(list)
+  on(listActions.updateCardSuccess, (state, { cards, listId, cardId }) => {
+    console.log(cards);
+
     return {
       ...state,
+      lists: state.lists.map((list) => {
+        if (list.id === listId) {
+          return { ...list, cards };
+        } else {
+          return {
+            ...list,
+            cards: list.cards
+              ? list.cards.filter((card) => card.id !== cardId)
+              : [],
+          };
+        }
+      }),
       isUpdatingCardSuccess: true,
       isUpdatingCard: false,
     };
   }),
-  on(listActions.updateCardFailure, (state, {error, type}) => {
-    return {
-      ...state,
-      isUpdatingCard: false,
-      isUpdatingCardSuccess: false,
-      updateCardError: error
-    };
-  }),
-  on(listActions.deleteList, (state, {type, listId}) => {
-    console.log(type)
-    console.log(state)
+
+  on(listActions.deleteList, (state, { type, listId }) => {
+    console.log(type);
+    console.log(state);
     return {
       ...state,
       isDeletingList: true,
       isDeletingListSuccess: false,
-      deleteListError: ''
+      deleteListError: '',
     };
   }),
-  on(listActions.deleteListSuccess, (state, {listId, type}) => {
-    console.log(type)
+  on(listActions.deleteListSuccess, (state, { listId, type }) => {
+    console.log(type);
     return {
       ...state,
-      lists: state.lists.filter(list => list.id !== listId),
+      lists: state.lists.filter((list) => list.id !== listId),
       isDeletingList: false,
       isDeletingListSuccess: true,
-      deleteListError: ''
+      deleteListError: '',
     };
   }),
-  on(listActions.deleteListFailure, (state, {error, type}) => {
+  on(listActions.deleteListFailure, (state, { error, type }) => {
     return {
       ...state,
       isDeletingList: false,
       isDeletingListSuccess: false,
-      deleteListError: error
+      deleteListError: error,
     };
   }),
-)
+  on(listActions.clearListStore, (state) => {
+    console.log('clearListStore');
+    return initialState;
+  }),
+);

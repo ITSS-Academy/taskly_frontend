@@ -61,33 +61,29 @@
 <!--  </div>-->
 <!--</div>-->
 
-<div class="kanban-container">
-  <div class="list-container">
-    @for (list of (lists$ | async); track $index) {
-      <div class="list-column">
-        <h2>{{ list.title }}</h2>
-        <div
-          cdkDropList
-          [cdkDropListData]="list.cards"
-          cdkDropListGroup
-          class="task-list"
-        >
-          @for (task of list.cards; track $index) {
-            <app-task
-              [task]="task"
-              cdkDrag
-            ></app-task>
-          }
-        </div>
-        <button
-          mat-button
-          class="add-task-button"
-          (click)="addTask(list.id)"
-        >
-          <mat-icon>add</mat-icon>
-          Add task
-        </button>
+<div
+  cdkDropList
+  cdkDropListGroup
+  cdkDropListOrientation="horizontal"
+  [cdkDropListData]="lists"
+  (cdkDropListDropped)="this.onColumnDrop($event)"
+  class="list-container"
+>
+  @for (list of lists; track $index) {
+    <div class="list-column" cdkDrag>
+      <h2>{{ list.title }}</h2>
+
+      <div
+        cdkDropList
+        (cdkDropListDropped)="onCardDrop($event)"
+        [cdkDropListData]="list.cards"
+        [id]="indexToString($index)"
+        class="task-list">
+
+        @for (card of list.cards; track $index) {
+          <app-task [task]="card" cdkDrag></app-task>
+        }
       </div>
-    }
-  </div>
+    </div>
+  }
 </div>
