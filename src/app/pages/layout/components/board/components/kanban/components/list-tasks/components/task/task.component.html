@@ -1,4 +1,4 @@
-<div class="task-card">
+<div class="task-card" (click)="openDialog()">
   <div class="task-header">
     <div class="assignees">
       <div class="avatar" *for="let assignee of ['user1', 'user2']; let i = index" [style.zIndex]="100-i">
