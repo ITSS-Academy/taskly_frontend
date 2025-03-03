@@ -1,0 +1,102 @@
+<div class="task-description-overlay"  (click)="onClose()">
+  <div class="task-description-container" (click)="$event.stopPropagation()">
+    <div class="task-description-header">
+      <h2>Task description</h2>
+      <button mat-icon-button class="close-button" (click)="onClose()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="task-description-content">
+      <!-- Title -->
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="task.title" class="title-input">
+      </div>
+
+      <!-- Tags Button -->
+      <div class="form-group">
+        <button mat-stroked-button class="tag-button">
+          <mat-icon>tag</mat-icon> Tags
+        </button>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea [(ngModel)]="task.description" placeholder="Insert your notes here..." class="notes-textarea"></textarea>
+      </div>
+
+      <!-- Assignee -->
+      <div class="form-group">
+        <label>Assignee</label>
+        <div class="assignees-container">
+          <div class="assignee-chip" *ngFor="let assignee of task.assignees">
+            <div class="assignee-avatar">
+              <mat-icon>account_circle</mat-icon>
+            </div>
+            <span class="assignee-name">{{ assignee }}</span>
+          </div>
+          <button mat-stroked-button class="add-assignee-button">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="form-group">
+        <div class="tags-date-row">
+          <div class="tags-section">
+            <label>Tags</label>
+            <div class="tags-container">
+              <div class="tag" *ngFor="let tag of task.tags">
+                {{ tag }}
+                <mat-icon class="remove-tag" (click)="removeTag(tag)">close</mat-icon>
+              </div>
+              <div class="add-tag-container">
+                <input type="text" [(ngModel)]="newTag" placeholder="Add tag..." class="add-tag-input" (keyup.enter)="addTag()">
+                <button mat-icon-button class="add-tag-button" (click)="addTag()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="date-section">
+            <label>Date</label>
+            <input type="date" [ngModel] ="task.date | date:'yyyy-MM-dd'" (ngModelChange)="task.date = $event" class="date-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist -->
+      <div class="form-group">
+        <label>Checklist</label>
+        <div class="checklist-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="(task.completedSubtasks / task.totalSubtasks) * 100 || 0"></div>
+          </div>
+          <div class="progress-text">{{ task.completedSubtasks }}/{{ task.totalSubtasks }}</div>
+        </div>
+        <div class="add-subtask-container">
+          <input type="text" [(ngModel)]="newSubtask" placeholder="Add new subtask" class="add-subtask-input" (keyup.enter)="addSubtask()">
+          <button mat-icon-button class="add-subtask-button" (click)="addSubtask()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <div class="form-group">
+        <label>Comments</label>
+        <textarea placeholder="Add your comment..." class="comments-textarea"></textarea>
+      </div>
+    </div>
+
+    <div class="task-description-footer">
+      <button mat-button class="cancel-button" (click)="onClose()">Cancel</button>
+      <button mat-raised-button color="primary" class="save-button" (click)="saveChanges()">Save</button>
+    </div>
+  </div>
+</div>
