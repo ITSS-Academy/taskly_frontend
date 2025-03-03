@@ -4,7 +4,7 @@
       <div class="avatar" *for="let assignee of ['user1', 'user2']; let i = index" [style.zIndex]="100-i">
         <mat-icon>account_circle</mat-icon>
       </div>
-      <div class="more-assignees" *ngIf="task.assignees.length > 2">+{{task.assignees.length - 2}}</div>
+      <!--      <div class="more-assignees" *ngIf="task.assignees.length > 2">+{{task.assignees.length - 2}}</div>-->
     </div>
     <button mat-icon-button class="close-button" (click)="closeTask()">
       <mat-icon>close</mat-icon>
@@ -12,23 +12,23 @@
   </div>
 
   <div class="task-title">
-    {{task.title}}
+    {{ task.title }}
   </div>
 
   <div class="progress-container">
     <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="task.progress" [style.background-color]="getProgressColor()"></div>
+      <!--      <div class="progress-fill" [style.width.%]="task.progress" [style.background-color]="getProgressColor()"></div>-->
     </div>
   </div>
 
   <div class="task-footer">
     <div class="task-date">
-      {{task.date | date:'d MMM yyyy'}}
+      {{ task.dueDate | date:'d MMM yyyy' }}
     </div>
     <div class="task-status">
-      <mat-checkbox [checked]="task.completedSubtasks === task.totalSubtasks" [disabled]="true" *ngIf="task.completedSubtasks === task.totalSubtasks"></mat-checkbox>
-      <span *ngIf="task.completedSubtasks !== task.totalSubtasks">☐</span>
-      {{task.completedSubtasks}}/{{task.totalSubtasks}}
+      <!--      <mat-checkbox [checked]="task.checklistItems === task.totalSubtasks" [disabled]="true" *ngIf="task.completedSubtasks === task.totalSubtasks"></mat-checkbox>-->
+      <!--      <span *ngIf="task.completedSubtasks !== task.totalSubtasks">☐</span>-->
+      <!--      {{task.completedSubtasks}}/{{task.totalSubtasks}}-->
     </div>
   </div>
 </div>

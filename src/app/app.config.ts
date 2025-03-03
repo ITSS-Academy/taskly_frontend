@@ -14,18 +14,22 @@ import {boardReducer} from './ngrx/board/board.reducer';
 import * as boardEffects from './ngrx/board/board.effects';
 import {userReducer} from './ngrx/user/user.reducer';
 import * as userEffects from './ngrx/user/user.effects';
+import {listReducer} from './ngrx/list/list.reducer';
+import * as listEffects from './ngrx/list/list.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({eventCoalescing: true}), provideHttpClient(), provideRouter(routes), provideAnimationsAsync(),
     provideStore({
       auth: authReducer,
       board: boardReducer,
-      user: userReducer
+      user: userReducer,
+      list: listReducer
     }),
     provideEffects([
       authEffects,
       boardEffects,
-      userEffects
+      userEffects,
+      listEffects
     ]),
     provideFirebaseApp(() => initializeApp({
       "projectId": "kanban-246",

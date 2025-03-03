@@ -1,5 +1,5 @@
-import {ListState} from './list.state';
-import {createReducer, on} from '@ngrx/store';
+import { ListState } from './list.state';
+import { createReducer, on } from '@ngrx/store';
 import * as listActions from './list.actions';
 
 const initialState: ListState = {
@@ -22,151 +22,242 @@ const initialState: ListState = {
 
   isDeletingList: false,
   isDeletingListSuccess: false,
-  deleteListError: ''
+  deleteListError: '',
+
+  isAddingCard: false,
+  isAddingCardSuccess: false,
+  addCardError: '',
+
+  isDeletingCard: false,
+  isDeletingCardSuccess: false,
+  deleteCardError: '',
 };
 
 export const listReducer = createReducer(
   initialState,
-  on(listActions.addNewList, (state, {type, list, boardId}) => {
-    console.log(type)
+  on(listActions.addNewList, (state, { type, listName, boardId }) => {
+    console.log(type);
     return {
       ...state,
       isAddingList: true,
       isAddingListSuccess: false,
-      addListError: ''
+      addListError: '',
     };
   }),
-  on(listActions.addNewListSuccess, (state, {list}) => {
+  on(listActions.addNewListSuccess, (state, { list }) => {
     return {
       ...state,
       lists: [...state.lists, list],
       isAddingList: false,
       isAddingListSuccess: true,
-      addListError: ''
+      addListError: '',
     };
   }),
-  on(listActions.addNewListFailure, (state, {error}) => {
+  on(listActions.addNewListFailure, (state, { error }) => {
     return {
       ...state,
       isAddingList: false,
       isAddingListSuccess: false,
-      addListError: error
+      addListError: error,
     };
   }),
-  on(listActions.storeLists, (state, {lists}) => {
+  on(listActions.storeLists, (state, { lists }) => {
     return {
       ...state,
       lists: lists,
     };
   }),
-  on(listActions.getLists, (state, {type, boardId}) => {
+  on(listActions.getLists, (state, { type, boardId }) => {
     return {
       ...state,
       isGettingLists: true,
       isGettingListsSuccess: false,
-      getListsError: ''
+      getListsError: '',
     };
   }),
-  on(listActions.getListsSuccess, (state, {lists}) => {
+  on(listActions.getListsSuccess, (state, { type, lists }) => {
+    console.log(type);
+    console.log(lists);
     return {
       ...state,
       lists: lists,
       isGettingLists: false,
       isGettingListsSuccess: true,
-      getListsError: ''
+      getListsError: '',
     };
   }),
-  on(listActions.getListsFailure, (state, {error}) => {
+  on(listActions.getListsFailure, (state, { error }) => {
     return {
       ...state,
       isGettingLists: false,
       isGettingListsSuccess: false,
-      getListsError: error
+      getListsError: error,
     };
   }),
-  on(listActions.updatePosition, (state, {type, list, boardId}) => {
-    console.log(type)
+  on(listActions.updatePosition, (state, { type, list, boardId }) => {
+    console.log(type);
     return {
       ...state,
       isUpdatingLists: true,
       isUpdatingListsSuccess: false,
-      updateListsError: ''
+      updateListsError: '',
     };
   }),
-  on(listActions.updatePositionSuccess, (state, {list, type}) => {
-    console.log(type)
-    console.log(list)
+  on(listActions.updatePositionSuccess, (state, { lists, type }) => {
+    console.log(type);
+    console.log(lists);
+
+    // Giữ lại những card trong lists
+    const newList = lists.map((list) => {
+      if (state.lists) {
+        const foundList = state.lists.find((l) => l.id === list.id);
+        const cards = foundList ? foundList.cards : []; // Nếu không tìm thấy, gán rỗng
+        return { ...list, cards };
+      }
+      return list;
+    });
+
     return {
       ...state,
-      lists: list,
+      lists: newList, // Cập nhật lại danh sách mới
       isUpdatingLists: false,
       isUpdatingListsSuccess: true,
-      updateListsError: ''
+      updateListsError: '',
     };
   }),
-  on(listActions.updatePositionFailure, (state, {error, type}) => {
+
+  on(listActions.updatePositionFailure, (state, { error, type }) => {
     return {
       ...state,
       isUpdatingLists: false,
       isUpdatingListsSuccess: false,
-      updateListsError: error
+      updateListsError: error,
     };
   }),
-  on(listActions.updateCard, (state, {type, previousList, list, boardId}) => {
-    console.log(type)
-    console.log(previousList)
-    console.log(list)
+
+  on(listActions.updateCard, (state, { type }) => {
     return {
       ...state,
-      isUpdatingLists: false,
       isUpdatingCard: true,
       isUpdatingCardSuccess: false,
-      updateCardError: ''
+      updateCardError: '',
     };
   }),
-  on(listActions.updateCardSuccess, (state, {list, type}) => {
-    console.log(type)
-    console.log(list)
+  on(listActions.updateCardSuccess, (state, { cards, listId, cardId }) => {
+    console.log(cards);
+
     return {
       ...state,
+      lists: state.lists.map((list) => {
+        if (list.id === listId) {
+          return { ...list, cards };
+        } else {
+          return {
+            ...list,
+            cards: list.cards
+              ? list.cards.filter((card) => card.id !== cardId)
+              : [],
+          };
+        }
+      }),
       isUpdatingCardSuccess: true,
       isUpdatingCard: false,
     };
   }),
-  on(listActions.updateCardFailure, (state, {error, type}) => {
-    return {
-      ...state,
-      isUpdatingCard: false,
-      isUpdatingCardSuccess: false,
-      updateCardError: error
-    };
-  }),
-  on(listActions.deleteList, (state, {type, listId}) => {
-    console.log(type)
-    console.log(state)
+
+  on(listActions.deleteList, (state, { type, listId }) => {
+    console.log(type);
+    console.log(state);
     return {
       ...state,
       isDeletingList: true,
       isDeletingListSuccess: false,
-      deleteListError: ''
+      deleteListError: '',
     };
   }),
-  on(listActions.deleteListSuccess, (state, {listId, type}) => {
-    console.log(type)
+  on(listActions.deleteListSuccess, (state, { listId, type }) => {
+    console.log(type);
     return {
       ...state,
-      lists: state.lists.filter(list => list.id !== listId),
+      lists: state.lists.filter((list) => list.id !== listId),
       isDeletingList: false,
       isDeletingListSuccess: true,
-      deleteListError: ''
+      deleteListError: '',
     };
   }),
-  on(listActions.deleteListFailure, (state, {error, type}) => {
+  on(listActions.deleteListFailure, (state, { error, type }) => {
     return {
       ...state,
       isDeletingList: false,
       isDeletingListSuccess: false,
-      deleteListError: error
+      deleteListError: error,
     };
   }),
-)
+  on(listActions.clearListStore, (state) => {
+    console.log('clearListStore');
+    return initialState;
+  }),
+
+  on(listActions.addCard, (state, { card, listId }) => {
+    return {
+      ...state,
+      isAddingCard: true,
+      isAddingCardSuccess: false,
+      addCardError: '',
+    };
+  }),
+  on(listActions.addCardSuccess, (state, { card, listId }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        if (list.id === listId && list.cards) {
+          return { ...list, cards: [...list.cards, card] };
+        }
+        return list;
+      }),
+      isAddingCard: false,
+      isAddingCardSuccess: true,
+      addCardError: '',
+    };
+  }),
+
+  on(listActions.addCardFailure, (state, { error }) => {
+    return {
+      ...state,
+      isAddingCard: false,
+      isAddingCardSuccess: false,
+      addCardError: error,
+    };
+  }),
+
+  on(listActions.deleteCard, (state, { cardId }) => {
+    return {
+      ...state,
+      isDeletingCard: true,
+      isDeletingCardSuccess: false,
+    };
+  }),
+  on(listActions.deleteCardSuccess, (state, { cardId }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        return {
+          ...list,
+          cards: list.cards
+            ? list.cards.filter((card) => card.id !== cardId)
+            : [],
+        };
+      }),
+      isDeletingCard: false,
+      isDeletingCardSuccess: true,
+    };
+  }),
+  on(listActions.deleteCardFailure, (state, { error }) => {
+    return {
+      ...state,
+      isDeletingCard: false,
+      isDeletingCardSuccess: false,
+      deleteCardError: error,
+    };
+  }),
+);
