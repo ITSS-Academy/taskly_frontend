@@ -21,7 +21,8 @@ export class BackgroundComponent {
   constructor(
     private backgroundColorService: BackgroundColorService,
     private dialogRef: MatDialogRef<BackgroundComponent>,// Inject MatDialogRef
-    private store: Store<{ auth: AuthState }>
+    private store: Store<{ auth: AuthState }>,
+    private storeBoard: Store<{ board: BoardModel }>
   ) {
   }
 

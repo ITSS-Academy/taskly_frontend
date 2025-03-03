@@ -9,15 +9,15 @@ import {BackgroundComponent} from '../background/background.component';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
 import {NgStyle} from '@angular/common';
 import {FilterComponent} from '../filter/filter.component';
-import {LogoutComponent} from '../logout/logout.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {BoardState} from '../../ngrx/board/board.state';
+import {LogoutButtonComponent} from '../logout-button/logout-button.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [MaterialModule, FormsModule, NotificationsButtonComponent, NgStyle],
+  imports: [MaterialModule, FormsModule, NotificationsButtonComponent, NgStyle, LogoutButtonComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
@@ -39,6 +39,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
               private store: Store<{ board: BoardState }>) {
     this.store.select('board', 'board').subscribe((board) => {
       if (board) {
+        console.log(board);
         this.id = board.id!;
         this.inputValue = board.name!;
       }
@@ -106,14 +107,6 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openLogoutDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.backgroundDialog.open(LogoutComponent, {
-      // width: '250px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
-  }
-  
   routeKanban() {
     console.log(this.id);
     this.router.navigate(['/board/kanban', this.id]);
@@ -123,5 +116,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     console.log(this.id);
     this.router.navigate(['/board/table', this.id]);
   }
+
+
 }
 

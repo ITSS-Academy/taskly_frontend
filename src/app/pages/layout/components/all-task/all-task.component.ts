@@ -21,7 +21,7 @@ import {HomeNavComponent} from '../home/components/home-nav/home-nav.component';
   templateUrl: './all-task.component.html',
   styleUrl: './all-task.component.scss',
 })
-export class AllTaskComponent implements OnInit, AfterViewInit {
+export class AllTaskComponent implements AfterViewInit {
   displayedColumns: string[] = ['title', 'list', 'member', 'tags', 'note'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   readonly panelOpenState = signal(false);
@@ -33,18 +33,6 @@ export class AllTaskComponent implements OnInit, AfterViewInit {
   }
 
   selected = 'option2';
-
-  backgroundImage: string | null =
-    'https://images.unsplash.com/photo-1542435503-956c469947f6?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVza3RvcHxlbnwwfHwwfHx8MA%3D%3D';
-
-  constructor(private backgroundService: BackgroundColorService) {
-  }
-
-  ngOnInit(): void {
-    this.backgroundService.backgroundImage$.subscribe((imageUrl) => {
-      this.backgroundImage = imageUrl;
-    });
-  }
 }
 
 export interface PeriodicElement {

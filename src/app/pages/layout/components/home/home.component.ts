@@ -25,14 +25,10 @@ import {logout} from '../../../../ngrx/auth/auth.actions';
 export class HomeComponent {
   isSlideBarVisible = false;
 
-  constructor(private store: Store<{ auth: AuthState }>) {
+  constructor() {
   }
 
   onLinkActivated(): void {
     this.isSlideBarVisible = false;
-  }
-
-  logout() {
-    this.store.dispatch(logout());
   }
 }
