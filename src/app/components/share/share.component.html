@@ -3,10 +3,33 @@
   <mat-dialog-content>
     <div class="share">
       <div class="example-form">
-        <mat-form-field class="example-full-width">
+        <!--        <mat-form-field class="example-full-width">-->
+        <!--          <mat-label>Invite members</mat-label>-->
+        <!--          <input matInput placeholder="Member email" [(ngModel)]="userName" (input)="onUserNameChange()">-->
+        <!--        </mat-form-field>-->
+        <mat-form-field class="example-chip-list">
           <mat-label>Invite members</mat-label>
-          <input matInput placeholder="Member email" [(ngModel)]="userName" (input)="onUserNameChange()">
+          <mat-chip-grid #chipGrid aria-label="Enter fruits">
+            @for (user of this.users(); track $index) {
+              <mat-chip-row
+                [editable]="false"
+              >
+                {{ user.name }}
+                <button matChipRemove [attr.aria-label]="'remove ' + user.name">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
+            <input
+              matInput placeholder="Member email"
+              [(ngModel)]="userName"
+              (input)="onUserNameChange()"
+              [matChipInputFor]="chipGrid"
+              (keydown)="add($event)"
+            />
+          </mat-chip-grid>
         </mat-form-field>
+
         <button mat-flat-button class="share-btn">Share</button>
       </div>
 
