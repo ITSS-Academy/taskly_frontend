@@ -34,7 +34,7 @@ export class BoardService {
   }
 
   getAllBoards() {
-    return this.httpClient.get('http://localhost:3000/board/get-all-by-uid', {headers: {Authorization: this.accessToken}});
+    return this.httpClient.get('http://192.168.68.66:3000/board/get-all-by-uid', {headers: {Authorization: this.accessToken}});
   }
 
   getBoard(id: string): Observable<any> {
