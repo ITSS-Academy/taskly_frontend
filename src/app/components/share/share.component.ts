@@ -15,6 +15,8 @@ import {MaterialModule} from '../../shared/modules/material.module';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatChipEditedEvent, MatChipInputEvent} from '@angular/material/chips';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component';
 
 export interface Fruit {
   name: string;
@@ -115,6 +117,16 @@ export class ShareComponent implements OnInit, OnDestroy {
       users.splice(index, 1);
       this.announcer.announce(`Removed ${user.name}`);
       return [...users];
+    });
+  }
+
+  private _snackBar = inject(MatSnackBar);
+
+  durationInSeconds = 5;
+
+  openSnackBar() {
+    this._snackBar.openFromComponent(ShareSnackbarComponent, {
+      duration: this.durationInSeconds * 1000,
     });
   }
 
