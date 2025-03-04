@@ -26,6 +26,11 @@ export class AllTaskComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   readonly panelOpenState = signal(false);
 
+  constructor(private backgroundService: BackgroundColorService) {
+    this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
+    this.backgroundService.setSidebarColor('rgb(245, 255, 248)');
+  }
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {

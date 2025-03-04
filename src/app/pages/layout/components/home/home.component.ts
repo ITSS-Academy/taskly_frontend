@@ -8,6 +8,7 @@ import {AuthState} from '../../../../ngrx/auth/auth.state';
 import {Store} from '@ngrx/store';
 import * as authActions from '../../../../ngrx/auth/auth.actions';
 import {logout} from '../../../../ngrx/auth/auth.actions';
+import {BackgroundColorService} from '../../../../services/background-color/background-color.service';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,10 @@ import {logout} from '../../../../ngrx/auth/auth.actions';
 export class HomeComponent {
   isSlideBarVisible = false;
 
-  constructor() {
+  constructor(private backgroundService: BackgroundColorService,
+              private store: Store<{ auth: AuthState }>) {
+    this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
+    this.backgroundService.setSidebarColor('rgb(245, 255, 248)');
   }
 
   onLinkActivated(): void {

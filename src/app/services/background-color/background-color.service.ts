@@ -23,6 +23,8 @@ export class BackgroundColorService {
 
     // Determine the best text color for contrast
     const textColor = this.getContrastingColor(color);
+    console.log(color)
+    console.log('Sidebar Text Color:', textColor);
     this.textColorSource.next(textColor);
   }
 
