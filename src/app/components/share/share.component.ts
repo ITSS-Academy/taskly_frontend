@@ -1,30 +1,31 @@
-import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {MatFormField} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {FormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogTitle
+  MatDialogTitle,
 } from '@angular/material/dialog';
-import {NotificationsComponent} from '../notifications/notifications.component';
-import {UserState} from '../../ngrx/user/user.state';
-import {Store} from '@ngrx/store';
-import {debounceTime, Observable, Subject, Subscription} from 'rxjs';
+import { NotificationsComponent } from '../notifications/notifications.component';
+import { UserState } from '../../ngrx/user/user.state';
+import { Store } from '@ngrx/store';
+import { debounceTime, Observable, Subject, Subscription } from 'rxjs';
 import * as userActions from '../../ngrx/user/user.actions';
-import {UserModel} from '../../models/user.model';
-import {AsyncPipe} from '@angular/common';
-import {MaterialModule} from '../../shared/modules/material.module';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {MatChipEditedEvent, MatChipInputEvent} from '@angular/material/chips';
+import { UserModel } from '../../models/user.model';
+import { AsyncPipe } from '@angular/common';
+import { MaterialModule } from '../../shared/modules/material.module';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.component';
+import { NotificationsState } from '../../ngrx/notifications/notifications.state';
 
 export interface Fruit {
   name: string;
@@ -33,26 +34,26 @@ export interface Fruit {
 @Component({
   selector: 'app-share',
   standalone: true,
-  imports: [
-    MaterialModule,
-    AsyncPipe,
-    FormsModule,
-  ],
+  imports: [MaterialModule, AsyncPipe, FormsModule],
   templateUrl: './share.component.html',
-  styleUrl: './share.component.scss'
+  styleUrl: './share.component.scss',
 })
 export class ShareComponent implements OnInit, OnDestroy {
   userNameSubject = new Subject<string>();
 
-  searchUser$!: Observable<UserModel[]>
+  searchUser$!: Observable<UserModel[]>;
   searchUser!: UserModel;
 
   subcriptions: Subscription[] = [];
 
-
   readonly data = inject<string>(MAT_DIALOG_DATA);
 
-  constructor(private store: Store<{ user: UserState }>) {
+  constructor(
+    private store: Store<{
+      user: UserState;
+      notifications: NotificationsState;
+    }>,
+  ) {
     console.log(this.data);
   }
 
@@ -66,18 +67,29 @@ export class ShareComponent implements OnInit, OnDestroy {
         }
       }),
 
-      this.userNameSubject.pipe(
-        debounceTime(500)
-      ).subscribe(value => {
+      this.userNameSubject.pipe(debounceTime(500)).subscribe((value) => {
         if (value !== '') {
-          this.store.dispatch(userActions.searchUsers({email: value}));
+          this.store.dispatch(userActions.searchUsers({ email: value }));
         }
-      })
-    )
+      }),
+      this.store
+        .select('notifications', 'isInvitingUserSuccess')
+        .subscribe((success) => {
+          if (success) {
+            this.openSnackBar('Invited users successfully');
+          }
+        }),
+      this.store
+        .select('notifications', 'isInvitingUserFailure')
+        .subscribe((failure) => {
+          if (failure) {
+            this.openSnackBar(failure);
+          }
+        }),
+    );
   }
 
   readonly dialog = inject(MatDialog);
-
 
   userName!: string;
 
@@ -88,7 +100,7 @@ export class ShareComponent implements OnInit, OnDestroy {
   openDialog() {
     const dialogRef = this.dialog.open(ShareComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
     });
   }
@@ -119,7 +131,7 @@ export class ShareComponent implements OnInit, OnDestroy {
   }
 
   remove(user: UserModel): void {
-    this.users.update(users => {
+    this.users.update((users) => {
       const index = users.indexOf(user);
       if (index < 0) {
         return users;
@@ -135,18 +147,24 @@ export class ShareComponent implements OnInit, OnDestroy {
 
   durationInSeconds = 5;
 
-  openSnackBar() {
+  openSnackBar(content: string) {
     this._snackBar.openFromComponent(ShareSnackbarComponent, {
+      data: content,
       duration: this.durationInSeconds * 1000,
     });
   }
 
   ngOnDestroy() {
-    this.subcriptions.forEach(sub => sub.unsubscribe());
-    this.subcriptions = []
+    this.subcriptions.forEach((sub) => sub.unsubscribe());
+    this.subcriptions = [];
   }
 
   inviteUsers() {
-    this.store.dispatch(notificationsActions.inviteUser({invitedUser: this.users(), boardId: this.data}));
+    this.store.dispatch(
+      notificationsActions.inviteUser({
+        invitedUser: this.users(),
+        boardId: this.data,
+      }),
+    );
   }
 }
