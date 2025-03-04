@@ -105,18 +105,18 @@ export class ShareComponent implements OnInit, OnDestroy {
     }
   }
 
-  // remove(user: Fruit): void {
-  //   this.users.update(users => {
-  //     const index = users.indexOf(user);
-  //     if (index < 0) {
-  //       return users;
-  //     }
-  //
-  //     users.splice(index, 1);
-  //     this.announcer.announce(`Removed ${user.name}`);
-  //     return [...users];
-  //   });
-  // }
+  remove(user: UserModel): void {
+    this.users.update(users => {
+      const index = users.indexOf(user);
+      if (index < 0) {
+        return users;
+      }
+
+      users.splice(index, 1);
+      this.announcer.announce(`Removed ${user.name}`);
+      return [...users];
+    });
+  }
 
   ngOnDestroy() {
     this.subcriptions.forEach(sub => sub.unsubscribe());

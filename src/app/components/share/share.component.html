@@ -15,7 +15,7 @@
                 [editable]="false"
               >
                 {{ user.name }}
-                <button matChipRemove [attr.aria-label]="'remove ' + user.name">
+                <button matChipRemove [attr.aria-label]="'remove ' + user.name" (click)="remove(user)">
                   <mat-icon>cancel</mat-icon>
                 </button>
               </mat-chip-row>
