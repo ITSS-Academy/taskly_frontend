@@ -5,12 +5,24 @@ import {BackgroundColorService} from '../../../../services/background-color/back
 import {AsyncPipe, JsonPipe, NgStyle} from '@angular/common';
 import {BoardState} from '../../../../ngrx/board/board.state';
 import {Store} from '@ngrx/store';
-import {combineLatest, EMPTY, filter, map, Observable, of, Subscription, switchMap, take} from 'rxjs';
+import {
+  combineLatest,
+  distinctUntilKeyChanged,
+  EMPTY,
+  filter,
+  map,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+  take
+} from 'rxjs';
 import {BoardModel} from '../../../../models/board.model';
 import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
 import {GatewayService} from '../../../../services/gateway/gateway.service';
 import {ListModel} from '../../../../models/list.model';
 import {ListState} from '../../../../ngrx/list/list.state';
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 
 
 @Component({
@@ -44,31 +56,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   board$!: Observable<BoardModel | null>
 
   ngOnInit(): void {
-    this.gateway.message()
     this.subscriptions.push(
-      this.store.select('board', 'board')
-        .pipe(
-          filter(board => !!board), // Lọc board null
-          switchMap(board =>
-            this.store.select('list', 'lists').pipe(
-              map(lists => ({
-                board,
-                lists: lists?.filter(list => list.boardId === board.id) ?? []
-              }))
-            )
-          )
-        )
-        .subscribe(({board, lists}) => {
-          if (lists.length > 0 && board.listsCount) {
-            console.log('🚀 Joining board:', board.id, 'with lists:', lists);
-            this.gateway.joinBoard(board, lists);
-          } else if (!board.listsCount) {
-            console.log('🚀 Joining board:', board.id, 'with lists:', []);
-            this.gateway.joinBoard(board, []);
-          }
-        }),
-
-
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
 
@@ -125,4 +113,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
+  protected readonly take = take;
 }

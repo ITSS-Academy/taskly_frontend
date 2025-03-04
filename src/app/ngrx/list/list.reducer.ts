@@ -1,5 +1,5 @@
-import { ListState } from './list.state';
-import { createReducer, on } from '@ngrx/store';
+import {ListState} from './list.state';
+import {createReducer, on} from '@ngrx/store';
 import * as listActions from './list.actions';
 
 const initialState: ListState = {
@@ -35,7 +35,7 @@ const initialState: ListState = {
 
 export const listReducer = createReducer(
   initialState,
-  on(listActions.addNewList, (state, { type, listName, boardId }) => {
+  on(listActions.addNewList, (state, {type, listName, boardId}) => {
     console.log(type);
     return {
       ...state,
@@ -44,7 +44,7 @@ export const listReducer = createReducer(
       addListError: '',
     };
   }),
-  on(listActions.addNewListSuccess, (state, { list }) => {
+  on(listActions.addNewListSuccess, (state, {list}) => {
     return {
       ...state,
       lists: [...state.lists, list],
@@ -53,7 +53,7 @@ export const listReducer = createReducer(
       addListError: '',
     };
   }),
-  on(listActions.addNewListFailure, (state, { error }) => {
+  on(listActions.addNewListFailure, (state, {error}) => {
     return {
       ...state,
       isAddingList: false,
@@ -61,13 +61,13 @@ export const listReducer = createReducer(
       addListError: error,
     };
   }),
-  on(listActions.storeLists, (state, { lists }) => {
+  on(listActions.storeLists, (state, {lists}) => {
     return {
       ...state,
       lists: lists,
     };
   }),
-  on(listActions.getLists, (state, { type, boardId }) => {
+  on(listActions.getLists, (state, {type, boardId}) => {
     return {
       ...state,
       isGettingLists: true,
@@ -75,7 +75,7 @@ export const listReducer = createReducer(
       getListsError: '',
     };
   }),
-  on(listActions.getListsSuccess, (state, { type, lists }) => {
+  on(listActions.getListsSuccess, (state, {type, lists}) => {
     console.log(type);
     console.log(lists);
     return {
@@ -86,7 +86,7 @@ export const listReducer = createReducer(
       getListsError: '',
     };
   }),
-  on(listActions.getListsFailure, (state, { error }) => {
+  on(listActions.getListsFailure, (state, {error}) => {
     return {
       ...state,
       isGettingLists: false,
@@ -94,7 +94,7 @@ export const listReducer = createReducer(
       getListsError: error,
     };
   }),
-  on(listActions.updatePosition, (state, { type, list, boardId }) => {
+  on(listActions.updatePosition, (state, {type, list, boardId}) => {
     console.log(type);
     return {
       ...state,
@@ -103,7 +103,7 @@ export const listReducer = createReducer(
       updateListsError: '',
     };
   }),
-  on(listActions.updatePositionSuccess, (state, { lists, type }) => {
+  on(listActions.updatePositionSuccess, (state, {lists, type}) => {
     console.log(type);
     console.log(lists);
 
@@ -112,7 +112,7 @@ export const listReducer = createReducer(
       if (state.lists) {
         const foundList = state.lists.find((l) => l.id === list.id);
         const cards = foundList ? foundList.cards : []; // Nếu không tìm thấy, gán rỗng
-        return { ...list, cards };
+        return {...list, cards};
       }
       return list;
     });
@@ -126,7 +126,7 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.updatePositionFailure, (state, { error, type }) => {
+  on(listActions.updatePositionFailure, (state, {error, type}) => {
     return {
       ...state,
       isUpdatingLists: false,
@@ -135,7 +135,7 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.updateCard, (state, { type }) => {
+  on(listActions.updateCard, (state, {type}) => {
     return {
       ...state,
       isUpdatingCard: true,
@@ -143,14 +143,14 @@ export const listReducer = createReducer(
       updateCardError: '',
     };
   }),
-  on(listActions.updateCardSuccess, (state, { cards, listId, cardId }) => {
+  on(listActions.updateCardSuccess, (state, {cards, listId, cardId}) => {
     console.log(cards);
 
     return {
       ...state,
       lists: state.lists.map((list) => {
         if (list.id === listId) {
-          return { ...list, cards };
+          return {...list, cards};
         } else {
           return {
             ...list,
@@ -165,7 +165,7 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.deleteList, (state, { type, listId }) => {
+  on(listActions.deleteList, (state, {type, listId}) => {
     console.log(type);
     console.log(state);
     return {
@@ -175,7 +175,7 @@ export const listReducer = createReducer(
       deleteListError: '',
     };
   }),
-  on(listActions.deleteListSuccess, (state, { listId, type }) => {
+  on(listActions.deleteListSuccess, (state, {listId, type}) => {
     console.log(type);
     return {
       ...state,
@@ -185,7 +185,7 @@ export const listReducer = createReducer(
       deleteListError: '',
     };
   }),
-  on(listActions.deleteListFailure, (state, { error, type }) => {
+  on(listActions.deleteListFailure, (state, {error, type}) => {
     return {
       ...state,
       isDeletingList: false,
@@ -198,7 +198,7 @@ export const listReducer = createReducer(
     return initialState;
   }),
 
-  on(listActions.addCard, (state, { card, listId }) => {
+  on(listActions.addCard, (state, {card, listId}) => {
     return {
       ...state,
       isAddingCard: true,
@@ -206,12 +206,12 @@ export const listReducer = createReducer(
       addCardError: '',
     };
   }),
-  on(listActions.addCardSuccess, (state, { card, listId }) => {
+  on(listActions.addCardSuccess, (state, {card, listId}) => {
     return {
       ...state,
       lists: state.lists.map((list) => {
         if (list.id === listId && list.cards) {
-          return { ...list, cards: [...list.cards, card] };
+          return {...list, cards: [...list.cards, card]};
         }
         return list;
       }),
@@ -221,7 +221,7 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.addCardFailure, (state, { error }) => {
+  on(listActions.addCardFailure, (state, {error}) => {
     return {
       ...state,
       isAddingCard: false,
@@ -230,14 +230,14 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.deleteCard, (state, { cardId }) => {
+  on(listActions.deleteCard, (state, {cardId}) => {
     return {
       ...state,
       isDeletingCard: true,
       isDeletingCardSuccess: false,
     };
   }),
-  on(listActions.deleteCardSuccess, (state, { cardId }) => {
+  on(listActions.deleteCardSuccess, (state, {cardId}) => {
     return {
       ...state,
       lists: state.lists.map((list) => {
@@ -252,7 +252,7 @@ export const listReducer = createReducer(
       isDeletingCardSuccess: true,
     };
   }),
-  on(listActions.deleteCardFailure, (state, { error }) => {
+  on(listActions.deleteCardFailure, (state, {error}) => {
     return {
       ...state,
       isDeletingCard: false,
@@ -260,4 +260,10 @@ export const listReducer = createReducer(
       deleteCardError: error,
     };
   }),
+  on(listActions.storeNewLists, (state, {lists}) => {
+    return {
+      ...state,
+      lists: lists,
+    };
+  })
 );
