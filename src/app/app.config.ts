@@ -17,6 +17,8 @@ import * as userEffects from './ngrx/user/user.effects';
 import {listReducer} from './ngrx/list/list.reducer';
 import * as listEffects from './ngrx/list/list.effects';
 import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
+import {notificationsReducer} from './ngrx/notifications/notifications.reducer';
+import * as notificationsEffects from './ngrx/notifications/notifications.effects';
 
 const config: SocketIoConfig = {
   url: 'http://localhost:80',
@@ -33,13 +35,15 @@ export const appConfig: ApplicationConfig = {
       auth: authReducer,
       board: boardReducer,
       user: userReducer,
-      list: listReducer
+      list: listReducer,
+      notifications: notificationsReducer
     }),
     provideEffects([
       authEffects,
       boardEffects,
       userEffects,
-      listEffects
+      listEffects,
+      notificationsEffects
     ]),
     provideFirebaseApp(() => initializeApp({
       "projectId": "kanban-246",

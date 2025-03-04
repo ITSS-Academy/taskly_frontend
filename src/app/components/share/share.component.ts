@@ -3,7 +3,14 @@ import {MatFormField} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle
+} from '@angular/material/dialog';
 import {NotificationsComponent} from '../notifications/notifications.component';
 import {UserState} from '../../ngrx/user/user.state';
 import {Store} from '@ngrx/store';
@@ -15,6 +22,7 @@ import {MaterialModule} from '../../shared/modules/material.module';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatChipEditedEvent, MatChipInputEvent} from '@angular/material/chips';
+import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
 
 export interface Fruit {
   name: string;
@@ -40,7 +48,10 @@ export class ShareComponent implements OnInit, OnDestroy {
   subcriptions: Subscription[] = [];
 
 
+  readonly data = inject<string>(MAT_DIALOG_DATA);
+
   constructor(private store: Store<{ user: UserState }>) {
+    console.log(this.data);
   }
 
   ngOnInit() {
@@ -121,5 +132,9 @@ export class ShareComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subcriptions.forEach(sub => sub.unsubscribe());
     this.subcriptions = []
+  }
+
+  inviteUsers() {
+    this.store.dispatch(notificationsActions.inviteUser({invitedUser: this.users(), boardId: this.data}));
   }
 }
