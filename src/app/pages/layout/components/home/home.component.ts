@@ -30,6 +30,7 @@ export class HomeComponent {
               private store: Store<{ auth: AuthState }>) {
     this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
     this.backgroundService.setSidebarColor('rgb(245, 255, 248)');
+    this.backgroundService.setLogo('rgb(245, 255, 248)');
   }
 
   onLinkActivated(): void {

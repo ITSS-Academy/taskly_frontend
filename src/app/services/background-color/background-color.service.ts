@@ -5,13 +5,25 @@ import {BehaviorSubject} from 'rxjs';
   providedIn: 'root'
 })
 export class BackgroundColorService {
+  private logoImageSource = new BehaviorSubject<string>("/assets/images/logo-black.png");
   private sidebarColorSource = new BehaviorSubject<string>('#F5FFF8'); // Default: White
   private textColorSource = new BehaviorSubject<string>('#000000'); // Default: Black
-  private backgroundImageSource = new BehaviorSubject<string | null>(null); // Default: No Image
+  private backgroundImageSource = new BehaviorSubject<string | null>(null);
 
+  logoImage$ = this.logoImageSource.asObservable();
   sidebarColor$ = this.sidebarColorSource.asObservable();
   textColor$ = this.textColorSource.asObservable();
   backgroundImage$ = this.backgroundImageSource.asObservable();
+
+  private readonly defaultLogo = "/assets/images/logo-primary.png";
+  private readonly blackLogo = "./assets/images/logo-black.png";
+  private readonly whiteLogo = "/assets/images/logo-white.png";
+
+  setLogo(color: string): void {
+    const logoImage = this.getContrastingColor(color) === '#ffffff' ? this.whiteLogo : this.blackLogo;
+    this.logoImageSource.next(logoImage);
+    console.log('Logo Image:', logoImage);
+  }
 
   setNavbarTextColor(color: string): void {
     const textColor = this.getContrastingColor(color);

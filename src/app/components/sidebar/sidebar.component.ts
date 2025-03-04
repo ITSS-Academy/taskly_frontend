@@ -53,12 +53,17 @@ export class SidebarComponent implements OnInit {
     },
   ];
 
+  logoImage!: string;
   sidebarColor: string = '#F5FFF8'; // Default color
   sidebarTextColor: string = '--md-sys-color-on-surface'; // Default text color
 
   ngOnInit() {
     this.boards$ = this.store.select('board', 'boards');
 
+    this.backgroundColorService.logoImage$.subscribe(imageUrl => {
+      console.log('xxxxxxxxxxxxxxxxxxxxxxxxx:', imageUrl);
+      this.logoImage = imageUrl;
+    });
 
     this.backgroundColorService.sidebarColor$.subscribe(color => {
       this.sidebarColor = color;

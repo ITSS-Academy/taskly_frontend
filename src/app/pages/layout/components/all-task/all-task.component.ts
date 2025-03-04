@@ -27,6 +27,7 @@ export class AllTaskComponent implements AfterViewInit {
   readonly panelOpenState = signal(false);
 
   constructor(private backgroundService: BackgroundColorService) {
+    this.backgroundService.setLogo('rgb(245, 255, 248)');
     this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
     this.backgroundService.setSidebarColor('rgb(245, 255, 248)');
   }

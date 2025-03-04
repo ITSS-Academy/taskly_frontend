@@ -117,6 +117,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       const primaryColor = `rgb(${r}, ${g}, ${b})`;
       console.log('Extracted Sidebar Color:', primaryColor);
 
+      this.backgroundService.setLogo(primaryColor);
       this.backgroundService.setSidebarColor(primaryColor);
       this.backgroundService.setNavbarTextColor(primaryColor);
     };
