@@ -1,5 +1,5 @@
-import { createAction, props } from '@ngrx/store';
-import { ListCard, ListModel } from '../../models/list.model';
+import {createAction, props} from '@ngrx/store';
+import {ListCard, ListModel} from '../../models/list.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
@@ -104,4 +104,10 @@ export const deleteCardFailure = createAction(
   '[Card] Delete Card Failure',
   props<{ error: string }>(),
 );
+
+export const storeNewLists = createAction(
+  '[List] Store New Lists',
+  props<{ lists: ListModel[] }>(),
+);
+
 export const clearListStore = createAction('[List] Clear List Store');
