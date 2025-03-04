@@ -1,13 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {NavbarComponent} from '../../../../components/navbar/navbar.component';
 import {BackgroundColorService} from '../../../../services/background-color/background-color.service';
 import {AsyncPipe, JsonPipe, NgStyle} from '@angular/common';
 import {BoardState} from '../../../../ngrx/board/board.state';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {combineLatest, EMPTY, filter, map, Observable, of, Subscription, switchMap, take} from 'rxjs';
 import {BoardModel} from '../../../../models/board.model';
 import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
+import {GatewayService} from '../../../../services/gateway/gateway.service';
+import {ListModel} from '../../../../models/list.model';
+import {ListState} from '../../../../ngrx/list/list.state';
 
 
 @Component({
@@ -24,30 +27,62 @@ import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   backgroundImage: string | null =
     'https://images.unsplash.com/photo-1542435503-956c469947f6?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVza3RvcHxlbnwwfHwwfHx8MA%3D%3D';
 
-  constructor(private backgroundService: BackgroundColorService,
-              private store: Store<{ board: BoardState }>) {
+  constructor(private backgroundService: BackgroundColorService, private gateway: GatewayService,
+              private store: Store<{
+                board: BoardState,
+                list: ListState
+              }>) {
     this.board$ = this.store.select('board', 'board');
 
   }
 
+  subscriptions: Subscription[] = [];
   board$!: Observable<BoardModel | null>
 
   ngOnInit(): void {
-    this.store.select('board', 'board').subscribe((board) => {
-      if (board) {
-        if (board.background && typeof board.background === 'object' && 'fileLocation' in board.background) {
-          this.extractPrimaryColor(board.background.fileLocation as string);
-          this.backgroundImage = board.background.fileLocation as string;
+    this.gateway.message()
+    this.subscriptions.push(
+      this.store.select('board', 'board')
+        .pipe(
+          filter(board => !!board), // Lọc board null
+          switchMap(board =>
+            this.store.select('list', 'lists').pipe(
+              map(lists => ({
+                board,
+                lists: lists?.filter(list => list.boardId === board.id) ?? []
+              }))
+            )
+          )
+        )
+        .subscribe(({board, lists}) => {
+          if (lists.length > 0 && board.listsCount) {
+            console.log('🚀 Joining board:', board.id, 'with lists:', lists);
+            this.gateway.joinBoard(board, lists);
+          } else if (!board.listsCount) {
+            console.log('🚀 Joining board:', board.id, 'with lists:', []);
+            this.gateway.joinBoard(board, []);
+          }
+        }),
+
+
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+
+          if (board.background && typeof board.background === 'object' && 'fileLocation' in board.background) {
+            this.extractPrimaryColor(board.background.fileLocation as string);
+            this.backgroundImage = board.background.fileLocation as string;
+          }
         }
-      }
-    })
-    this.backgroundService.backgroundImage$.subscribe((imageUrl) => {
-      this.backgroundImage = imageUrl;
-    });
+      }),
+      this.backgroundService.backgroundImage$.subscribe((imageUrl) => {
+        this.backgroundImage = imageUrl;
+      }),
+    )
+
   }
 
   extractPrimaryColor(imageUrl: string): void {
@@ -87,6 +122,7 @@ export class BoardComponent implements OnInit {
     };
   }
 
-
-
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 }

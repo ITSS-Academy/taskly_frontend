@@ -1,7 +1,7 @@
 import {Component, EventEmitter, inject, Output} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
-import {DatePipe, NgIf} from '@angular/common';
+import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {MaterialModule} from '../../shared/modules/material.module';
 
 @Component({
@@ -11,7 +11,8 @@ import {MaterialModule} from '../../shared/modules/material.module';
     FormsModule,
     DatePipe,
     MaterialModule,
-    NgIf
+    NgIf,
+    NgForOf
   ],
   templateUrl: './task-description.component.html',
   styleUrl: './task-description.component.scss'
@@ -25,7 +26,8 @@ export class TaskDescriptionComponent {
   readonly dialogRef = inject(MatDialogRef<TaskDescriptionComponent>);
   readonly task = inject<any>(MAT_DIALOG_DATA);
 
-  constructor() {}
+  constructor() {
+  }
 
   onClose() {
     this.dialogRef.close()
@@ -44,7 +46,7 @@ export class TaskDescriptionComponent {
   }
 
   removeTag(tag: string) {
-    this.task.tags = this.task.tags.filter((t:any) => t !== tag);
+    this.task.tags = this.task.tags.filter((t: any) => t !== tag);
   }
 
   addSubtask() {

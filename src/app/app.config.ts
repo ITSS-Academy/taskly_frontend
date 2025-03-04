@@ -1,4 +1,4 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -16,9 +16,19 @@ import {userReducer} from './ngrx/user/user.reducer';
 import * as userEffects from './ngrx/user/user.effects';
 import {listReducer} from './ngrx/list/list.reducer';
 import * as listEffects from './ngrx/list/list.effects';
+import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
+
+const config: SocketIoConfig = {
+  url: 'http://localhost:80',
+  options: {
+    transports: ['websocket'],
+  },
+};
+
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({eventCoalescing: true}), provideHttpClient(), provideRouter(routes), provideAnimationsAsync(),
+    importProvidersFrom(SocketIoModule.forRoot(config)),
     provideStore({
       auth: authReducer,
       board: boardReducer,
@@ -39,5 +49,6 @@ export const appConfig: ApplicationConfig = {
       "authDomain": "kanban-246.firebaseapp.com",
       "messagingSenderId": "656199323172",
       "measurementId": "G-14D94KVP60"
-    })), provideAuth(() => getAuth())]
+    })),
+    provideAuth(() => getAuth())],
 };
