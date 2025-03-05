@@ -20,4 +20,8 @@ export class NotificationsService {
   onNewNoti() {
     return this.socket.fromEvent('newNoti');
   }
+
+  leaveNoti(userId: string) {
+    this.socket.emit('leave', userId);
+  }
 }

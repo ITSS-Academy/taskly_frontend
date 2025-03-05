@@ -51,6 +51,7 @@ export class NotificationsButtonComponent implements OnInit {
       this.store
         .select('notifications', 'isNewNotifications')
         .subscribe((newNotifications) => {
+          console.log(newNotifications);
           this.isNotifications = newNotifications;
         }),
     );

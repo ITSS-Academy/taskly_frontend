@@ -7,6 +7,7 @@ import { UserState } from '../../ngrx/user/user.state';
 import * as userActions from '../../ngrx/user/user.actions';
 import { NotificationsState } from '../../ngrx/notifications/notifications.state';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
+import { UserModel } from '../../models/user.model';
 
 @Component({
   selector: 'app-layout',
@@ -26,13 +27,17 @@ export class LayoutComponent implements OnDestroy, OnInit {
     this.store.dispatch(userActions.getUser());
   }
 
+  user!: UserModel;
+
   ngOnInit() {
     this.store.select('user', 'user').subscribe((user) => {
       if (user) {
         this.notification.joinNoti(user.id);
+        this.user = user;
       }
     });
-    this.notification.onNewNoti().subscribe((newNoti) => {
+    this.notification.onNewNoti().subscribe(() => {
+      console.log('new notification');
       this.store.dispatch(
         notificationsActions.updateIsNewNotifications({
           isNewNotifications: true,
@@ -42,6 +47,7 @@ export class LayoutComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
+    this.notification.leaveNoti(this.user.id);
     this.store.dispatch(userActions.signOut());
   }
 }

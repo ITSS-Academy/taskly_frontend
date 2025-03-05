@@ -1,16 +1,20 @@
 <div class="task-card" (click)="openDialog()">
   @if (Array.isArray(task?.members) && task?.members!.length > 0) {
     <div class="task-header">
-
-
-      <div class="assignees">
-        @for (user of task.members; track $index) {
-          <div class="avatar" [style.zIndex]="100-$index">
-            <img [src]="(user.user_id | user | async)?.photoUrl" alt="(user.user_id | user | async)?.name"
-                 style="width: 100%; height: 100%; border-radius: 100%">
-          </div>
-        }
-        <!--      <div class="more-assignees" *ngIf="task.assignees.length > 2">+{{task.assignees.length - 2}}</div>-->
+      <div class="left">
+        <div class="assignees">
+          @for (user of task.members; track $index) {
+            <div class="avatar" [style.z-index]="100-$index" matTooltip="{{(user.user_id | user | async)?.name}}">
+              <img [src]="(user.user_id | user | async)?.photoUrl" alt="(user.user_id | user | async)?.name"
+                   style="width: 100%; height: 100%; border-radius: 100%">
+            </div>
+          }
+          <!--      <div class="more-assignees" *ngIf="task.assignees.length > 2">+{{task.assignees.length - 2}}</div>-->
+        </div>
+        
+        <div class="task-title">
+          {{ task.title }}
+        </div>
       </div>
 
       <div class="task-actions">
@@ -27,7 +31,6 @@
       <div class="task-title">
         {{ task.title }}
       </div>
-
 
       <div class="task-actions">
         <button mat-icon-button class="more-button" (click)="showMoreOptions(); $event.stopPropagation()">

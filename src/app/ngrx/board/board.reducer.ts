@@ -1,5 +1,5 @@
-import {BoardState} from './board.state';
-import {createReducer, on} from '@ngrx/store';
+import { BoardState } from './board.state';
+import { createReducer, on } from '@ngrx/store';
 import * as boardActions from './board.actions';
 
 const initialState: BoardState = {
@@ -16,7 +16,12 @@ const initialState: BoardState = {
   isGettingBoard: false,
   isGettingBoardSuccess: false,
   getBoardError: '',
-}
+
+  invitedBoards: null,
+  isInvitedBoardsGetting: false,
+  invitedBoardsGettingError: null,
+  isGetInvitedBoardsSuccess: false,
+};
 
 export const boardReducer = createReducer(
   initialState,
@@ -28,7 +33,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: false,
     };
   }),
-  on(boardActions.createBoardSuccess, (state, {board}) => {
+  on(boardActions.createBoardSuccess, (state, { board }) => {
     console.log(board);
     return {
       ...state,
@@ -38,7 +43,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: true,
     };
   }),
-  on(boardActions.createBoardFail, (state, {error}) => {
+  on(boardActions.createBoardFail, (state, { error }) => {
     return {
       ...state,
       isBoardCreating: false,
@@ -51,10 +56,10 @@ export const boardReducer = createReducer(
     return {
       ...state,
       isBoardsGetting: true,
-    }
+    };
   }),
-  on(boardActions.getBoardsSuccess, (state, {boards}) => {
-    console.log(boards)
+  on(boardActions.getBoardsSuccess, (state, { boards }) => {
+    console.log(boards);
     return {
       ...state,
       boards: boards,
@@ -63,7 +68,7 @@ export const boardReducer = createReducer(
       isGetBoardsSuccess: true,
     };
   }),
-  on(boardActions.getBoardsFail, (state, {error}) => {
+  on(boardActions.getBoardsFail, (state, { error }) => {
     return {
       ...state,
       isBoardsGetting: false,
@@ -77,26 +82,60 @@ export const boardReducer = createReducer(
       board: null,
       isGettingBoard: true,
       isGettingBoardSuccess: false,
-      getBoardError: ''
+      getBoardError: '',
     };
   }),
-  on(boardActions.getBoardSuccess, (state, {type, board}) => {
-    console.log(type)
-    console.log(board)
+  on(boardActions.getBoardSuccess, (state, { type, board }) => {
+    console.log(type);
+    console.log(board);
     return {
       ...state,
       board,
       isGettingBoard: false,
       isGettingBoardSuccess: true,
-      getBoardError: ''
+      getBoardError: '',
     };
   }),
-  on(boardActions.getBoardFailure, (state, {errorMessage}) => {
+  on(boardActions.getBoardFailure, (state, { errorMessage }) => {
     return {
       ...state,
       isGettingBoard: false,
       isGettingBoardSuccess: false,
-      getBoardError: errorMessage
+      getBoardError: errorMessage,
+    };
+  }),
+  on(boardActions.getInvitedBoards, (state) => {
+    return {
+      ...state,
+      invitedBoards: null,
+      isInvitedBoardsGetting: true,
+      invitedBoardsGettingError: null,
+      isGetInvitedBoardsSuccess: false,
+    };
+  }),
+  on(boardActions.getInvitedBoardsSuccess, (state, { boards }) => {
+    return {
+      ...state,
+      invitedBoards: boards,
+      isInvitedBoardsGetting: false,
+      invitedBoardsGettingError: null,
+      isGetInvitedBoardsSuccess: true,
+    };
+  }),
+  on(boardActions.getInvitedBoardsFail, (state, { error }) => {
+    return {
+      ...state,
+      isInvitedBoardsGetting: false,
+      invitedBoardsGettingError: error,
+      isGetInvitedBoardsSuccess: false,
+    };
+  }),
+  on(boardActions.acceptInvitation, (state, { board }) => {
+    return {
+      ...state,
+      invitedBoards: state.invitedBoards
+        ? [board, ...state.invitedBoards]
+        : [board],
     };
   }),
 );

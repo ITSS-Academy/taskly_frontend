@@ -17,6 +17,7 @@ import {
 import {ListCard} from '../../../../../../../../../../models/list.model';
 import {UserPipe} from '../../../../../../../../../../shared/pipes/user.pipe';
 import {LabelPipe} from '../../../../../../../../../../shared/pipes/label.pipe';
+import {MatTooltip} from '@angular/material/tooltip';
 
 interface Task {
   id: string;
@@ -33,7 +34,7 @@ interface Task {
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
-  imports: [MatIcon, DatePipe, MatCheckbox, MatIconButton, NgIf, ForDirective, UserPipe, AsyncPipe, JsonPipe, LabelPipe, NgStyle],
+  imports: [MatIcon, DatePipe, MatCheckbox, MatIconButton, NgIf, ForDirective, UserPipe, AsyncPipe, JsonPipe, LabelPipe, NgStyle, MatTooltip],
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent {

@@ -1,9 +1,5 @@
-import {Component} from '@angular/core';
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {MatToolbar} from "@angular/material/toolbar";
-import {MatInput} from "@angular/material/input";
+import {Component, ElementRef, HostListener, inject, ViewChild} from '@angular/core';
+import {MaterialModule} from '../../../../../../shared/modules/material.module';
 import {
   NotificationsButtonComponent
 } from '../../../../../../components/notifications-button/notifications-button.component';
@@ -13,14 +9,7 @@ import {LogoutButtonComponent} from '../../../../../../components/logout-button/
   selector: 'app-home-nav',
   standalone: true,
   imports: [
-    MatButton,
-    MatIcon,
-    MatIconButton,
-    MatMenu,
-    MatMenuItem,
-    MatToolbar,
-    MatMenuTrigger,
-    MatInput,
+    MaterialModule,
     NotificationsButtonComponent,
     LogoutButtonComponent
   ],
@@ -28,5 +17,15 @@ import {LogoutButtonComponent} from '../../../../../../components/logout-button/
   styleUrl: './home-nav.component.scss'
 })
 export class HomeNavComponent {
+  showSearchItems = false;
 
+  @ViewChild('searchContainer') searchContainer!: ElementRef;
+
+  // Detect click outside the search container
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (this.searchContainer && !this.searchContainer.nativeElement.contains(event.target)) {
+      this.showSearchItems = false;
+    }
+  }
 }
