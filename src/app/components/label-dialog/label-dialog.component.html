@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Nhãn</h2>
+<mat-dialog-content>
+  <mat-form-field class="full-width">
+    <mat-label>Tìm nhãn...</mat-label>
+    <input matInput [(ngModel)]="searchText">
+  </mat-form-field>
+
+  <div class="label-list">
+    <mat-selection-list>
+      <mat-list-option *ngFor="let label of filteredLabels()" [(ngModel)]="label.selected">
+        <div class="label-item">
+          <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
+          {{ label.name }}
+          <button mat-icon-button (click)="editLabel(label)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+
+  <button mat-stroked-button color="primary" (click)="createNewLabel()">Tạo nhãn mới</button>
+  <button mat-stroked-button> Bật chế độ thân thiện với người mù màu </button>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Đóng</button>
+</mat-dialog-actions>
+

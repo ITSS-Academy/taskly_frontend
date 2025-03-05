@@ -1,4 +1,4 @@
-import { LabelModel } from './label.model';
+// import { LabelModel } from './label.model';
 
 export interface ListModel {
   id: string | null;

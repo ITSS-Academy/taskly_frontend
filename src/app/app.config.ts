@@ -39,5 +39,5 @@ export const appConfig: ApplicationConfig = {
       "authDomain": "kanban-246.firebaseapp.com",
       "messagingSenderId": "656199323172",
       "measurementId": "G-14D94KVP60"
-    })), provideAuth(() => getAuth())]
+    })), provideAuth(() => getAuth()), provideAnimationsAsync('noop')]
 };
