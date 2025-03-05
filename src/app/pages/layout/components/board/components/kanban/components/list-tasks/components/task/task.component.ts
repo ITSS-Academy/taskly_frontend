@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe, NgIf } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -10,6 +10,10 @@ import { BoardState } from '../../../../../../../../../../ngrx/board/board.state
 import { Store } from '@ngrx/store';
 import { ListState } from '../../../../../../../../../../ngrx/list/list.state';
 import * as listActions from '../../../../../../../../../../ngrx/list/list.actions';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  TaskDescriptionComponent
+} from '../../../../../../../../../../components/task-description/task-description.component';
 
 interface Task {
   id: string;
@@ -31,6 +35,8 @@ interface Task {
 })
 export class TaskComponent {
   @Input() task!: CardModel;
+  readonly dialog = inject(MatDialog);
+
 
   constructor(
     private store: Store<{
@@ -56,4 +62,10 @@ export class TaskComponent {
   // }
 
   protected readonly of = of;
+
+  openDialog() {
+    this.dialog.open(TaskDescriptionComponent, {
+      data: this.task,
+    })
+  }
 }

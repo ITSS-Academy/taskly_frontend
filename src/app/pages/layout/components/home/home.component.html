@@ -16,16 +16,17 @@
         <p>Your workspaces</p>
       </div>
       <div class="workspace">
-        <div class="work-container">
-          <p>Work</p>
-        </div>
-        <div class="personal-container">
-          <p>Personal</p>
-        </div>
-        <div class="new-container">
+        @for (board of (boards$ | async); track $index) {
+          <div class="board-container"
+               [ngStyle]="{background: 'url(' + (board.backgroundId! | background | async) + ')'}">
+            <p>{{ board.name }}</p>
+          </div>
+        }
+        <div class="personal-container create-container">
           <p>Tạo bảng mới</p>
         </div>
       </div>
     </div>
   </div>
 </div>
+

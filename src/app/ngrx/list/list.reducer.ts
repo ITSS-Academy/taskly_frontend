@@ -207,11 +207,15 @@ export const listReducer = createReducer(
     };
   }),
   on(listActions.addCardSuccess, (state, { card, listId }) => {
+    console.log(state.lists);
+
     return {
       ...state,
       lists: state.lists.map((list) => {
         if (list.id === listId && list.cards) {
           return { ...list, cards: [...list.cards, card] };
+        } else if (list.id === listId && !list.cards) {
+          return { ...list, cards: [card] };
         }
         return list;
       }),
@@ -258,6 +262,12 @@ export const listReducer = createReducer(
       isDeletingCard: false,
       isDeletingCardSuccess: false,
       deleteCardError: error,
+    };
+  }),
+  on(listActions.storeNewLists, (state, { lists }) => {
+    return {
+      ...state,
+      lists: lists,
     };
   }),
 );

@@ -14,23 +14,24 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Observable, of, Subscription } from 'rxjs';
-import { TaskComponent } from './components/list-tasks/components/task/task.component';
-import { MatIcon } from '@angular/material/icon';
-import { MatButton } from '@angular/material/button';
-import { ForDirective } from '../../../../../../shared/for.directive';
-import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
-import { BoardState } from '../../../../../../ngrx/board/board.state';
-import { Store } from '@ngrx/store';
+import {combineLatest, distinctUntilKeyChanged, filter, map, Observable, of, Subscription, switchMap, take} from 'rxjs';
+import {TaskComponent} from './components/list-tasks/components/task/task.component';
+import {MatIcon} from '@angular/material/icon';
+import {MatButton} from '@angular/material/button';
+import {ForDirective} from '../../../../../../shared/for.directive';
+import {AsyncPipe, NgClass, NgForOf} from '@angular/common';
+import {ActivatedRoute, RouterOutlet} from '@angular/router';
+import {BoardState} from '../../../../../../ngrx/board/board.state';
+import {Store} from '@ngrx/store';
 import * as boardActions from '../../../../../../ngrx/board/board.actions';
-import { NavbarComponent } from '../../../../../../components/navbar/navbar.component';
-import { BoardModel } from '../../../../../../models/board.model';
-import { ListModel } from '../../../../../../models/list.model';
+import {NavbarComponent} from '../../../../../../components/navbar/navbar.component';
+import {BoardModel} from '../../../../../../models/board.model';
+import {ListModel} from '../../../../../../models/list.model';
 import * as listActions from '../../../../../../ngrx/list/list.actions';
-import { ListState } from '../../../../../../ngrx/list/list.state';
-import { MaterialModule } from '../../../../../../shared/modules/material.module';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {ListState} from '../../../../../../ngrx/list/list.state';
+import {MaterialModule} from '../../../../../../shared/modules/material.module';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {GatewayService} from '../../../../../../services/gateway/gateway.service';
 
 interface Task {
   id: string;
@@ -74,6 +75,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   cardName = new FormControl('', [Validators.required]);
   listName = new FormControl('', [Validators.required]);
 
+
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -82,22 +84,101 @@ export class KanbanComponent implements OnInit, OnDestroy {
       board: BoardState;
       list: ListState;
     }>,
+    private gateway: GatewayService
   ) {
-    this.activatedRoute.params.subscribe((params) => {
-      this.boardId = params['id'];
-      this.store.dispatch(boardActions.getBoard({ boardId: this.boardId }));
-      this.store.dispatch(listActions.getLists({ boardId: this.boardId }));
-    });
+
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.store.select('list', 'lists').subscribe((lists) => {
-        console.log(lists);
-        this.lists = lists;
-      }),
-    );
+    this.activatedRoute.params.subscribe((params) => {
+      const newBoardId = params['id'];
+      if (this.boardId) {
+        this.gateway.leaveBoard(this.boardId);
+      }
+      this.boardId = newBoardId;
 
+      this.subscriptions.forEach((sub) => sub.unsubscribe());
+      this.subscriptions = [];
+      this.store.dispatch(listActions.clearListStore())
+
+      this.store.dispatch(boardActions.getBoard({boardId: this.boardId}));
+      this.store.dispatch(listActions.getLists({boardId: this.boardId}));
+      this.subscriptions.push(
+        this.store.select('list', 'isGettingListsSuccess').subscribe(
+          (isGettingListsSuccess) => {
+            if (isGettingListsSuccess) {
+              this.subscriptions.push(
+                this.store.select('board', 'board')
+                  .pipe(
+                    filter(board => !!board),
+                    distinctUntilKeyChanged('id'),
+                    switchMap(board =>
+                      this.store.select('list', 'lists').pipe(
+                        map(lists => ({
+                          board,
+                          lists: lists?.filter(list => list.boardId === board.id) ?? []
+                        })),
+                        take(1)
+                      )
+                    )
+                  )
+                  .subscribe(({board, lists}) => {
+                    if (lists.length > 0 && board.listsCount) {
+                      console.log('🚀 Joining board:', board.id, 'with lists:', lists);
+                      this.gateway.joinBoard(board, lists);
+                    } else if (!board.listsCount) {
+                      console.log('🚀 Joining board:', board.id, 'with lists:', []);
+                      this.gateway.joinBoard(board, []);
+                    }
+                  }),
+              )
+            }
+          }
+        ),
+
+        this.store.select('list', 'lists').subscribe((lists) => {
+          console.log(lists);
+          this.lists = lists;
+        }),
+        this.store.select('list', 'isAddingListSuccess').subscribe((isAddingListSuccess) => {
+          if (isAddingListSuccess) {
+            this.gateway.onListChange(this.boardId, this.lists);
+          }
+        }),
+
+        this.store.select('list', 'isDeletingListSuccess').subscribe((isDeletingListSuccess) => {
+            if (isDeletingListSuccess) {
+              this.gateway.onListChange(this.boardId, this.lists);
+            }
+          }
+        ),
+        this.store.select('list', 'isDeletingCardSuccess').subscribe((isDeletingCardSuccess) => {
+          if (isDeletingCardSuccess) {
+            this.gateway.onListChange(this.boardId, this.lists);
+          }
+        }),
+        this.store.select('list', 'isUpdatingListsSuccess').subscribe((isUpdatingListsSuccess) => {
+          if (isUpdatingListsSuccess) {
+            this.gateway.onListChange(this.boardId, this.lists);
+          }
+        }),
+        this.store.select('list', 'isAddingCardSuccess').subscribe((isAddingCardSuccess) => {
+          if (isAddingCardSuccess) {
+            this.gateway.onListChange(this.boardId, this.lists);
+          }
+        }),
+        this.store.select('list', 'isUpdatingCardSuccess').subscribe((isUpdatingCardSuccess) => {
+          if (isUpdatingCardSuccess) {
+            this.gateway.onListChange(this.boardId, this.lists);
+          }
+        }),
+
+        this.gateway.listenListChange().subscribe((lists: ListModel[]) => {
+          // this.lists = lists;
+          this.store.dispatch(listActions.storeNewLists({lists}));
+        })
+      );
+    });
     this.board$ = this.store.select('board', 'board');
   }
 
@@ -105,11 +186,11 @@ export class KanbanComponent implements OnInit, OnDestroy {
     // find in lists, then switch isInEditMode to true
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
-        return { ...list, isInEditMode: true };
+        return {...list, isInEditMode: true};
       }
       if (list.isInEditMode) {
         this.cardName.reset();
-        return { ...list, isInEditMode: false };
+        return {...list, isInEditMode: false};
       }
       return list;
     });
@@ -182,7 +263,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       if (this.lists && this.lists[previousIndex].cards) {
         console.log(this.lists[previousIndex]);
         const updatedColumns = [
-          ...this.lists[previousIndex].cards.map((card: any) => ({ ...card })),
+          ...this.lists[previousIndex].cards.map((card: any) => ({...card})),
         ];
         moveItemInArray(
           updatedColumns,
@@ -191,18 +272,18 @@ export class KanbanComponent implements OnInit, OnDestroy {
         );
         this.lists = this.lists.map((col, index) => {
           if (index === previousIndex) {
-            return { ...col, cards: [...updatedColumns] };
+            return {...col, cards: [...updatedColumns]};
           }
           return col;
         });
       }
     } else {
       const previousContainer = [
-        ...event.previousContainer.data.map((item: any) => ({ ...item })),
+        ...event.previousContainer.data.map((item: any) => ({...item})),
       ];
       console.log(event.container!.data);
       const container = [
-        ...event.container!.data!.map((item: any) => ({ ...item })),
+        ...event.container!.data!.map((item: any) => ({...item})),
       ];
       transferArrayItem(
         previousContainer,
@@ -213,10 +294,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
       this.lists = this.lists.map((col, index) => {
         if (index === previousIndex) {
-          return { ...col, cards: [...previousContainer] };
+          return {...col, cards: [...previousContainer]};
         }
         if (index === currentIndex) {
-          return { ...col, cards: [...container] };
+          return {...col, cards: [...container]};
         }
         return col;
       });
@@ -235,12 +316,12 @@ export class KanbanComponent implements OnInit, OnDestroy {
       return;
     }
     this.store.dispatch(
-      listActions.addCard({ card: this.cardName.value!, listId }),
+      listActions.addCard({card: this.cardName.value!, listId}),
     );
     this.cardName.reset();
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
-        return { ...list, isInEditMode: false };
+        return {...list, isInEditMode: false};
       }
       return list;
     });
@@ -249,7 +330,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   cancelEdit(listId: string) {
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
-        return { ...list, isInEditMode: false };
+        return {...list, isInEditMode: false};
       }
       return list;
     });
@@ -262,8 +343,11 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('destroy');
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.store.dispatch(listActions.clearListStore());
   }
+
 
   cancelAddList() {
     this.isAddingList = false;
@@ -274,6 +358,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   removeList(listId: string) {
-    this.store.dispatch(listActions.deleteList({ listId }));
+    this.store.dispatch(listActions.deleteList({listId}));
   }
 }

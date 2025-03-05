@@ -81,7 +81,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   readonly shareDialog = inject(MatDialog);
 
   openShareDialog() {
-    const dialogRef = this.shareDialog.open(ShareComponent);
+    const dialogRef = this.shareDialog.open(ShareComponent, {
+      data: this.id
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

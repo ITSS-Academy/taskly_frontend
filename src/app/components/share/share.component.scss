@@ -1,6 +1,6 @@
 .container {
   background-color: var(--md-sys-color-surface-container-lowest);
-  width: 400px;
+  width: 550px;
   border-radius: 10px;
 
   mat-dialog-content {
@@ -79,18 +79,17 @@
   }
 }
 
-::ng-deep.cdk-overlay-dark-backdrop {
-  background: none;
-}
-
-::ng-deep.cdk-global-overlay-wrapper {
-  display: flex;
-  justify-content: flex-end !important;
-  align-items: flex-start !important;
-}
-
+//::ng-deep.cdk-overlay-dark-backdrop {
+//  background: none;
+//}
+//
+//::ng-deep.cdk-global-overlay-wrapper {
+//  display: flex;
+//  justify-content: flex-end !important;
+//  align-items: flex-start !important;
+//}
+//
 ::ng-deep.cdk-overlay-pane.mat-mdc-dialog-panel {
   position: inherit !important;
-  right: 60px;
   top: 47px;
 }
