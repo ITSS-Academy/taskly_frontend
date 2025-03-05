@@ -46,4 +46,12 @@ export class UserService {
       return response as Observable<UserModel>;
     });
   }
+
+  getUser() {
+    return this.httpClient.get(`${environment.apiUrl}/user`, {
+      headers: {
+        Authorization: this.accessToken,
+      },
+    });
+  }
 }

@@ -63,3 +63,29 @@ export const getNotifications$ = createEffect(
     functional: true,
   },
 );
+
+export const replyInviteBoard$ = createEffect(
+  (
+    action$ = inject(Actions),
+    notificationsService = inject(NotificationsService),
+  ) => {
+    return action$.pipe(
+      ofType(notificationsActions.replyInviteBoard),
+      switchMap(({notificationId, isAccepted}) => {
+        return notificationsService.replyInvteBoard(notificationId, isAccepted).pipe(
+          map(() => notificationsActions.replyInviteBoardSuccess()),
+          catchError((error) => {
+            return of(
+              notificationsActions.replyInviteBoardFailure({
+                error: error.error.message || 'Unknown error',
+              }),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  {
+    functional: true,
+  },
+);

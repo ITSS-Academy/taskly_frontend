@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MaterialModule} from "../../shared/modules/material.module";
 import {MatSidenav} from "@angular/material/sidenav";
 import {RouterLink} from '@angular/router';
@@ -6,12 +6,14 @@ import {AsyncPipe, NgStyle} from '@angular/common';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
 import {Store} from '@ngrx/store';
 import {BoardState} from '../../ngrx/board/board.state';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, take} from 'rxjs';
 import {BoardModel} from '../../models/board.model';
 import * as boardActions from '../../ngrx/board/board.actions';
 import {BackgroundPipe} from '../../shared/pipes/background.pipe'
 import {MatDialog} from '@angular/material/dialog';
 import {CreateBoardComponent} from '../create-board/create-board.component';
+import {UserState} from '../../ngrx/user/user.state';
+import {UserModel} from '../../models/user.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,14 +24,17 @@ import {CreateBoardComponent} from '../create-board/create-board.component';
 })
 
 
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
-  supcriptions!: Subscription[];
+  supcriptions: Subscription[] = [];
   boards$ !: Observable<BoardModel[] | null>
+
+  user!: UserModel
 
   constructor(private backgroundColorService: BackgroundColorService,
               private store: Store<{
-                board: BoardState
+                board: BoardState,
+                user: UserState
               }>) {
     this.store.dispatch(boardActions.getBoards());
 
@@ -60,17 +65,34 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.boards$ = this.store.select('board', 'boards');
 
-    this.backgroundColorService.logoImage$.subscribe(imageUrl => {
-      console.log('xxxxxxxxxxxxxxxxxxxxxxxxx:', imageUrl);
-      this.logoImage = imageUrl;
-    });
 
-    this.backgroundColorService.sidebarColor$.subscribe(color => {
-      this.sidebarColor = color;
-    });
+    this.supcriptions.push(
+      this.backgroundColorService.logoImage$.subscribe(imageUrl => {
+        this.logoImage = imageUrl;
+      }),
 
-    this.backgroundColorService.textColor$.subscribe(color => {
-      this.sidebarTextColor = color;
-    });
+
+      this.backgroundColorService.sidebarColor$.subscribe(color => {
+        this.sidebarColor = color;
+      }),
+
+      this.backgroundColorService.textColor$.subscribe(color => {
+        this.sidebarTextColor = color;
+      }),
+      this.store.select('user', 'isGettingUserSuccess').subscribe(isGettingUserSuccess => {
+        if (isGettingUserSuccess) {
+          this.store.select('user', 'user').pipe(take(1)).subscribe(user => {
+            if (user) {
+              this.user = user;
+            }
+          })
+        }
+      })
+    )
+  }
+
+  ngOnDestroy() {
+    this.supcriptions.forEach(sub => sub.unsubscribe());
+    this.supcriptions = [];
   }
 }

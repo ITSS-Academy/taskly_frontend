@@ -17,6 +17,10 @@ const initialState: NotificationsState = {
   isInvitingUser: false,
   isInvitingUserSuccess: false,
   isInvitingUserFailure: false,
+
+  isReplyingInvitation: false,
+  isReplyingInvitationSuccess: false,
+  isReplyingInvitationFailure: false,
 };
 
 export const notificationsReducer = createReducer(
@@ -119,4 +123,28 @@ export const notificationsReducer = createReducer(
       isCheckingNewNotificationsFailure: error,
     };
   }),
+  on(notificationsActions.replyInviteBoard, (state) => {
+    return {
+      ...state,
+      isReplyingInvitation: true,
+      isReplyingInvitationSuccess: false,
+      isReplyingInvitationFailure: false,
+    };
+  }),
+  on(notificationsActions.replyInviteBoardSuccess, (state) => {
+    return {
+      ...state,
+      isReplyingInvitation: false,
+      isReplyingInvitationSuccess: true,
+      isReplyingInvitationFailure: false,
+    }
+  }),
+  on(notificationsActions.replyInviteBoardFailure, (state, {error}) => {
+    return {
+      ...state,
+      isReplyingInvitation: false,
+      isReplyingInvitationSuccess: false,
+      isReplyingInvitationFailure: error,
+    }
+  })
 );

@@ -12,8 +12,8 @@
             </div>
             <div matListItemLine>Accept or decline the invitation</div>
             <div class="btns">
-              <button mat-stroked-button>Decline</button>
-              <button mat-flat-button>Accept</button>
+              <button mat-stroked-button (click)="rejectInvitation(noti.id!)">Decline</button>
+              <button mat-flat-button (click)="acceptInvitation(noti.id!)">Accept</button>
             </div>
           </mat-list-item>
         } @else {

@@ -48,3 +48,17 @@ export const checkNewNotificationsFailure = createAction(
 export const clearNotifications = createAction(
   '[Notifications] Clear Notifications',
 );
+
+export const replyInviteBoard = createAction(
+  '[Notifications] Reply Invite Board',
+  props<{ notificationId: string; isAccepted: boolean }>(),
+);
+
+export const replyInviteBoardSuccess = createAction(
+  '[Notifications] Reply Invite Board Success',
+);
+
+export const replyInviteBoardFailure = createAction(
+  '[Notifications] Reply Invite Board Failure',
+  props<{ error: any }>(),
+);

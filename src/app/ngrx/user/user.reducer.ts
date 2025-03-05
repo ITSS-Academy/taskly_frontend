@@ -84,4 +84,7 @@ export const userReducer = createReducer(
       searchUsersError: ''
     };
   }),
+  on(userActions.signOut, (state, {type}) => {
+    return initialState
+  })
 );

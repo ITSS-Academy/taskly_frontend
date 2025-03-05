@@ -1,4 +1,4 @@
-import { NotificationsModel } from '../../models/notifications.model';
+import {NotificationsModel} from '../../models/notifications.model';
 
 export interface NotificationsState {
   notifications: NotificationsModel[];
@@ -15,4 +15,8 @@ export interface NotificationsState {
   isInvitingUser: boolean;
   isInvitingUserSuccess: boolean;
   isInvitingUserFailure: any;
+
+  isReplyingInvitation: boolean;
+  isReplyingInvitationSuccess: boolean;
+  isReplyingInvitationFailure: any;
 }

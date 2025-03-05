@@ -6,14 +6,17 @@
       Taskly
     </div>
 
-    <div class="profile">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
-           alt="Profile">
-      <div class="info">
-        <p>Name</p>
-        <span [ngStyle]="{'color': sidebarTextColor}">Workspace Account</span>
+    @if (user) {
+      <div class="profile">
+        <img src="{{this.user.photoUrl  }}"
+             alt="Profile">
+        <div class="info">
+          <p>{{ this.user.name }}</p>
+          <!--        <span [ngStyle]="{'color': sidebarTextColor}">Workspace Account</span>-->
+        </div>
       </div>
-    </div>
+    }
+
 
     <mat-selection-list>
       <mat-list-item [routerLink]="['home']">

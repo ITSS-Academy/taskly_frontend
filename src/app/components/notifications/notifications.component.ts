@@ -82,4 +82,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       }),
     );
   }
+
+  acceptInvitation(notificationId: string) {
+    this.store.dispatch(notificationsActions.replyInviteBoard({notificationId, isAccepted: true}));
+  }
+
+  rejectInvitation(notificationId: string) {
+    this.store.dispatch(notificationsActions.replyInviteBoard({notificationId, isAccepted: false}));
+  }
+
+
 }

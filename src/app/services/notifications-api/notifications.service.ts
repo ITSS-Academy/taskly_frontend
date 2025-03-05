@@ -40,4 +40,14 @@ export class NotificationsService {
       },
     );
   }
+
+  replyInvteBoard(notificationId: string, isAccepted: boolean) {
+    return this.httpClient.put(`${environment.apiUrl}/notifications/isAccept/board`, {
+      notificationId,
+      isAccepted,
+    }, {
+      headers: {Authorization: this.accessToken},
+    });
+  }
+
 }
