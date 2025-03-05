@@ -4,26 +4,33 @@
     <div class="templates">
       <div class="titles">
         <mat-icon class="material-symbols-outlined">difference</mat-icon>
-        <p>Templates</p>
+        <p class="title">Templates</p>
       </div>
-      <div class="board-container">
-        <p>Basic kanban</p>
+      <div class="template">
+        <div class="board-container"
+             style="background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/05/New-Wallpaper-Full-HD-1920x1080.jpg')">
+          <div class="overlay"></div>
+          <p class="board-name">Basic kanban</p>
+        </div>
       </div>
     </div>
     <div class="workspaces">
       <div class="titles">
         <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
-        <p>Your workspaces</p>
+        <p class="title">Your workspaces</p>
       </div>
       <div class="workspace">
         @for (board of (boards$ | async); track $index) {
           <div class="board-container"
-               [ngStyle]="{background: 'url(' + (board.backgroundId! | background | async) + ')'}">
-            <p>{{ board.name }}</p>
+               (click)="navigateToBoard(board.id!)"
+               [ngStyle]="{'background-image': 'url(' + (board.backgroundId! | background | async) + ')'}">
+            <div class="overlay"></div>
+            <p class="board-name">{{ board.name }}</p>
           </div>
         }
-        <div class="personal-container create-container">
-          <p>Tạo bảng mới</p>
+
+        <div class="board-container create-board">
+          <p class="board-name">Create board</p>
         </div>
       </div>
     </div>
