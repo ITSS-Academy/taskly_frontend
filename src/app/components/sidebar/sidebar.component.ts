@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {MaterialModule} from "../../shared/modules/material.module";
 import {MatSidenav} from "@angular/material/sidenav";
-import {RouterLink} from '@angular/router';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 import {AsyncPipe, NgStyle} from '@angular/common';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
 import {Store} from '@ngrx/store';
@@ -16,7 +16,7 @@ import {CreateBoardComponent} from '../create-board/create-board.component';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [MaterialModule, RouterLink, NgStyle, AsyncPipe, BackgroundPipe],
+  imports: [MaterialModule, RouterLink, NgStyle, AsyncPipe, BackgroundPipe, RouterLinkActive],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })

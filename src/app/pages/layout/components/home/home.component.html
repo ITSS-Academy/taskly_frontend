@@ -19,20 +19,25 @@
         <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
         <p class="title">Your workspaces</p>
       </div>
-      <div class="workspace">
-        @for (board of (boards$ | async); track $index) {
-          <div class="board-container"
-               (click)="navigateToBoard(board.id!)"
-               [ngStyle]="{'background-image': 'url(' + (board.backgroundId! | background | async) + ')'}">
-            <div class="overlay"></div>
-            <p class="board-name">{{ board.name }}</p>
-          </div>
-        }
-
-        <div class="board-container create-board">
-          <p class="board-name">Create board</p>
+      @if (isGettingBoards) {
+        <ngx-skeleton-loader [theme]="{height: '135px', width: '19%', borderRadius: '10px'}"/>
+      } @else {
+        <div class="workspace">
+          @if (boards$ | async; as data) {
+            @for (board of data; track $index) {
+              <div class="board-container"
+                   (click)="navigateToBoard(board.id!)"
+                   [ngStyle]="{'background-image': 'url(' + (board.backgroundId! | background | async) + ')'}">
+                <div class="overlay"></div>
+                <p class="board-name">{{ board.name }}</p>
+              </div>
+            }
+          } @else {
+            <ngx-skeleton-loader [theme]="{height: '135px', width: '19%', borderRadius: '10px'}"/>
+          }
         </div>
-      </div>
+
+      }
     </div>
   </div>
 </div>

@@ -8,11 +8,12 @@ import {NotificationsModel} from '../../models/notifications.model';
 import {AsyncPipe, JsonPipe} from '@angular/common';
 import {UserPipe} from '../../shared/pipes/user.pipe';
 import {BoardPipe} from '../../shared/pipes/board.pipe';
+import {NgxSkeletonLoaderComponent} from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-notifications-api',
   standalone: true,
-  imports: [MaterialModule, JsonPipe, UserPipe, AsyncPipe, BoardPipe],
+  imports: [MaterialModule, JsonPipe, UserPipe, AsyncPipe, BoardPipe, NgxSkeletonLoaderComponent],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
 })
@@ -20,7 +21,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   limit = 10;
   offset = 0;
 
-  isGettingNotifications = false;
+  isGettingNotifications!: boolean;
   canGetMoreNotifications = true;
 
   subcriptions: Subscription[] = [];
