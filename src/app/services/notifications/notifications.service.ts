@@ -31,4 +31,13 @@ export class NotificationsService {
       },
     );
   }
+
+  getNotifications(offset: number, limit: number) {
+    return this.htppClient.get(
+      `${environment.apiUrl}/notifications/${limit}/${offset}`,
+      {
+        headers: { Authorization: this.accessToken },
+      },
+    );
+  }
 }
