@@ -13,6 +13,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {BoardState} from '../../ngrx/board/board.state';
 import {LogoutButtonComponent} from '../logout-button/logout-button.component';
+import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
+import {NotificationsState} from '../../ngrx/notifications/notifications.state';
 
 @Component({
   selector: 'app-navbar',
@@ -36,7 +38,10 @@ export class NavbarComponent implements OnInit, AfterViewInit {
               private backgroundColorService: BackgroundColorService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
-              private store: Store<{ board: BoardState }>) {
+              private store: Store<{
+                board: BoardState,
+                notifications: NotificationsState
+              }>) {
     this.store.select('board', 'board').subscribe((board) => {
       if (board) {
         console.log(board);

@@ -1,6 +1,6 @@
-import { createAction, props } from '@ngrx/store';
-import { UserModel } from '../../models/user.model';
-import { NotificationsModel } from '../../models/notifications.model';
+import {createAction, props} from '@ngrx/store';
+import {UserModel} from '../../models/user.model';
+import {NotificationsModel} from '../../models/notifications.model';
 
 export const inviteUser = createAction(
   '[Notifications] Invite User',

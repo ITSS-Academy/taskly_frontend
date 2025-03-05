@@ -6,6 +6,9 @@ import {NotificationsComponent} from '../notifications/notifications.component';
 import {MatDialog} from '@angular/material/dialog';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
 import {NgStyle} from '@angular/common';
+import {Store} from '@ngrx/store';
+import {NotificationsState} from '../../ngrx/notifications/notifications.state';
+import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
 
 @Component({
   selector: 'app-notifications-button',
@@ -18,7 +21,10 @@ import {NgStyle} from '@angular/common';
   styleUrl: './notifications-button.component.scss'
 })
 export class NotificationsButtonComponent implements OnInit {
-  constructor(private backgroundColorService: BackgroundColorService) {
+  constructor(private backgroundColorService: BackgroundColorService,
+              private store: Store<{
+                notifications: NotificationsState
+              }>) {
   }
 
   textColor: string = '#000000';
@@ -28,6 +34,7 @@ export class NotificationsButtonComponent implements OnInit {
     const dialogRef = this.dialog.open(NotificationsComponent);
 
     dialogRef.afterClosed().subscribe(result => {
+      this.store.dispatch(notificationsActions.clearNotifications());
       console.log(`Dialog result: ${result}`);
     });
   }

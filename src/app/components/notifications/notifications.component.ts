@@ -1,15 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MaterialModule } from '../../shared/modules/material.module';
-import { NotificationsState } from '../../ngrx/notifications/notifications.state';
-import { Store } from '@ngrx/store';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {MaterialModule} from '../../shared/modules/material.module';
+import {NotificationsState} from '../../ngrx/notifications/notifications.state';
+import {Store} from '@ngrx/store';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
-import { Subscription } from 'rxjs';
-import { NotificationsModel } from '../../models/notifications.model';
+import {Subscription} from 'rxjs';
+import {NotificationsModel} from '../../models/notifications.model';
+import {AsyncPipe, JsonPipe} from '@angular/common';
+import {UserPipe} from '../../shared/pipes/user.pipe';
+import {BoardPipe} from '../../shared/pipes/board.pipe';
 
 @Component({
-  selector: 'app-notifications',
+  selector: 'app-notifications-api',
   standalone: true,
-  imports: [MaterialModule],
+  imports: [MaterialModule, JsonPipe, UserPipe, AsyncPipe, BoardPipe],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
 })
@@ -51,7 +54,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+  }
 
   notiArray: NotificationsModel[] = [];
 

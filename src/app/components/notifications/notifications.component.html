@@ -3,10 +3,13 @@
   <mat-dialog-content class="mat-typography notifications" (scroll)="onScroll($event)">
     <mat-list>
       @for (noti of notiArray; track $index) {
-        @if (noti.type == 'invite_card') {
+
+        @if (noti.type == 'invite_board') {
           <mat-list-item class="invite-noti">
             <mat-icon matListItemIcon>group</mat-icon>
-            <div matListItemTitle>{{ noti.senderId }} Invitation to join {{ noti.boardId }}</div>
+            <div matListItemTitle>{{ (noti.senderId | user | async)?.name }} Invitation to
+              join {{ (noti.boardId! | board | async)?.name }}
+            </div>
             <div matListItemLine>Accept or decline the invitation</div>
             <div class="btns">
               <button mat-stroked-button>Decline</button>

@@ -1,5 +1,5 @@
-import { NotificationsState } from './notifications.state';
-import { createReducer, on } from '@ngrx/store';
+import {NotificationsState} from './notifications.state';
+import {createReducer, on} from '@ngrx/store';
 import * as notificationsActions from './notifications.actions';
 
 const initialState: NotificationsState = {
@@ -38,7 +38,7 @@ export const notificationsReducer = createReducer(
       isInvitingUserFailure: false,
     };
   }),
-  on(notificationsActions.inviteUserFailure, (state, { error }) => {
+  on(notificationsActions.inviteUserFailure, (state, {error}) => {
     return {
       ...state,
       isInvitingUser: false,
@@ -57,7 +57,7 @@ export const notificationsReducer = createReducer(
   }),
   on(
     notificationsActions.getNotificationsSuccess,
-    (state, { notifications, limit }) => {
+    (state, {notifications, limit}) => {
       console.log(notifications);
       console.log(limit);
       const isCanGetMoreNotifications = notifications.length == limit;
@@ -71,7 +71,7 @@ export const notificationsReducer = createReducer(
       };
     },
   ),
-  on(notificationsActions.getNotificationsFailure, (state, { error }) => {
+  on(notificationsActions.getNotificationsFailure, (state, {error}) => {
     return {
       ...state,
       isGettingNotifications: false,
@@ -79,11 +79,16 @@ export const notificationsReducer = createReducer(
       isGettingNotificationsFailure: error,
     };
   }),
-  on(notificationsActions.clearNotifications, (state) => {
+  on(notificationsActions.clearNotifications, (state,) => {
     return {
       ...state,
       notifications: [],
-    };
+      isCanGetMoreNotifications: true,
+      isGettingNotifications: false,
+      isGettingNotificationsSuccess: false,
+      isGettingNotificationsFailure: false,
+
+    }
   }),
 
   on(notificationsActions.checkNewNotifications, (state) => {
@@ -96,7 +101,7 @@ export const notificationsReducer = createReducer(
   }),
   on(
     notificationsActions.checkNewNotificationsSuccess,
-    (state, { isNewNotification }) => {
+    (state, {isNewNotification}) => {
       return {
         ...state,
         isNewNotifications: isNewNotification,
@@ -106,7 +111,7 @@ export const notificationsReducer = createReducer(
       };
     },
   ),
-  on(notificationsActions.checkNewNotificationsFailure, (state, { error }) => {
+  on(notificationsActions.checkNewNotificationsFailure, (state, {error}) => {
     return {
       ...state,
       isCheckingNewNotifications: false,

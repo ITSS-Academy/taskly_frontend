@@ -1,10 +1,10 @@
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { inject } from '@angular/core';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {inject} from '@angular/core';
 import * as listActions from '../list/list.actions';
-import { catchError, map, of, switchMap } from 'rxjs';
-import { NotificationsService } from '../../services/notifications/notifications.service';
+import {catchError, map, of, switchMap} from 'rxjs';
+import {NotificationsService} from '../../services/notifications-api/notifications.service';
 import * as notificationsActions from './notifications.actions';
-import { NotificationsModel } from '../../models/notifications.model';
+import {NotificationsModel} from '../../models/notifications.model';
 
 export const inviteUser$ = createEffect(
   (
@@ -13,7 +13,7 @@ export const inviteUser$ = createEffect(
   ) => {
     return action$.pipe(
       ofType(notificationsActions.inviteUser),
-      switchMap(({ boardId, invitedUser }) => {
+      switchMap(({boardId, invitedUser}) => {
         return notificationsService.inviteUser(invitedUser, boardId).pipe(
           map(() => notificationsActions.inviteUserSuccess()),
           catchError((error) => {
@@ -39,10 +39,10 @@ export const getNotifications$ = createEffect(
   ) => {
     return action$.pipe(
       ofType(notificationsActions.getNotifications),
-      switchMap(({ offset, limit }) => {
+      switchMap(({offset, limit}) => {
         return notificationsService.getNotifications(offset, limit).pipe(
           map((notifications: NotificationsModel[] | any) => {
-            // console.log('notifications', notifications);
+            // console.log('notifications-api', notifications-api);
             return notificationsActions.getNotificationsSuccess({
               notifications: notifications,
               limit: limit,
