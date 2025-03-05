@@ -15,6 +15,7 @@ import * as boardActions from '../../../../ngrx/board/board.actions';
 import {BoardState} from '../../../../ngrx/board/board.state';
 import {AsyncPipe, NgStyle} from '@angular/common';
 import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
     LoginComponent,
     AsyncPipe,
     NgStyle,
-    BackgroundPipe
+    BackgroundPipe,
+    RouterLink
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -46,6 +48,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.boards$ = this.store.select('board', 'boards');
+  }
+
+  navigateToBoard(boardId: string): void {
+    console.log(boardId);
   }
 
   onLinkActivated(): void {
