@@ -1,3 +1,7 @@
 <button mat-icon-button (click)="openDialog()" [ngStyle]="{'color': textColor}">
-  <mat-icon matBadgeSize="small" matBadge="1" class="material-symbols-outlined">notifications</mat-icon>
+  @if (this.isNotifications) {
+    <mat-icon matBadgeSize="small" matBadge="1" class="material-symbols-outlined">notifications</mat-icon>
+  } @else {
+    <mat-icon class="material-symbols-outlined">notifications</mat-icon>
+  }
 </button>

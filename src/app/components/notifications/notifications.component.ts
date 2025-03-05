@@ -1,13 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MaterialModule} from '../../shared/modules/material.module';
-import {NotificationsState} from '../../ngrx/notifications/notifications.state';
-import {Store} from '@ngrx/store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MaterialModule } from '../../shared/modules/material.module';
+import { NotificationsState } from '../../ngrx/notifications/notifications.state';
+import { Store } from '@ngrx/store';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
-import {Subscription} from 'rxjs';
-import {NotificationsModel} from '../../models/notifications.model';
-import {AsyncPipe, JsonPipe} from '@angular/common';
-import {UserPipe} from '../../shared/pipes/user.pipe';
-import {BoardPipe} from '../../shared/pipes/board.pipe';
+import { Subscription } from 'rxjs';
+import { NotificationsModel } from '../../models/notifications.model';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { UserPipe } from '../../shared/pipes/user.pipe';
+import { BoardPipe } from '../../shared/pipes/board.pipe';
+import { NotificationsService } from '../../services/notification/notifications.service';
 
 @Component({
   selector: 'app-notifications-api',
@@ -25,7 +26,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   subcriptions: Subscription[] = [];
 
-  constructor(private store: Store<{ notifications: NotificationsState }>) {
+  constructor(
+    private store: Store<{ notifications: NotificationsState }>,
+    private notificationsSocket: NotificationsService,
+  ) {
     this.store.dispatch(
       notificationsActions.getNotifications({
         offset: this.offset,
@@ -51,11 +55,17 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         .subscribe((canGetMoreNotifications) => {
           this.canGetMoreNotifications = canGetMoreNotifications;
         }),
+      this.store
+        .select('notifications', 'isGettingNotificationsSuccess')
+        .subscribe((isGettingNotificationsSuccess) => {
+          if (isGettingNotificationsSuccess) {
+            this.store.dispatch(notificationsActions.checkNewNotifications());
+          }
+        }),
     );
   }
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   notiArray: NotificationsModel[] = [];
 
@@ -81,15 +91,24 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         limit: this.limit,
       }),
     );
+    this.store.dispatch(notificationsActions.checkNewNotifications());
   }
 
   acceptInvitation(notificationId: string) {
-    this.store.dispatch(notificationsActions.replyInviteBoard({notificationId, isAccepted: true}));
+    this.store.dispatch(
+      notificationsActions.replyInviteBoard({
+        notificationId,
+        isAccepted: true,
+      }),
+    );
   }
 
   rejectInvitation(notificationId: string) {
-    this.store.dispatch(notificationsActions.replyInviteBoard({notificationId, isAccepted: false}));
+    this.store.dispatch(
+      notificationsActions.replyInviteBoard({
+        notificationId,
+        isAccepted: false,
+      }),
+    );
   }
-
-
 }

@@ -1,8 +1,8 @@
-import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {MatFormField} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {FormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -11,21 +11,21 @@ import {
   MatDialogContent,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {NotificationsComponent} from '../notifications/notifications.component';
-import {UserState} from '../../ngrx/user/user.state';
-import {Store} from '@ngrx/store';
-import {debounceTime, Observable, Subject, Subscription} from 'rxjs';
+import { UserState } from '../../ngrx/user/user.state';
+import { Store } from '@ngrx/store';
+import { debounceTime, Observable, Subject, Subscription } from 'rxjs';
 import * as userActions from '../../ngrx/user/user.actions';
-import {UserModel} from '../../models/user.model';
-import {AsyncPipe} from '@angular/common';
-import {MaterialModule} from '../../shared/modules/material.module';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {MatChipEditedEvent, MatChipInputEvent} from '@angular/material/chips';
+import { UserModel } from '../../models/user.model';
+import { AsyncPipe } from '@angular/common';
+import { MaterialModule } from '../../shared/modules/material.module';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component';
-import {NotificationsState} from '../../ngrx/notifications/notifications.state';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.component';
+import { NotificationsState } from '../../ngrx/notifications/notifications.state';
+import { NotificationsService } from '../../services/notification/notifications.service';
 
 export interface Fruit {
   name: string;
@@ -53,6 +53,7 @@ export class ShareComponent implements OnInit, OnDestroy {
       user: UserState;
       notifications: NotificationsState;
     }>,
+    private notiSocket: NotificationsService,
   ) {
     console.log(this.data);
   }
@@ -69,7 +70,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 
       this.userNameSubject.pipe(debounceTime(500)).subscribe((value) => {
         if (value !== '') {
-          this.store.dispatch(userActions.searchUsers({email: value}));
+          this.store.dispatch(userActions.searchUsers({ email: value }));
         }
       }),
       this.store
@@ -96,7 +97,6 @@ export class ShareComponent implements OnInit, OnDestroy {
   onUserNameChange() {
     this.userNameSubject.next(this.userName);
   }
-
 
   readonly users = signal<UserModel[]>([]);
   readonly announcer = inject(LiveAnnouncer);
@@ -159,5 +159,8 @@ export class ShareComponent implements OnInit, OnDestroy {
         boardId: this.data,
       }),
     );
+    for (let i = 0; i < this.users().length; i++) {
+      this.notiSocket.sendNoti(this.users()[i]);
+    }
   }
 }

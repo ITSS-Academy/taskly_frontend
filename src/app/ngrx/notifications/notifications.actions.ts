@@ -1,6 +1,6 @@
-import {createAction, props} from '@ngrx/store';
-import {UserModel} from '../../models/user.model';
-import {NotificationsModel} from '../../models/notifications.model';
+import { createAction, props } from '@ngrx/store';
+import { UserModel } from '../../models/user.model';
+import { NotificationsModel } from '../../models/notifications.model';
 
 export const inviteUser = createAction(
   '[Notifications] Invite User',
@@ -56,9 +56,15 @@ export const replyInviteBoard = createAction(
 
 export const replyInviteBoardSuccess = createAction(
   '[Notifications] Reply Invite Board Success',
+  props<{ notificationId: string }>(),
 );
 
 export const replyInviteBoardFailure = createAction(
   '[Notifications] Reply Invite Board Failure',
   props<{ error: any }>(),
+);
+
+export const updateIsNewNotifications = createAction(
+  '[Notifications] Update Is New Notifications',
+  props<{ isNewNotifications: boolean }>(),
 );
