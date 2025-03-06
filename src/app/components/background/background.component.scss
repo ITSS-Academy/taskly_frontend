@@ -2,7 +2,7 @@
   width: 350px;
   height: fit-content;
   background-color: var(--md-sys-color-surface);
-  padding: 10px 20px;
+  padding: 0px 5px;
   border-radius: 10px;
   border: none;
 }
@@ -162,6 +162,11 @@
 
 ::ng-deep.mat-mdc-dialog-content {
   max-height: 100%;
+  padding: 0 15px 6px 15px!important;
+
+}
+h2[mat-dialog-title] {
+  padding-left: 15px;
 }
 
 
