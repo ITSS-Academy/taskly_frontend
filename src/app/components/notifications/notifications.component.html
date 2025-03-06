@@ -4,34 +4,32 @@
 
     <mat-list>
       @for (noti of notiArray; track $index) {
-        @if (noti.board && noti.sender) {
-          <!--          {{ noti.board | json }}-->
-            <!--          {{ noti.sender | json }}-->
-          @if (noti.type == 'invite_board') {
-            <mat-list-item class="invite-noti">
-              <mat-icon matListItemIcon>group</mat-icon>
-              <div matListItemTitle matTooltip="{{ noti.sender.name }} Invitation to join {{ noti.board.name }}">
-                {{ noti.sender.name }} Invitation to join {{ noti.board.name }}
-              </div>
-              <div matListItemLine>Accept or decline the invitation</div>
-              <div class="btns">
-                <button mat-stroked-button (click)="this.rejectInvitation(noti.id!)">Decline</button>
-                <button mat-flat-button (click)="this.acceptInvitation(noti.id!, noti.board)">Accept</button>
-              </div>
-            </mat-list-item>
-          } @else {
-            <mat-list-item>
-              <mat-icon matListItemIcon>folder</mat-icon>
-              <div matListItemTitle>card</div>
-              <div matListItemLine>{{ noti.createdAt }}</div>
-            </mat-list-item>
-          }
+        @if (noti.type == 'invite_board') {
+          <mat-list-item class="invite-noti">
+            <mat-icon matListItemIcon>group</mat-icon>
+            <div matListItemTitle matTooltip="{{ noti.senderName }} Invitation to join {{ noti.boardName }}">
+              {{ noti.senderName }} Invitation to join {{ noti.boardName }}
+            </div>
+            <div matListItemLine>Accept or decline the invitation</div>
+            <div class="btns">
+              <button mat-stroked-button (click)="this.rejectInvitation(noti.id!)">Decline</button>
+              <button mat-flat-button (click)="this.acceptInvitation(noti.id!)">Accept</button>
+            </div>
+          </mat-list-item>
         } @else {
-          <ngx-skeleton-loader count="1" appearance="line"/>
+          <mat-list-item>
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>card</div>
+            <div matListItemLine>{{ noti.createdAt }}</div>
+          </mat-list-item>
         }
-
-
       }
+
+      @if (isGettingNotifications) {
+        <ngx-skeleton-loader count="2" appearance="line"/>
+      }
+
+
     </mat-list>
 
   </mat-dialog-content>

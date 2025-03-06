@@ -1,4 +1,4 @@
-import {LabelModel} from './label.model';
+import { LabelModel } from './label.model';
 
 export interface ListModel {
   id: string | null;
@@ -13,7 +13,7 @@ export interface ListCard {
   title: string;
   description?: string;
   dueDate?: Date;
-  labels?: any[];
+  labels?: LabelModel[];
   members?: any[];
   checklistCount?: number;
   commentsCount?: number;

@@ -1,11 +1,23 @@
+import { ChecklistItemModel } from './checklistItem.model';
+import { LabelModel } from './label.model';
+import { CommentModel } from './comment.model';
+
 export interface CardModel {
-  id: string | null,
+  id: string;
   title: string;
-  description: string;
-  dueDate: Date;
-  labels: any[] | null;
-  members: any[] | null;
-  checklistItems: any[] | null;
-  comments: any[] | null;
+  description: string | null;
+  dueDate: Date | null;
+  labels:
+    | {
+        boardLabelId: string;
+      }[]
+    | null;
+  members:
+    | {
+        user_id: string;
+      }[]
+    | null;
+  checklistItems: ChecklistItemModel[] | null;
+  comments: CommentModel[] | null;
   attachments: any[] | null;
 }

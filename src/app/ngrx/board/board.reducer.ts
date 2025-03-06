@@ -131,6 +131,7 @@ export const boardReducer = createReducer(
     };
   }),
   on(boardActions.acceptInvitation, (state, { board }) => {
+    console.log(board);
     return {
       ...state,
       invitedBoards: state.invitedBoards

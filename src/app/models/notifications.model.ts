@@ -7,4 +7,7 @@ export interface NotificationsModel {
   cardId?: string;
   userId: string;
   senderId: string;
+  senderName?: string;
+  boardName?: string;
+  cardTitle?: string;
 }

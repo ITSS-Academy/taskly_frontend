@@ -1,10 +1,11 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import * as listActions from '../list/list.actions';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 import { NotificationsService } from '../../services/notifications-api/notifications.service';
 import * as notificationsActions from './notifications.actions';
 import { NotificationsModel } from '../../models/notifications.model';
+import * as boardActions from '../board/board.actions';
 
 export const inviteUser$ = createEffect(
   (
@@ -75,23 +76,35 @@ export const replyInviteBoard$ = createEffect(
         return notificationsService
           .replyInvteBoard(notificationId, isAccepted)
           .pipe(
-            map(() =>
-              notificationsActions.replyInviteBoardSuccess({ notificationId }),
-            ),
-            catchError((error) => {
-              return of(
-                notificationsActions.replyInviteBoardFailure({
-                  error: error.error.message || 'Unknown error',
-                }),
-              );
+            mergeMap((board: any) => {
+              if (isAccepted) {
+                console.log('board', board);
+                return of(
+                  boardActions.acceptInvitation({ board }),
+                  notificationsActions.replyInviteBoardSuccess({
+                    notificationId,
+                  }),
+                );
+              } else {
+                return of(
+                  notificationsActions.replyInviteBoardSuccess({
+                    notificationId,
+                  }),
+                );
+              }
             }),
+            catchError((error) =>
+              of(
+                notificationsActions.replyInviteBoardFailure({
+                  error: error.error?.message || 'Unknown error',
+                }),
+              ),
+            ),
           );
       }),
     );
   },
-  {
-    functional: true,
-  },
+  { functional: true },
 );
 
 export const checkNewNotifications$ = createEffect(

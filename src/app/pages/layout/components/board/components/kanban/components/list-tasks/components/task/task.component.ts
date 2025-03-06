@@ -1,20 +1,23 @@
-import {Component, inject, Input} from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import {AsyncPipe, DatePipe, NgIf, NgStyle} from '@angular/common';
-import { of } from 'rxjs';
+import { AsyncPipe, DatePipe, NgIf, NgStyle } from '@angular/common';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { MatIconButton } from '@angular/material/button';
 import { CardModel } from '../../../../../../../../../../models/card.model';
 import { BoardState } from '../../../../../../../../../../ngrx/board/board.state';
 import { Store } from '@ngrx/store';
 import { ListState } from '../../../../../../../../../../ngrx/list/list.state';
 import * as listActions from '../../../../../../../../../../ngrx/list/list.actions';
-import {MatDialog} from '@angular/material/dialog';
-import {
-  TaskDescriptionComponent
-} from '../../../../../../../../../../components/task-description/task-description.component';
-import {LabelPipe} from '../../../../../../../../../../shared/pipes/label.pipe';
-import {UserPipe} from '../../../../../../../../../../shared/pipes/user.pipe';
-import {MatTooltip} from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { TaskDescriptionComponent } from '../../../../../../../../../../components/task-description/task-description.component';
+import { LabelPipe } from '../../../../../../../../../../shared/pipes/label.pipe';
+import { UserPipe } from '../../../../../../../../../../shared/pipes/user.pipe';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ListCard } from '../../../../../../../../../../models/list.model';
+import * as cardActions from '../../../../../../../../../../ngrx/card/card.actions';
+import { CardState } from '../../../../../../../../../../ngrx/card/card.state';
+import { LabelService } from '../../../../../../../../../../services/label/label.service';
+import { LabelModel } from '../../../../../../../../../../models/label.model';
 
 interface Task {
   id: string;
@@ -31,20 +34,54 @@ interface Task {
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
-  imports: [MatIcon, DatePipe, MatIconButton, LabelPipe, AsyncPipe, UserPipe, NgStyle, MatTooltip],
+  imports: [
+    MatIcon,
+    DatePipe,
+    MatIconButton,
+    LabelPipe,
+    AsyncPipe,
+    UserPipe,
+    NgStyle,
+    MatTooltip,
+  ],
   styleUrls: ['./task.component.scss'],
 })
-export class TaskComponent {
-  @Input() task!: CardModel;
+export class TaskComponent implements OnInit, OnDestroy {
+  @Input() task!: ListCard;
   readonly dialog = inject(MatDialog);
+  subscription: Subscription[] = [];
 
+  // labels: LabelModel[] = [];
 
   constructor(
     private store: Store<{
       board: BoardState;
       list: ListState;
+      card: CardState;
     }>,
+    private labelService: LabelService,
   ) {}
+
+  ngOnInit() {
+    // const labelIdsRequest = this.task.labels?.map((label) =>
+    //   this.labelService.getLabel(label.boardLabelId),
+    // );
+
+    this.subscription
+      .push
+      // forkJoin(labelIdsRequest!).subscribe((labels) => {
+      //   if (labels) {
+      //     this.labels = labels.map((label) => label!);
+      //     console.log('Labels:', this.labels);
+      //   }
+      // })
+      ();
+  }
+
+  ngOnDestroy() {
+    this.subscription.forEach((sub) => sub.unsubscribe());
+    this.subscription = [];
+  }
 
   closeTask() {
     // Implement logic to remove/archive task
@@ -66,13 +103,11 @@ export class TaskComponent {
 
   openDialog() {
     this.dialog.open(TaskDescriptionComponent, {
-      data: this.task,
-    })
+      data: this.task.id,
+    });
   }
 
-  showMoreOptions() {
-
-  }
+  showMoreOptions() {}
 
   protected readonly Array = Array;
 }
