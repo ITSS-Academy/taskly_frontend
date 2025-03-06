@@ -1,4 +1,28 @@
-<mat-card>
-  <mat-card-title>Quản lý nhãn</mat-card-title>
-  <button mat-raised-button color="primary" (click)="openLabelDialog()">Chỉnh sửa nhãn</button>
-</mat-card>
+<div class="label-container">
+    <h2>Tạo nhãn mới</h2>
+
+    <!-- Hộp màu xem trước -->
+    <div class="preview-color" [style.background]="selectedColor || '#eee'"></div>
+
+    <!-- Ô nhập tiêu đề -->
+    <label>Tiêu đề</label>
+    <input type="text" placeholder="Nhập tiêu đề" [(ngModel)]="labelTitle"/>
+
+    <!-- Chọn màu -->
+    <label>Chọn một màu</label>
+    <div class="color-grid">
+        <div
+                *ngFor="let color of colors"
+                class="color-box"
+                [style.background]="color"
+                [class.selected]="selectedColor === color"
+                (click)="selectColor(color)">
+        </div>
+    </div>
+
+    <!-- Nút gỡ màu -->
+    <button mat-button color="warn" (click)="removeColor()">✖ Gỡ bỏ màu</button>
+
+    <!-- Nút tạo mới -->
+    <button mat-button color="primary" (click)="createLabel()">Tạo mới</button>
+</div>

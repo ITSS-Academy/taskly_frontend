@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Nhãn</h2>
+<h2 mat-dialog-title>Label</h2>
 <mat-dialog-content>
   <mat-form-field class="full-width">
     <mat-label>Tìm nhãn...</mat-label>
@@ -18,12 +18,9 @@
       </mat-list-option>
     </mat-selection-list>
   </div>
-
-  <button mat-stroked-button color="primary" (click)="createNewLabel()">Tạo nhãn mới</button>
-  <button mat-stroked-button> Bật chế độ thân thiện với người mù màu </button>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Đóng</button>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button color="primary" (click)="createNewLabel()">Create New Labels</button>
+  <button mat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>
-

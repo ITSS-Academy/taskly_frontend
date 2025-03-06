@@ -2,9 +2,15 @@
   <div class="task-description-container" (click)="$event.stopPropagation()">
     <div class="task-description-header">
       <h2>Task description</h2>
-      <button mat-icon-button class="close-button" (click)="onClose()">
-        <mat-icon>close</mat-icon>
-      </button>
+      <div class="header-buttons">
+        <button mat-stroked-button class="create-label-button" (click)="createLabel()">
+          <mat-icon>add</mat-icon>
+          Create Label
+        </button>
+        <button mat-icon-button class="close-button" (click)="onClose()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
 
     <div class="task-description-content">
@@ -14,11 +20,15 @@
         <input type="text" [(ngModel)]="task.title" class="title-input">
       </div>
 
-      <!-- Tags Button -->
-      <div class="form-group">
+      <!-- Tags and Labels Buttons in the same row -->
+      <div class="form-group tags-labels-row">
         <button mat-stroked-button class="tag-button">
           <mat-icon>tag</mat-icon>
           Tags
+        </button>
+        <button mat-stroked-button class="label-button" (click)="openLabelDialog()">
+          <mat-icon>label</mat-icon>
+          Labels
         </button>
       </div>
 

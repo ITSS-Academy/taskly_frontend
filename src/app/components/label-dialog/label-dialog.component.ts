@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, inject } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from '../../shared/modules/material.module';
+import { NgForOf, NgStyle } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { LabelListComponent } from '../label-list/label-list.component'; // Import LabelListComponent
 
 interface Label {
   name: string;
@@ -8,11 +12,15 @@ interface Label {
 }
 
 @Component({
-  selector: 'app-label-dialog',
   templateUrl: './label-dialog.component.html',
+  imports: [MaterialModule, NgStyle, FormsModule, NgForOf],
+  standalone: true,
   styleUrls: ['./label-dialog.component.scss']
 })
 export class LabelDialogComponent {
+  readonly labelRef = inject(MatDialogRef<LabelDialogComponent>);
+  private dialog = inject(MatDialog); // Inject MatDialog để mở dialog mới
+
   searchText = '';
   labels: Label[] = [
     { name: 'Xanh lá cây', color: '#2ECC71', selected: true },
@@ -27,8 +35,11 @@ export class LabelDialogComponent {
     return this.labels.filter(label => label.name.toLowerCase().includes(this.searchText.toLowerCase()));
   }
 
+  // ✅ Mở label-list khi nhấn "Tạo nhãn mới"
   createNewLabel() {
-    console.log("Tạo nhãn mới");
+    this.dialog.open(LabelListComponent, {
+      width: '400px'
+    });
   }
 
   editLabel(label: Label) {
