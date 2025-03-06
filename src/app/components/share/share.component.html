@@ -30,21 +30,31 @@
           </mat-chip-grid>
         </mat-form-field>
 
-        <button mat-flat-button class="share-btn" (click)="inviteUsers()">Share</button>
-      </div>
-
-      <div class="users-container">
         @for (user of (this.searchUser$ | async); track $index) {
-          <div class="user">
+          <div class="user-container">
             <img class="avatar"
                  [src]="user.photoUrl"
-                 alt="Profile">
+                 alt=""
+                 matListItemIcon>
             <div class="user-info">
               <p class="user-name">{{ user.name }}</p>
               <span class="user-email">{{ user.email }}</span>
             </div>
           </div>
         }
+
+        <button mat-flat-button class="share-btn" (click)="inviteUsers()">Share</button>
+      </div>
+
+      <div class="members-container">
+        <img class="avatar"
+             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
+             alt=""
+             matListItemIcon>
+        <div class="user-info">
+          <p class="user-name">Trinh Tu Hao</p>
+          <span class="user-email">tuhaotrinh</span>
+        </div>
       </div>
     </div>
     <!--    <button mat-stroked-button (click)="openSnackBar()" aria-label="Show an example snack-bar">-->

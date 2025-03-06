@@ -79,9 +79,11 @@ export class BackgroundComponent {
       const primaryColor = `rgb(${r}, ${g}, ${b})`;
       console.log('Extracted Sidebar Color:', primaryColor);
 
-      this.backgroundColorService.setLogo(primaryColor);
-      this.backgroundColorService.setSidebarColor(primaryColor);
-      this.backgroundColorService.setNavbarTextColor(primaryColor);
+      setTimeout(() => {
+        this.backgroundColorService.setLogo(primaryColor);
+        this.backgroundColorService.setSidebarColor(primaryColor);
+        this.backgroundColorService.setNavbarTextColor(primaryColor);
+      }, 100);
     };
   }
 

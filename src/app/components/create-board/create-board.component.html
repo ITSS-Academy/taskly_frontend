@@ -7,6 +7,20 @@
         <input matInput placeholder="Add your board title" formControlName="title">
       </mat-form-field>
 
+      <div class="image-container" (click)="openFilePicker()">
+        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+
+        @if (imagePreview) {
+          <div class="image-box"
+               [style.background-image]="'url(' + imagePreview + ')'">
+            <img src="/assets/images/todo.svg" alt="">
+          </div>
+        } @else {
+          <img src="/assets/images/add-image.png" alt="">
+        }
+      </div>
+
+
       <div class="backgrounds">
         <p class="background-title">Background</p>
         <div class="background-images">
@@ -27,11 +41,6 @@
           @for (color of colorBackgrounds; track $index) {
             <div class="color-box" [style.background]="color" (click)="selectBackground(color)"></div>
           }
-          <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*"
-                 style="display: none;">
-          <div class="color-box add-color" (click)="fileInput.click()">
-            <mat-icon>add</mat-icon>
-          </div>
         </div>
       </div>
     </mat-dialog-content>
@@ -43,3 +52,4 @@
   </form>
 
 </div>
+

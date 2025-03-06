@@ -1,7 +1,7 @@
 <div class="example-container"
      [ngStyle]="{'background-color': sidebarColor, 'color': sidebarTextColor}">
   <div [ngStyle]="{'background-color': sidebarColor, 'color': sidebarTextColor}">
-    <div class="logo" [ngStyle]="{'color': sidebarTextColor}">
+    <div class="logo" [ngStyle]="{'color': sidebarTextColor}" [routerLink]="['home']">
       <img src="{{logoImage}}" alt="logo" class="logo-img">
       Taskly
     </div>

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SidebarComponent} from "../../../../components/sidebar/sidebar.component";
-import {HomeNavComponent} from "./components/home-nav/home-nav.component";
+import {HomeNavComponent} from "../home-nav/home-nav.component";
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {LoginComponent} from '../../../login/login.component';

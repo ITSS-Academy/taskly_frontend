@@ -92,27 +92,24 @@
 
       </div>
       @if (!list.isInEditMode) {
-        <button mat-button class="add-task-button" (click)="addTask(list.id!)">
+        <button mat-stroked-button class="add-task-button" (click)="addTask(list.id!)">
           <mat-icon>add</mat-icon>
           Add task
         </button>
       } @else {
         <div class="input-container">
           <mat-form-field>
-            <mat-label>Input</mat-label>
-            <input matInput [formControl]="cardName" (keydown)="onEnterPress($event,list.id!)">
+            <mat-label>Task Name</mat-label>
+            <input matInput #taskInput [formControl]="cardName" (keydown)="onEnterPress($event,list.id!)">
           </mat-form-field>
           <div class="btn-container">
             <button mat-stroked-button (click)="cancelEdit(list.id!)">Cancel</button>
-            <button mat-button (click)="createNewTask(list.id!)">
+            <button mat-flat-button (click)="createNewTask(list.id!)">
               <mat-icon>add</mat-icon>
               Add
             </button>
           </div>
-
         </div>
-
-
       }
     </div>
   }
@@ -124,11 +121,11 @@
       </button>
     </div>
   } @else {
-    <div>
-      <div class="addlist-container">
+    <div class="list-column add-list-column">
+      <div class="input-container">
         <mat-form-field>
-          <mat-label>Input</mat-label>
-          <input matInput [formControl]="listName">
+          <mat-label>Column Name</mat-label>
+          <input #columnInput matInput [formControl]="listName">
         </mat-form-field>
         <div class="btn-container">
           <button mat-stroked-button (click)="cancelAddList()">Cancel</button>

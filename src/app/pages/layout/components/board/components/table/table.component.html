@@ -1,1 +1,54 @@
-table works !
+<div class="table">
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.title }}</mat-cell>
+    </ng-container>
+
+    <!-- Board Column -->
+    <ng-container matColumnDef="board">
+      <mat-header-cell *matHeaderCellDef> Board</mat-header-cell>
+      <mat-cell class="board-hover" *matCellDef="let element">
+        {{ element.board }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- List Column -->
+    <ng-container matColumnDef="list">
+      <mat-header-cell *matHeaderCellDef> List</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.list }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Member Column -->
+    <ng-container matColumnDef="members">
+      <mat-header-cell *matHeaderCellDef> Members</mat-header-cell>
+      <mat-cell class="members-hover" *matCellDef="let element"> {{ element.members }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Label Column -->
+    <ng-container matColumnDef="tags">
+      <mat-header-cell *matHeaderCellDef> Label</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-chip aria-label="tags">
+          {{ element.tags }}
+        </mat-chip>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row class="mat-header-fixed" *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+</div>
+
+
+
+
