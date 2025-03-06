@@ -1,5 +1,6 @@
 export interface LabelModel {
-  id: string | null;
-  name: string | null;
-  color: string | null;
+  id?: string;
+  name: string;
+  color: string;
+  boardId: string;
 }

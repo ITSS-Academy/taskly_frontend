@@ -1,28 +1,37 @@
+<button mat-icon-button style="position: absolute; right: 10px; top: 10px" (click)="this.close()">
+  <mat-icon>close</mat-icon>
+</button>
 <div class="label-container">
-    <h2>Tạo nhãn mới</h2>
+  <h2>Create new label</h2>
 
-    <!-- Hộp màu xem trước -->
-    <div class="preview-color" [style.background]="selectedColor || '#eee'"></div>
+
+  <form [formGroup]="createLabelForm">
+
+    <div class="preview-color" [style.background]="createLabelForm.get('color')?.value || '#eee'"></div>
 
     <!-- Ô nhập tiêu đề -->
-    <label>Tiêu đề</label>
-    <input type="text" placeholder="Nhập tiêu đề" [(ngModel)]="labelTitle"/>
-
+    <mat-form-field style="width: 100%" appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput type="text" placeholder="Enter title" formControlName="title"/>
+    </mat-form-field>
     <!-- Chọn màu -->
-    <label>Chọn một màu</label>
+    <label>Select a color</label>
     <div class="color-grid">
-        <div
-                *ngFor="let color of colors"
-                class="color-box"
-                [style.background]="color"
-                [class.selected]="selectedColor === color"
-                (click)="selectColor(color)">
-        </div>
+      <div
+        *ngFor="let color of colors"
+        class="color-box"
+        [style.background]="color"
+        [class.selected]="createLabelForm.get('color')?.value === color"
+        (click)="selectColor(color)">
+      </div>
     </div>
+  </form>
+  <!-- Hộp màu xem trước -->
 
-    <!-- Nút gỡ màu -->
-    <button mat-button color="warn" (click)="removeColor()">✖ Gỡ bỏ màu</button>
 
-    <!-- Nút tạo mới -->
-    <button mat-button color="primary" (click)="createLabel()">Tạo mới</button>
+  <!-- Nút gỡ màu -->
+  <button mat-button color="warn" (click)="removeColor()">✖ Remove color</button>
+
+  <!-- Nút tạo mới -->
+  <button mat-button color="primary" (click)="createLabel()">Create</button>
 </div>

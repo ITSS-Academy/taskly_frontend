@@ -24,6 +24,8 @@ import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 import {notificationsReducer} from './ngrx/notifications/notifications.reducer';
 import * as notificationsEffects from './ngrx/notifications/notifications.effects';
 import {environment} from '../environments/environment.development';
+import {labelReducer} from './ngrx/label/label.reducer';
+import * as labelEffects from './ngrx/label/label.effects';
 
 
 export const appConfig: ApplicationConfig = {
@@ -38,6 +40,7 @@ export const appConfig: ApplicationConfig = {
       user: userReducer,
       list: listReducer,
       notifications: notificationsReducer,
+      label: labelReducer,
     }),
     provideEffects([
       authEffects,
@@ -45,6 +48,7 @@ export const appConfig: ApplicationConfig = {
       userEffects,
       listEffects,
       notificationsEffects,
+      labelEffects
     ]),
     provideFirebaseApp(() =>
       initializeApp({

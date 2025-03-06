@@ -1,19 +1,22 @@
+<button mat-icon-button mat-dialog-close style="position: absolute; right: 10px; top:10px;z-index: 10">
+  <mat-icon>close</mat-icon>
+</button>
 <h2 mat-dialog-title>Label</h2>
 <mat-dialog-content>
-  <mat-form-field class="full-width">
+  <mat-form-field class="full-width" appearance="outline">
     <mat-label>Tìm nhãn...</mat-label>
     <input matInput [(ngModel)]="searchText">
   </mat-form-field>
 
   <div class="label-list">
-    <mat-selection-list>
-      <mat-list-option *ngFor="let label of filteredLabels()" [(ngModel)]="label.selected">
+    <mat-selection-list #selectionColor>
+      <mat-list-option [value]="label" *ngFor="let label of filteredLabels()">
         <div class="label-item">
           <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
           {{ label.name }}
-          <button mat-icon-button (click)="editLabel(label)">
-            <mat-icon>edit</mat-icon>
-          </button>
+          <!--          <button mat-icon-button (click)="editLabel(label)">-->
+          <!--            <mat-icon>edit</mat-icon>-->
+          <!--          </button>-->
         </div>
       </mat-list-option>
     </mat-selection-list>
@@ -22,5 +25,5 @@
 
 <mat-dialog-actions class="dialog-actions">
   <button mat-stroked-button color="primary" (click)="createNewLabel()">Create New Labels</button>
-  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button (click)="addLabelsToCard()">Add To Task</button>
 </mat-dialog-actions>

@@ -105,6 +105,11 @@ export const deleteCardFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const updateLabelToCard = createAction(
+  '[Card] Update Label To Card',
+  props<{ cardId: string; labels: ListModel[] }>(),
+);
+
 export const storeNewLists = createAction(
   '[List] Store New Lists',
   props<{ lists: ListModel[] }>(),

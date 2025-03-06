@@ -1,8 +1,16 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import {FormsModule} from "@angular/forms";
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
+import {Store} from '@ngrx/store';
+import {LabelState} from '../../ngrx/label/label.state';
+import * as labelActions from '../../ngrx/label/label.actions';
+import {BoardState} from '../../ngrx/board/board.state';
+import {Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component';
+import {MaterialModule} from '../../shared/modules/material.module';
 
 @Component({
   selector: 'app-label-list',
@@ -11,13 +19,21 @@ import {MatButton} from "@angular/material/button";
   imports: [
     FormsModule,
     NgForOf,
-    MatButton
+    MatButton,
+    ReactiveFormsModule,
+    MaterialModule
   ],
   styleUrls: ['./label-list.component.scss']
 })
-export class LabelListComponent {
-  labelTitle: string = '';
-  selectedColor: string = ''; // Màu được chọn
+export class LabelListComponent implements OnInit, OnDestroy {
+  createLabelForm: FormGroup = new FormGroup({
+    title: new FormControl('', [Validators.required, Validators.minLength(1)]),
+    color: new FormControl('', [Validators.required])
+  });
+
+  private _snackBar = inject(MatSnackBar);
+
+
   colors: string[] = [
     '#D5E8D4', '#FFF2CC', '#F8CECC', '#F5E1FD', '#E3D7FF',
     '#6DECB9', '#FFE599', '#FFAB91', '#FF8A80', '#B39DDB',
@@ -27,18 +43,61 @@ export class LabelListComponent {
     '#01579B', '#00838F', '#2E7D32', '#8E24AA', '#546E7A'
   ];
 
-  constructor(private dialogRef: MatDialogRef<LabelListComponent>) {}
+  boardId!: string;
+  subscriptions: Subscription[] = [];
+
+  constructor(private dialogRef: MatDialogRef<LabelListComponent>,
+              private store: Store<{
+                label: LabelState,
+                board: BoardState
+              }>) {
+  }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+          this.boardId = board.id!;
+        }
+      })
+    )
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions = [];
+  }
 
   selectColor(color: string) {
-    this.selectedColor = color;
+    this.createLabelForm.get('color')?.setValue(color);
   }
 
   removeColor() {
-    this.selectedColor = '';
+    this.createLabelForm.get('color')?.setValue('');
   }
 
   createLabel() {
-    console.log("Tạo nhãn:", { title: this.labelTitle, color: this.selectedColor });
+    if (this.createLabelForm.valid) {
+      const label = this.createLabelForm.get('title')?.value;
+      const color = this.createLabelForm.get('color')?.value;
+
+      this.store.dispatch(labelActions.createLabel({
+        label: {
+          name: label,
+          color: color,
+          boardId: this.boardId
+        }
+      }));
+      // console.log("Tạo nhãn:", {title: label, color: color});
+      this.dialogRef.close();
+    } else {
+      this._snackBar.openFromComponent(ShareSnackbarComponent, {
+        data: "Please fill in the form",
+      })
+    }
+  }
+
+  close() {
     this.dialogRef.close();
   }
 }

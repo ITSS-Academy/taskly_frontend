@@ -1,9 +1,14 @@
-import {Component, EventEmitter, inject, Output} from '@angular/core';
+import {Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
+import {Store} from '@ngrx/store';
+import {BoardState} from '../../ngrx/board/board.state';
+import {Subscription} from 'rxjs';
+import {LabelState} from '../../ngrx/label/label.state';
+import * as labelActions from '../../ngrx/label/label.actions';
 
 @Component({
   selector: 'app-task-description',
@@ -18,7 +23,7 @@ import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
   templateUrl: 'task-description.component.html',
   styleUrl: './task-description.component.scss'
 })
-export class TaskDescriptionComponent {
+export class TaskDescriptionComponent implements OnInit {
 
   @Output() taskChange = new EventEmitter<any>();
 
@@ -29,8 +34,28 @@ export class TaskDescriptionComponent {
 
   readonly dialog = inject(MatDialog);
 
+  boardId!: string
+  subscriptions: Subscription[] = [];
 
-  constructor() {
+  constructor(private store: Store<{
+    board: BoardState,
+    label: LabelState
+  }>) {
+  }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+          this.boardId = board.id!;
+        }
+      }),
+      this.store.select('label', 'isGetLabelsInBoardSuccess').subscribe((isSuccess) => {
+        if (isSuccess) {
+          this.dialog.open(LabelDialogComponent)
+        }
+      })
+    )
   }
 
   onClose() {
@@ -68,11 +93,12 @@ export class TaskDescriptionComponent {
     }
   }
 
-  openLabelDialog() {
-    this.dialog.open(LabelDialogComponent)
-  }
 
   createLabel() {
 
+  }
+
+  openLabelDialog() {
+    this.store.dispatch(labelActions.getLabelsInBoard({id: this.boardId}));
   }
 }
