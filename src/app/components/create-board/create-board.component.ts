@@ -28,15 +28,13 @@ export class CreateBoardComponent {
     'assets/images/bg3.jpg',
     'assets/images/bg4.jpg'
   ];
-  colorBackgrounds = ['#D3D3D3', '#A8E6CF', '#377D6A', '#1D4F73'];
+  colorBackgrounds = ['#D3D3D3', '#A8E6CF', '#377D6A', '#1D4F73', '#1D4F73'];
   boardForm = new FormGroup(
     {
       title: new FormControl('', [Validators.required]),
       image: new FormControl<File | null>(null),
     }
   );
-  imagePreview: string | null = null;
-
 
   constructor(public dialogRef: MatDialogRef<CreateBoardComponent>,
               private store: Store<{ board: BoardState }>) {
@@ -61,36 +59,25 @@ export class CreateBoardComponent {
     }
   }
 
-  isImage: boolean = true; // Determines whether the selected file is an image
+  imagePreview: string | null = null; // Chỉ lưu một ảnh
 
-  onFileSelected(event: Event) {
+  // Hàm mở trình chọn ảnh
+  openFilePicker(): void {
+    document.querySelector<HTMLInputElement>('input[type="file"]')?.click();
+  }
+
+  // Hàm xử lý khi chọn ảnh
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-
     if (input.files && input.files.length > 0) {
-      const file = input.files[0]; // Get the first file
+      const file = input.files[0];
       const reader = new FileReader();
 
-      // Check if the file is an image or video
-      this.isImage = file.type.startsWith('image');
-
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        if (e.target?.result) {
-          this.imagePreview = e.target.result as string; // Store the Base64 data
-        }
+      reader.onload = () => {
+        this.imagePreview = reader.result as string; // Gán ảnh vào biến để hiển thị
       };
 
       reader.readAsDataURL(file);
-
-      // Clear the input so selecting the same file again triggers the change event
-      input.value = '';
     }
   }
-
-  removeImage() {
-    this.imagePreview = null; // Reset preview
-  }
-
-
-  protected readonly of = of;
-  i: any;
 }
