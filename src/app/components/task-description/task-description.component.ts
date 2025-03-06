@@ -1,8 +1,9 @@
 import {Component, EventEmitter, inject, Output} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {MaterialModule} from '../../shared/modules/material.module';
+import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
 
 @Component({
   selector: 'app-task-description',
@@ -14,7 +15,7 @@ import {MaterialModule} from '../../shared/modules/material.module';
     NgIf,
     NgForOf
   ],
-  templateUrl: './task-description.component.html',
+  templateUrl: 'task-description.component.html',
   styleUrl: './task-description.component.scss'
 })
 export class TaskDescriptionComponent {
@@ -25,6 +26,9 @@ export class TaskDescriptionComponent {
   newSubtask = '';
   readonly dialogRef = inject(MatDialogRef<TaskDescriptionComponent>);
   readonly task = inject<any>(MAT_DIALOG_DATA);
+
+  readonly dialog = inject(MatDialog);
+
 
   constructor() {
   }
@@ -62,5 +66,13 @@ export class TaskDescriptionComponent {
     } else {
       this.task.completedSubtasks--;
     }
+  }
+
+  openLabelDialog() {
+    this.dialog.open(LabelDialogComponent)
+  }
+
+  createLabel() {
+
   }
 }
