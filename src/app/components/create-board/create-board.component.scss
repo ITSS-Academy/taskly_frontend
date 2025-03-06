@@ -52,6 +52,7 @@
 
         .add-color {
           background-color: var(--md-sys-color-outline-variant);
+          overflow: hidden;
         }
       }
     }
@@ -99,3 +100,48 @@
 ::ng-deep.mdc-text-field {
   padding: 0 4px !important;
 }
+
+.imagePreview{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: fit-content;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview {
+width: 75px;
+  height: 60px;
+  background-size: cover ;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.image-preview.ng-star-inserted {
+  width: 75px;
+  height: 60px;
+  background-size: cover ;
+  border-radius: 10px;
+}
+
+remove-btn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+}
+
+
+
+
+
