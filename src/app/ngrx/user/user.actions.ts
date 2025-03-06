@@ -9,4 +9,6 @@ export const searchUsers = createAction('[User] Search Users', props<{ email: st
 export const searchUsersSuccess = createAction('[User] Search Users Success', props<{ users: UserModel[] }>());
 export const searchUsersFailure = createAction('[User] Search Users Failure', props<{ errorMessage: string }>());
 
+export const signOut = createAction('[User] Sign Out');
+
 export const clearSearchUsers = createAction('[User] Clear Search Users');

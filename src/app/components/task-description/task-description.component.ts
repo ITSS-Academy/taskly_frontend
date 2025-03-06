@@ -1,11 +1,16 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
 import { MaterialModule } from '../../shared/modules/material.module';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { TextFieldModule } from '@angular/cdk/text-field';
+import { LabelDialogComponent } from '../label-dialog/label-dialog.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {TextFieldModule} from '@angular/cdk/text-field';
 
 interface Subtask {
   id: string;
@@ -30,10 +35,10 @@ interface Comment {
     NgIf,
     MatDatepickerModule,
     MatNativeDateModule,
-    TextFieldModule
+    TextFieldModule,
   ],
-  templateUrl: './task-description.component.html',
-  styleUrl: './task-description.component.scss'
+  templateUrl: 'task-description.component.html',
+  styleUrl: './task-description.component.scss',
 })
 export class TaskDescriptionComponent {
   @Output() taskChange = new EventEmitter<any>();
@@ -55,6 +60,8 @@ export class TaskDescriptionComponent {
   comments: Comment[] = [];
   currentUser = 'Current User';
 
+  readonly dialog = inject(MatDialog);
+
   constructor() {
     // Create a copy of the task that we can modify
     this.taskCopy = { ...this.originalTask };
@@ -63,7 +70,7 @@ export class TaskDescriptionComponent {
     if (!this.originalTask.subtasks) {
       this.subtasks = [
         { id: '1', title: 'Design UI mockups', completed: true },
-        { id: '2', title: 'Implement frontend components', completed: true }
+        { id: '2', title: 'Implement frontend components', completed: true },
       ];
     } else {
       this.subtasks = [...this.originalTask.subtasks];
@@ -73,21 +80,27 @@ export class TaskDescriptionComponent {
       {
         id: '1',
         author: 'John Doe',
-        content: 'Let\'s focus on improving the user experience in this iteration.',
-        date: new Date(Date.now() - 86400000) // 1 day ago
+        content:
+          "Let's focus on improving the user experience in this iteration.",
+        date: new Date(Date.now() - 86400000), // 1 day ago
       },
       {
         id: '2',
         author: this.currentUser,
-        content: 'I\'ve started working on the UI components. Will update progress soon.',
-        date: new Date()
-      }
+        content:
+          "I've started working on the UI components. Will update progress soon.",
+        date: new Date(),
+      },
     ];
 
     // Initialize task properties on the copy
-    this.taskCopy.completedSubtasks = this.subtasks.filter(s => s.completed).length;
+    this.taskCopy.completedSubtasks = this.subtasks.filter(
+      (s) => s.completed
+    ).length;
     this.taskCopy.totalSubtasks = this.subtasks.length;
-    this.taskCopy.assignees = this.originalTask.assignees ? [...this.originalTask.assignees] : ['John Doe'];
+    this.taskCopy.assignees = this.originalTask.assignees
+      ? [...this.originalTask.assignees]
+      : ['John Doe'];
   }
 
   onClose() {
@@ -98,7 +111,9 @@ export class TaskDescriptionComponent {
     // Update task copy with new data
     this.taskCopy.subtasks = this.subtasks;
     this.taskCopy.comments = this.comments;
-    this.taskCopy.completedSubtasks = this.subtasks.filter(s => s.completed).length;
+    this.taskCopy.completedSubtasks = this.subtasks.filter(
+      (s) => s.completed
+    ).length;
     this.taskCopy.totalSubtasks = this.subtasks.length;
 
     this.taskChange.emit(this.taskCopy);
@@ -106,7 +121,10 @@ export class TaskDescriptionComponent {
   }
 
   addTag() {
-    if (this.newTag.trim() && !this.taskCopy.tags?.includes(this.newTag.trim())) {
+    if (
+      this.newTag.trim() &&
+      !this.taskCopy.tags?.includes(this.newTag.trim())
+    ) {
       if (!this.taskCopy.tags) {
         this.taskCopy.tags = [];
       }
@@ -128,7 +146,7 @@ export class TaskDescriptionComponent {
       this.subtasks.push({
         id: newId,
         title: this.newSubtask,
-        completed: false
+        completed: false,
       });
 
       this.taskCopy.totalSubtasks = this.subtasks.length;
@@ -137,8 +155,8 @@ export class TaskDescriptionComponent {
   }
 
   removeSubtask(id: string) {
-    const wasCompleted = this.subtasks.find(s => s.id === id)?.completed;
-    this.subtasks = this.subtasks.filter(s => s.id !== id);
+    const wasCompleted = this.subtasks.find((s) => s.id === id)?.completed;
+    this.subtasks = this.subtasks.filter((s) => s.id !== id);
 
     if (wasCompleted) {
       this.taskCopy.completedSubtasks--;
@@ -149,12 +167,16 @@ export class TaskDescriptionComponent {
 
   toggleSubtask(completed: boolean) {
     // Recalculate completed count
-    this.taskCopy.completedSubtasks = this.subtasks.filter(s => s.completed).length;
+    this.taskCopy.completedSubtasks = this.subtasks.filter(
+      (s) => s.completed
+    ).length;
   }
 
   getCompletionPercentage(): number {
     if (!this.taskCopy.totalSubtasks) return 0;
-    return (this.taskCopy.completedSubtasks / this.taskCopy.totalSubtasks) * 100;
+    return (
+      (this.taskCopy.completedSubtasks / this.taskCopy.totalSubtasks) * 100
+    );
   }
 
   addComment() {
@@ -163,7 +185,7 @@ export class TaskDescriptionComponent {
         id: Date.now().toString(),
         author: this.currentUser,
         content: this.newComment,
-        date: new Date()
+        date: new Date(),
       });
 
       this.newComment = '';
@@ -171,7 +193,7 @@ export class TaskDescriptionComponent {
   }
 
   deleteComment(id: string) {
-    this.comments = this.comments.filter(c => c.id !== id);
+    this.comments = this.comments.filter((c) => c.id !== id);
   }
 
   isCurrentUserAuthor(comment: Comment): boolean {
@@ -180,7 +202,15 @@ export class TaskDescriptionComponent {
 
   removeAssignee(assignee: string) {
     if (this.taskCopy.assignees) {
-      this.taskCopy.assignees = this.taskCopy.assignees.filter((a: string) => a !== assignee);
+      this.taskCopy.assignees = this.taskCopy.assignees.filter(
+        (a: string) => a !== assignee
+      );
     }
   }
+
+  openLabelDialog() {
+    this.dialog.open(LabelDialogComponent);
+  }
+
+  createLabel() {}
 }

@@ -1,28 +1,22 @@
 import {Component} from '@angular/core';
-import {MatButton} from '@angular/material/button';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
-import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatIcon} from '@angular/material/icon';
-import {NgForOf} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {BoardState} from '../../ngrx/board/board.state';
 import * as boardActions from '../../ngrx/board/board.actions';
+import {MaterialModule} from '../../shared/modules/material.module';
+import {MatDialogRef} from '@angular/material/dialog';
+import {of} from 'rxjs';
+
+
 
 @Component({
   selector: 'app-create-board',
   standalone: true,
   imports: [
-    MatDialogContent,
-    MatFormField,
-    MatIcon,
-    MatDialogActions,
-    MatDialogTitle,
-    MatInput,
-    MatButton,
-    MatLabel,
-    NgForOf,
-    ReactiveFormsModule
+    MaterialModule,
+    ReactiveFormsModule,
+
+
 
   ],
   templateUrl: './create-board.component.html',
@@ -39,9 +33,11 @@ export class CreateBoardComponent {
   boardForm = new FormGroup(
     {
       title: new FormControl('', [Validators.required]),
-      image: new FormControl<File | null>(null, [Validators.required]),
+      image: new FormControl<File | null>(null),
     }
   );
+  imagePreview: string[] = [];
+
 
   constructor(public dialogRef: MatDialogRef<CreateBoardComponent>,
               private store: Store<{ board: BoardState }>) {
@@ -49,6 +45,7 @@ export class CreateBoardComponent {
 
   selectBackground(background: string) {
     console.log('Selected background:', background);
+
   }
 
   createBoard() {
@@ -64,12 +61,25 @@ export class CreateBoardComponent {
       }));
     }
   }
-
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.boardForm.patchValue({image: file});
+      for (let i = 0; i < input.files.length; i++) {
+        const file = input.files[i];
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagePreview.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   }
+
+
+  removeImage(index: number) {
+    this.imagePreview.splice(index, 1);
+  }
+
+  protected readonly of = of;
+  i: any;
 }

@@ -31,9 +31,24 @@
                  style="display: none;">
           <div class="color-box add-color" (click)="fileInput.click()">
             <mat-icon>add</mat-icon>
+
+            <div class="imagePreview">
+            @for (image of imagePreview; track $index) {
+              <div class="image-preview" [style.background-image]="'url(' + image + ')'">
+                <button mat-icon-button (click)="removeImage(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
           </div>
+          </div>
+
+
+
         </div>
       </div>
+
+
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
@@ -43,3 +58,4 @@
   </form>
 
 </div>
+

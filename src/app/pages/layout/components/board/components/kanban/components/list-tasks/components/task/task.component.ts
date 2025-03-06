@@ -1,8 +1,8 @@
 import {Component, inject, Input} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { DatePipe, NgIf } from '@angular/common';
+import {AsyncPipe, DatePipe, NgIf, NgStyle} from '@angular/common';
+import { of } from 'rxjs';
 import { MatIconButton } from '@angular/material/button';
-import { ForDirective } from '../../../../../../../../../../shared/for.directive';
 import { CardModel } from '../../../../../../../../../../models/card.model';
 import { BoardState } from '../../../../../../../../../../ngrx/board/board.state';
 import { Store } from '@ngrx/store';
@@ -12,6 +12,9 @@ import {MatDialog} from '@angular/material/dialog';
 import {
   TaskDescriptionComponent
 } from '../../../../../../../../../../components/task-description/task-description.component';
+import {LabelPipe} from '../../../../../../../../../../shared/pipes/label.pipe';
+import {UserPipe} from '../../../../../../../../../../shared/pipes/user.pipe';
+import {MatTooltip} from '@angular/material/tooltip';
 
 interface Task {
   id: string;
@@ -28,7 +31,7 @@ interface Task {
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
-  imports: [MatIcon, DatePipe,  MatIconButton,  ForDirective],
+  imports: [MatIcon, DatePipe, MatIconButton, LabelPipe, AsyncPipe, UserPipe, NgStyle, MatTooltip],
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent {
@@ -59,9 +62,17 @@ export class TaskComponent {
   //   }
   // }
 
+  protected readonly of = of;
+
   openDialog() {
-    const dialogRef = this.dialog.open(TaskDescriptionComponent, {
+    this.dialog.open(TaskDescriptionComponent, {
       data: this.task,
-    });
+    })
   }
+
+  showMoreOptions() {
+
+  }
+
+  protected readonly Array = Array;
 }

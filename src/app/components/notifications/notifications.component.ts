@@ -1,15 +1,31 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MaterialModule } from '../../shared/modules/material.module';
 import { NotificationsState } from '../../ngrx/notifications/notifications.state';
 import { Store } from '@ngrx/store';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
-import { Subscription } from 'rxjs';
+import { NotificationsService } from '../../services/notification/notifications.service';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { NotificationsModel } from '../../models/notifications.model';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { UserPipe } from '../../shared/pipes/user.pipe';
+import { BoardPipe } from '../../shared/pipes/board.pipe';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import { BoardModel } from '../../models/board.model';
+import { BoardService } from '../../services/board/board.service';
+import { UserService } from '../../services/user/user.service';
+import * as boardActions from '../../ngrx/board/board.actions';
 
 @Component({
-  selector: 'app-notifications',
+  selector: 'app-notifications-api',
   standalone: true,
-  imports: [MaterialModule],
+  imports: [
+    MaterialModule,
+    JsonPipe,
+    UserPipe,
+    AsyncPipe,
+    BoardPipe,
+    NgxSkeletonLoaderComponent,
+  ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
 })
@@ -17,12 +33,17 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   limit = 10;
   offset = 0;
 
-  isGettingNotifications = false;
+  isGettingNotifications!: boolean;
   canGetMoreNotifications = true;
 
   subcriptions: Subscription[] = [];
 
-  constructor(private store: Store<{ notifications: NotificationsState }>) {
+  constructor(
+    private store: Store<{ notifications: NotificationsState }>,
+    private notificationsSocket: NotificationsService,
+    private boardService: BoardService,
+    private userService: UserService,
+  ) {
     this.store.dispatch(
       notificationsActions.getNotifications({
         offset: this.offset,
@@ -36,7 +57,16 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       this.store
         .select('notifications', 'notifications')
         .subscribe((notifications) => {
-          this.notiArray = notifications;
+          this.notiArray = notifications.map((newNoti) => {
+            const oldNoti = this.notiArray.find((n) => n.id === newNoti.id);
+            return {
+              ...oldNoti,
+              ...newNoti,
+            };
+          });
+          if (this.notiArray.length > 0) {
+            this.getBoardAndUser(this.offset, this.limit);
+          }
         }),
       this.store
         .select('notifications', 'isGettingNotifications')
@@ -48,12 +78,57 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         .subscribe((canGetMoreNotifications) => {
           this.canGetMoreNotifications = canGetMoreNotifications;
         }),
+      this.store
+        .select('notifications', 'isGettingNotificationsSuccess')
+        .subscribe((isGettingNotificationsSuccess) => {
+          if (isGettingNotificationsSuccess) {
+            this.store.dispatch(notificationsActions.checkNewNotifications());
+          }
+        }),
     );
   }
 
-  ngOnDestroy() {}
+  getBoardAndUser(offset: number, limit: number) {
+    let dataArray = this.notiArray
+      .slice(offset, offset + limit + 1)
+      .map((noti) => ({ ...noti }));
 
-  notiArray: NotificationsModel[] = [];
+    console.log(dataArray);
+    console.log(dataArray.length);
+    console.log(dataArray[0]);
+    console.log(this.notiArray);
+
+    if (dataArray.length === 0) return;
+
+    const boardRequests = dataArray.map((noti) =>
+      this.boardService.getBoard(noti.boardId!),
+    );
+    const userRequests = dataArray.map((noti) =>
+      this.userService.getUserById(noti.senderId),
+    );
+
+    forkJoin([forkJoin(boardRequests), forkJoin(userRequests)]).subscribe(
+      ([boards, users]) => {
+        const updatedDataArray = dataArray.map((noti, index) => ({
+          ...noti,
+          board: boards[index],
+          sender: users[index],
+        }));
+
+        // Update the notiArray with new data
+        this.notiArray = [
+          ...this.notiArray.slice(0, offset),
+          ...updatedDataArray,
+        ];
+      },
+    );
+  }
+
+  ngOnDestroy() {
+    this.subcriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  notiArray: any[] = [];
 
   onScroll(event: any) {
     const target = event.target;
@@ -75,6 +150,30 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       notificationsActions.getNotifications({
         offset: this.offset,
         limit: this.limit,
+      }),
+    );
+    this.store.dispatch(notificationsActions.checkNewNotifications());
+  }
+
+  acceptInvitation(notificationId: string, board: BoardModel) {
+    this.store.dispatch(
+      notificationsActions.replyInviteBoard({
+        notificationId,
+        isAccepted: true,
+      }),
+    );
+    this.store.dispatch(
+      boardActions.acceptInvitation({
+        board,
+      }),
+    );
+  }
+
+  rejectInvitation(notificationId: string) {
+    this.store.dispatch(
+      notificationsActions.replyInviteBoard({
+        notificationId,
+        isAccepted: false,
       }),
     );
   }

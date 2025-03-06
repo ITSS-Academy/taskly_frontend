@@ -2,7 +2,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import * as listActions from '../list/list.actions';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { NotificationsService } from '../../services/notifications/notifications.service';
+import { NotificationsService } from '../../services/notifications-api/notifications.service';
 import * as notificationsActions from './notifications.actions';
 import { NotificationsModel } from '../../models/notifications.model';
 
@@ -42,7 +42,7 @@ export const getNotifications$ = createEffect(
       switchMap(({ offset, limit }) => {
         return notificationsService.getNotifications(offset, limit).pipe(
           map((notifications: NotificationsModel[] | any) => {
-            // console.log('notifications', notifications);
+            // console.log('notifications-api', notifications-api);
             return notificationsActions.getNotificationsSuccess({
               notifications: notifications,
               limit: limit,
@@ -51,6 +51,67 @@ export const getNotifications$ = createEffect(
           catchError((error) => {
             return of(
               notificationsActions.getNotificationsFailure({
+                error: error.error.message || 'Unknown error',
+              }),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  {
+    functional: true,
+  },
+);
+
+export const replyInviteBoard$ = createEffect(
+  (
+    action$ = inject(Actions),
+    notificationsService = inject(NotificationsService),
+  ) => {
+    return action$.pipe(
+      ofType(notificationsActions.replyInviteBoard),
+      switchMap(({ notificationId, isAccepted }) => {
+        return notificationsService
+          .replyInvteBoard(notificationId, isAccepted)
+          .pipe(
+            map(() =>
+              notificationsActions.replyInviteBoardSuccess({ notificationId }),
+            ),
+            catchError((error) => {
+              return of(
+                notificationsActions.replyInviteBoardFailure({
+                  error: error.error.message || 'Unknown error',
+                }),
+              );
+            }),
+          );
+      }),
+    );
+  },
+  {
+    functional: true,
+  },
+);
+
+export const checkNewNotifications$ = createEffect(
+  (
+    action$ = inject(Actions),
+    notificationsService = inject(NotificationsService),
+  ) => {
+    return action$.pipe(
+      ofType(notificationsActions.checkNewNotifications),
+      switchMap(() => {
+        return notificationsService.checkNewNotifications().pipe(
+          map((isNewNotification) => {
+            console.log('isNewNotification', isNewNotification);
+            return notificationsActions.checkNewNotificationsSuccess({
+              isNewNotification,
+            });
+          }),
+          catchError((error) => {
+            return of(
+              notificationsActions.checkNewNotificationsFailure({
                 error: error.error.message || 'Unknown error',
               }),
             );

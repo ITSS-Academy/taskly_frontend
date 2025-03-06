@@ -11,7 +11,6 @@ import {
   MatDialogContent,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { NotificationsComponent } from '../notifications/notifications.component';
 import { UserState } from '../../ngrx/user/user.state';
 import { Store } from '@ngrx/store';
 import { debounceTime, Observable, Subject, Subscription } from 'rxjs';
@@ -26,6 +25,7 @@ import * as notificationsActions from '../../ngrx/notifications/notifications.ac
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.component';
 import { NotificationsState } from '../../ngrx/notifications/notifications.state';
+import { NotificationsService } from '../../services/notification/notifications.service';
 
 export interface Fruit {
   name: string;
@@ -53,6 +53,7 @@ export class ShareComponent implements OnInit, OnDestroy {
       user: UserState;
       notifications: NotificationsState;
     }>,
+    private notiSocket: NotificationsService,
   ) {
     console.log(this.data);
   }
@@ -95,14 +96,6 @@ export class ShareComponent implements OnInit, OnDestroy {
 
   onUserNameChange() {
     this.userNameSubject.next(this.userName);
-  }
-
-  openDialog() {
-    const dialogRef = this.dialog.open(ShareComponent);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-    });
   }
 
   readonly users = signal<UserModel[]>([]);
@@ -166,5 +159,8 @@ export class ShareComponent implements OnInit, OnDestroy {
         boardId: this.data,
       }),
     );
+    for (let i = 0; i < this.users().length; i++) {
+      this.notiSocket.sendNoti(this.users()[i]);
+    }
   }
 }
