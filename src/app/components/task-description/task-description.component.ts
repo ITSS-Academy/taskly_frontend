@@ -8,9 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
 import { MaterialModule } from '../../shared/modules/material.module';
 import { LabelDialogComponent } from '../label-dialog/label-dialog.component';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {TextFieldModule} from '@angular/cdk/text-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 interface Subtask {
   id: string;
@@ -33,6 +33,7 @@ interface Comment {
     DatePipe,
     MaterialModule,
     NgIf,
+    NgForOf,
     MatDatepickerModule,
     MatNativeDateModule,
     TextFieldModule,
@@ -55,52 +56,74 @@ export class TaskDescriptionComponent {
   readonly dialogRef = inject(MatDialogRef<TaskDescriptionComponent>);
   private readonly originalTask = inject<any>(MAT_DIALOG_DATA);
 
-  // Mock data for development
+  // Data for tasks
   subtasks: Subtask[] = [];
   comments: Comment[] = [];
   currentUser = 'Current User';
 
   readonly dialog = inject(MatDialog);
 
+  // Flag to determine if this is a new task
+  private isNewTask: boolean;
+
   constructor() {
+    // Determine if this is a new task based on id
+    this.isNewTask = !this.originalTask.id;
+
     // Create a copy of the task that we can modify
     this.taskCopy = { ...this.originalTask };
 
-    // Initialize subtasks from task data or with mock data
-    if (!this.originalTask.subtasks) {
+    // Initialize subtasks from task data or with empty array for new tasks
+    if (this.originalTask.subtasks && Array.isArray(this.originalTask.subtasks)) {
+      this.subtasks = [...this.originalTask.subtasks];
+    } else if (this.isNewTask) {
+      // Empty array for new tasks
+      this.subtasks = [];
+    } else {
+      // Default subtasks for existing tasks that don't have any yet
       this.subtasks = [
         { id: '1', title: 'Design UI mockups', completed: true },
-        { id: '2', title: 'Implement frontend components', completed: true },
+        { id: '2', title: 'Implement frontend components', completed: false },
       ];
-    } else {
-      this.subtasks = [...this.originalTask.subtasks];
     }
 
-    this.comments = [
-      {
-        id: '1',
-        author: 'John Doe',
-        content:
-          "Let's focus on improving the user experience in this iteration.",
-        date: new Date(Date.now() - 86400000), // 1 day ago
-      },
-      {
-        id: '2',
-        author: this.currentUser,
-        content:
-          "I've started working on the UI components. Will update progress soon.",
-        date: new Date(),
-      },
-    ];
+    // Initialize comments with existing data or defaults
+    if (this.originalTask.comments && Array.isArray(this.originalTask.comments)) {
+      this.comments = [...this.originalTask.comments];
+    } else {
+      // Use sample comments only for non-new tasks without comments
+      this.comments = this.isNewTask ? [] : [
+        {
+          id: '1',
+          author: 'John Doe',
+          content: "Let's focus on improving the user experience in this iteration.",
+          date: new Date(Date.now() - 86400000), // 1 day ago
+        },
+        {
+          id: '2',
+          author: this.currentUser,
+          content: "I've started working on the UI components. Will update progress soon.",
+          date: new Date(),
+        },
+      ];
+    }
 
     // Initialize task properties on the copy
     this.taskCopy.completedSubtasks = this.subtasks.filter(
       (s) => s.completed
     ).length;
     this.taskCopy.totalSubtasks = this.subtasks.length;
-    this.taskCopy.assignees = this.originalTask.assignees
-      ? [...this.originalTask.assignees]
-      : ['John Doe'];
+
+    // Use members array for assignees if available, otherwise use assignees
+    if (this.originalTask.members && Array.isArray(this.originalTask.members)) {
+      this.taskCopy.assignees = this.originalTask.members.map((m: any) =>
+        m.name || m.user_id || m
+      );
+    } else if (this.originalTask.assignees) {
+      this.taskCopy.assignees = [...this.originalTask.assignees];
+    } else {
+      this.taskCopy.assignees = this.isNewTask ? [] : ['John Doe'];
+    }
   }
 
   onClose() {
@@ -115,6 +138,14 @@ export class TaskDescriptionComponent {
       (s) => s.completed
     ).length;
     this.taskCopy.totalSubtasks = this.subtasks.length;
+
+    // Make sure we maintain the interface expected by the backend
+    if (this.originalTask.members && !this.taskCopy.members) {
+      // Convert assignees to members format if needed
+      this.taskCopy.members = this.taskCopy.assignees.map((a: string) => {
+        return { user_id: a };
+      });
+    }
 
     this.taskChange.emit(this.taskCopy);
     this.dialogRef.close(this.taskCopy);
@@ -141,7 +172,8 @@ export class TaskDescriptionComponent {
 
   addSubtask() {
     if (this.newSubtask.trim()) {
-      const newId = (this.subtasks.length + 1).toString();
+      // Generate a unique ID to prevent potential conflicts
+      const newId = Date.now().toString();
 
       this.subtasks.push({
         id: newId,
@@ -155,39 +187,42 @@ export class TaskDescriptionComponent {
   }
 
   removeSubtask(id: string) {
-    const wasCompleted = this.subtasks.find((s) => s.id === id)?.completed;
+    const subtask = this.subtasks.find((s) => s.id === id);
+    if (!subtask) return;
+
+    const wasCompleted = subtask.completed;
     this.subtasks = this.subtasks.filter((s) => s.id !== id);
 
+    // Update completion count if a completed subtask was removed
     if (wasCompleted) {
-      this.taskCopy.completedSubtasks--;
+      this.taskCopy.completedSubtasks = Math.max(0, this.taskCopy.completedSubtasks - 1);
     }
 
     this.taskCopy.totalSubtasks = this.subtasks.length;
   }
 
   toggleSubtask(completed: boolean) {
-    // Recalculate completed count
+    // Recalculate completed count safely
     this.taskCopy.completedSubtasks = this.subtasks.filter(
       (s) => s.completed
     ).length;
   }
 
   getCompletionPercentage(): number {
-    if (!this.taskCopy.totalSubtasks) return 0;
-    return (
-      (this.taskCopy.completedSubtasks / this.taskCopy.totalSubtasks) * 100
-    );
+    if (!this.taskCopy.totalSubtasks || this.taskCopy.totalSubtasks <= 0) return 0;
+    return Math.min(100, (this.taskCopy.completedSubtasks / this.taskCopy.totalSubtasks) * 100);
   }
 
   addComment() {
     if (this.newComment.trim()) {
-      this.comments.push({
+      const newComment: Comment = {
         id: Date.now().toString(),
         author: this.currentUser,
         content: this.newComment,
         date: new Date(),
-      });
+      };
 
+      this.comments.push(newComment);
       this.newComment = '';
     }
   }
@@ -208,9 +243,64 @@ export class TaskDescriptionComponent {
     }
   }
 
-  openLabelDialog() {
-    this.dialog.open(LabelDialogComponent);
+  addAssignee(assignee: string) {
+    if (!assignee.trim()) return;
+
+    if (!this.taskCopy.assignees) {
+      this.taskCopy.assignees = [];
+    }
+
+    if (!this.taskCopy.assignees.includes(assignee)) {
+      this.taskCopy.assignees.push(assignee);
+    }
+
+    this.showAssigneeSelector = false;
   }
 
-  createLabel() {}
+  openLabelDialog() {
+    const dialogRef = this.dialog.open(LabelDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the selected label
+        this.addLabelToTask(result);
+      }
+    });
+  }
+
+  createLabel() {
+    const dialogRef = this.dialog.open(LabelDialogComponent, {
+      width: '400px',
+      data: { isCreating: true }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Add the newly created label to the task
+        this.addLabelToTask(result);
+      }
+    });
+  }
+
+  private addLabelToTask(label: any) {
+    if (!this.taskCopy.labels) {
+      this.taskCopy.labels = [];
+    }
+
+    // Check if label is already on the task
+    const labelExists = this.taskCopy.labels.some((l: any) =>
+      (l.id && l.id === label.id) ||
+      (l.boardLabelId && l.boardLabelId === label.id)
+    );
+
+    if (!labelExists) {
+      this.taskCopy.labels.push({
+        boardLabelId: label.id,
+        name: label.name,
+        color: label.color
+      });
+    }
+  }
 }
