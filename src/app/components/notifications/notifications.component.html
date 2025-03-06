@@ -5,8 +5,8 @@
     <mat-list>
       @for (noti of notiArray; track $index) {
         @if (noti.board && noti.sender) {
-          {{ noti.board | json }}
-          {{ noti.sender | json }}
+          <!--          {{ noti.board | json }}-->
+            <!--          {{ noti.sender | json }}-->
           @if (noti.type == 'invite_board') {
             <mat-list-item class="invite-noti">
               <mat-icon matListItemIcon>group</mat-icon>

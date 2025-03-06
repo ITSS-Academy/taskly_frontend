@@ -9,6 +9,14 @@
         <mat-cell *matCellDef="let element"> {{ element.title }}</mat-cell>
       </ng-container>
 
+      <!-- Board Column -->
+      <ng-container matColumnDef="board">
+        <mat-header-cell *matHeaderCellDef> Board</mat-header-cell>
+        <mat-cell class="board-hover" *matCellDef="let element">
+          {{ element.board }}
+        </mat-cell>
+      </ng-container>
+
       <!-- List Column -->
       <ng-container matColumnDef="list">
         <mat-header-cell *matHeaderCellDef> List</mat-header-cell>
@@ -18,9 +26,9 @@
       </ng-container>
 
       <!-- Member Column -->
-      <ng-container matColumnDef="member">
-        <mat-header-cell *matHeaderCellDef> Member</mat-header-cell>
-        <mat-cell class="member-hover" *matCellDef="let element"> {{ element.member }}
+      <ng-container matColumnDef="members">
+        <mat-header-cell *matHeaderCellDef> Members</mat-header-cell>
+        <mat-cell class="members-hover" *matCellDef="let element"> {{ element.members }}
         </mat-cell>
       </ng-container>
 
@@ -31,14 +39,6 @@
           <mat-chip aria-label="tags">
             {{ element.tags }}
           </mat-chip>
-        </mat-cell>
-      </ng-container>
-
-      <!-- Note Column -->
-      <ng-container matColumnDef="note">
-        <mat-header-cell *matHeaderCellDef> Note</mat-header-cell>
-        <mat-cell class="note-hover" *matCellDef="let element">
-          {{ element.note }}
         </mat-cell>
       </ng-container>
 

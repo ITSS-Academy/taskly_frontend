@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   Component,
   ElementRef,
   Input,
@@ -51,8 +52,6 @@ interface Task {
   imports: [
     CdkDropList,
     TaskComponent,
-    MatIcon,
-    MatButton,
     CdkDrag,
     ForDirective,
     NgForOf,
@@ -66,7 +65,7 @@ interface Task {
   ],
   styleUrls: ['./kanban.component.scss'],
 })
-export class KanbanComponent implements OnInit, OnDestroy {
+export class KanbanComponent implements OnInit, OnDestroy, AfterViewChecked {
   board$!: Observable<BoardModel | null>;
   lists: (ListModel & { isInEditMode?: boolean })[] = [];
   boardId!: string;
@@ -183,6 +182,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   addTask(listId: string) {
+    this.list.isInEditMode = true;
     // find in lists, then switch isInEditMode to true
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
@@ -203,6 +203,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
         boardId: this.boardId,
       }),
     );
+    this.listName.reset();
   }
 
   onColumnDrop($event: CdkDragDrop<any>) {
@@ -328,6 +329,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit(listId: string) {
+    this.list.isInEditMode = false;
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
         return {...list, isInEditMode: false};
@@ -359,5 +361,20 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   removeList(listId: string) {
     this.store.dispatch(listActions.deleteList({listId}));
+  }
+
+  @ViewChild('columnInput') columnInput!: ElementRef;
+  @ViewChild('taskInput') taskInput!: ElementRef;
+
+  list = {isInEditMode: false}; // Simulated list object, replace with actual logic
+
+  ngAfterViewChecked() {
+    if (this.isAddingList && this.columnInput) {
+      setTimeout(() => this.columnInput.nativeElement.focus(), 0);
+    }
+
+    if (this.list.isInEditMode && this.taskInput) {
+      setTimeout(() => this.taskInput.nativeElement.focus(), 0);
+    }
   }
 }

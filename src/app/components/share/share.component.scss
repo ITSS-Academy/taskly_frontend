@@ -27,6 +27,7 @@
       border-radius: 15px;
       max-width: 80%;
       width: 80%;
+      position: relative;
     }
 
     .divider {
@@ -38,44 +39,52 @@
 
     .share-btn {
       background-color: var(--md-sys-color-primary);
-      color: var(--md-sys-color-on-primary);
+      color: var(--md-sys-color-on-primary)
     }
 
-    .users-container {
+    .user-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: absolute;
+      width: 73%;
+      padding: 8px;
+      background-color: var(--md-sys-color-on-primary);
+      z-index: 999;
+      border-radius: 16px;
+      margin-top: 114px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .members-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 100%;
+    }
+
+    .user-info {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      width: 100%;
+      gap: 8px;
 
-      .user {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+      .user-name {
+        font-size: 16px;
+        line-height: 16px;
+      }
 
-        .avatar {
-          width: 36px;
-          border-radius: 100%;
-        }
-
-        .user-info {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-
-          .user-name {
-            font-size: 16px;
-            line-height: 16px;
-          }
-
-          .user-email {
-            font-size: 12px;
-            line-height: 12px;
-          }
-        }
+      .user-email {
+        font-size: 12px;
+        line-height: 12px;
       }
     }
-
   }
 }
 
