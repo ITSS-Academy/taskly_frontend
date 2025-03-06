@@ -28,7 +28,6 @@ interface Comment {
     DatePipe,
     MaterialModule,
     NgIf,
-    NgForOf,
     MatDatepickerModule,
     MatNativeDateModule,
     TextFieldModule
