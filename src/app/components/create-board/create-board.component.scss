@@ -11,6 +11,7 @@
     align-items: center;
     justify-content: center;
     padding-top: 0;
+    gap: 12px;
 
     .full-width {
       width: 100%;
@@ -52,6 +53,7 @@
 
         .add-color {
           background-color: var(--md-sys-color-outline-variant);
+          overflow: hidden;
         }
       }
     }
@@ -96,6 +98,128 @@
   background-color: unset !important;
 }
 
-::ng-deep.mdc-text-field {
-  padding: 0 4px !important;
+.imagePreview {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: fit-content;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview {
+  width: 75px;
+  height: 60px;
+  background-size: cover;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.image-preview.ng-star-inserted {
+  width: 75px;
+  height: 60px;
+  background-size: cover;
+  border-radius: 10px;
+}
+
+remove-btn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+}
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hide default file input */
+input[type="file"] {
+  display: none;
+}
+
+/* Upload Button */
+.custom-upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1877f2;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.custom-upload-button:hover {
+  background-color: #165db3;
+}
+
+/* Preview Container */
+.preview-container {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* File Preview Box */
+.file-preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f1f1;
+  padding: 5px;
+  border-radius: 5px;
+  max-width: 100%;
+}
+
+/* Image Preview */
+.preview-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Video Preview */
+.preview-video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Remove Button */
+.remove-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.remove-button:hover {
+  background: darkred;
 }

@@ -7,6 +7,30 @@
         <input matInput placeholder="Add your board title" formControlName="title">
       </mat-form-field>
 
+      <div class="upload-container">
+        <!-- File Upload Label -->
+        <label class="custom-upload-button">
+          <i class="fas fa-upload"></i> Chọn ảnh/video
+          <input
+            type="file"
+            accept="image/*,video/*"
+            (change)="onFileSelected($event)">
+        </label>
+
+        @if (imagePreview) {
+          <div class="preview-container">
+            <div class="file-preview">
+              @if (isImage) {
+                <img [src]="imagePreview" alt="Preview" class="preview-image">
+              } @else {
+                <video [src]="imagePreview" controls class="preview-video"></video>
+              }
+              <button class="remove-button" (click)="removeImage()">X</button>
+            </div>
+          </div>
+        }
+      </div>
+
       <div class="backgrounds">
         <p class="background-title">Background</p>
         <div class="background-images">
@@ -31,7 +55,19 @@
                  style="display: none;">
           <div class="color-box add-color" (click)="fileInput.click()">
             <mat-icon>add</mat-icon>
+
+            <div class="imagePreview">
+              @for (image of imagePreview; track $index) {
+                <div class="image-preview" [style.background-image]="'url(' + image + ')'">
+                  <button mat-icon-button (click)="removeImage()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
           </div>
+
+
         </div>
       </div>
     </mat-dialog-content>
@@ -43,3 +79,4 @@
   </form>
 
 </div>
+

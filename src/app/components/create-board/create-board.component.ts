@@ -6,6 +6,8 @@ import {BoardState} from '../../ngrx/board/board.state';
 import * as boardActions from '../../ngrx/board/board.actions';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {MatDialogRef} from '@angular/material/dialog';
+import {of} from 'rxjs';
+
 
 @Component({
   selector: 'app-create-board',
@@ -30,9 +32,11 @@ export class CreateBoardComponent {
   boardForm = new FormGroup(
     {
       title: new FormControl('', [Validators.required]),
-      image: new FormControl<File | null>(null, [Validators.required]),
+      image: new FormControl<File | null>(null),
     }
   );
+  imagePreview: string | null = null;
+
 
   constructor(public dialogRef: MatDialogRef<CreateBoardComponent>,
               private store: Store<{ board: BoardState }>) {
@@ -40,6 +44,7 @@ export class CreateBoardComponent {
 
   selectBackground(background: string) {
     console.log('Selected background:', background);
+
   }
 
   createBoard() {
@@ -56,11 +61,36 @@ export class CreateBoardComponent {
     }
   }
 
+  isImage: boolean = true; // Determines whether the selected file is an image
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
+
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.boardForm.patchValue({image: file});
+      const file = input.files[0]; // Get the first file
+      const reader = new FileReader();
+
+      // Check if the file is an image or video
+      this.isImage = file.type.startsWith('image');
+
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target?.result) {
+          this.imagePreview = e.target.result as string; // Store the Base64 data
+        }
+      };
+
+      reader.readAsDataURL(file);
+
+      // Clear the input so selecting the same file again triggers the change event
+      input.value = '';
     }
   }
+
+  removeImage() {
+    this.imagePreview = null; // Reset preview
+  }
+
+
+  protected readonly of = of;
+  i: any;
 }
