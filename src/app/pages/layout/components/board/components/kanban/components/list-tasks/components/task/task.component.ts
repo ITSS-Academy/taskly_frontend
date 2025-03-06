@@ -1,15 +1,23 @@
-import { Component, Input } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
-import { DatePipe, NgIf } from '@angular/common';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { of } from 'rxjs';
-import { MatIconButton } from '@angular/material/button';
-import { ForDirective } from '../../../../../../../../../../shared/for.directive';
-import { CardModel } from '../../../../../../../../../../models/card.model';
-import { BoardState } from '../../../../../../../../../../ngrx/board/board.state';
-import { Store } from '@ngrx/store';
-import { ListState } from '../../../../../../../../../../ngrx/list/list.state';
+import {Component, inject, Input} from '@angular/core';
+import {MatIcon} from '@angular/material/icon';
+import {AsyncPipe, DatePipe, JsonPipe, NgIf, NgStyle} from '@angular/common';
+import {MatCheckbox} from '@angular/material/checkbox';
+import {of} from 'rxjs';
+import {MatIconButton} from '@angular/material/button';
+import {ForDirective} from '../../../../../../../../../../shared/for.directive';
+import {CardModel} from '../../../../../../../../../../models/card.model';
+import {BoardState} from '../../../../../../../../../../ngrx/board/board.state';
+import {Store} from '@ngrx/store';
+import {ListState} from '../../../../../../../../../../ngrx/list/list.state';
 import * as listActions from '../../../../../../../../../../ngrx/list/list.actions';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  TaskDescriptionComponent
+} from '../../../../../../../../../../components/task-description/task-description.component';
+import {ListCard} from '../../../../../../../../../../models/list.model';
+import {UserPipe} from '../../../../../../../../../../shared/pipes/user.pipe';
+import {LabelPipe} from '../../../../../../../../../../shared/pipes/label.pipe';
+import {MatTooltip} from '@angular/material/tooltip';
 
 interface Task {
   id: string;
@@ -26,23 +34,26 @@ interface Task {
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
-  imports: [MatIcon, DatePipe, MatCheckbox, MatIconButton, NgIf, ForDirective],
+  imports: [MatIcon, DatePipe, MatCheckbox, MatIconButton, NgIf, ForDirective, UserPipe, AsyncPipe, JsonPipe, LabelPipe, NgStyle, MatTooltip],
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent {
-  @Input() task!: CardModel;
+  @Input() task!: ListCard;
+  readonly dialog = inject(MatDialog);
+
 
   constructor(
     private store: Store<{
       board: BoardState;
       list: ListState;
     }>,
-  ) {}
+  ) {
+  }
 
   closeTask() {
     // Implement logic to remove/archive task
     console.log('Closing task:', this.task.id);
-    this.store.dispatch(listActions.deleteCard({ cardId: this.task.id! }));
+    this.store.dispatch(listActions.deleteCard({cardId: this.task.id!}));
   }
 
   // getProgressColor() {
@@ -56,4 +67,16 @@ export class TaskComponent {
   // }
 
   protected readonly of = of;
+
+  openDialog() {
+    this.dialog.open(TaskDescriptionComponent, {
+      data: this.task,
+    })
+  }
+
+  showMoreOptions() {
+
+  }
+
+  protected readonly Array = Array;
 }

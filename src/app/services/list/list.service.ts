@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthState } from '../../ngrx/auth/auth.state';
 import { Store } from '@ngrx/store';
 import { ListModel } from '../../models/list.model';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class ListService {
 
   addNewList(listName: string, boardId: string) {
     return this.httpClient.post(
-      `http://localhost:3000/list/new-list`,
+      `${environment.apiUrl}/list/new-list`,
       {
         listName,
         boardId,
@@ -33,14 +34,14 @@ export class ListService {
   }
 
   getLists(boardId: string) {
-    return this.httpClient.get(`http://localhost:3000/list/cards/${boardId}`, {
+    return this.httpClient.get(`${environment.apiUrl}/list/cards/${boardId}`, {
       headers: { Authorization: this.accesToken },
     });
   }
 
   updateLists(lists: ListModel[], boardId: string) {
     return this.httpClient.put(
-      `http://localhost:3000/list/update-lists`,
+      `${environment.apiUrl}/list/update-lists`,
       {
         lists,
         boardId,
@@ -51,7 +52,7 @@ export class ListService {
 
   updateListCard(cardId: string, listId: string, cardPosition: number) {
     return this.httpClient.put(
-      `http://localhost:3000/list/update-list/card`,
+      `${environment.apiUrl}/list/update-list/card`,
       {
         card: cardId,
         listId,
@@ -62,7 +63,7 @@ export class ListService {
   }
 
   deleteList(listId: string) {
-    return this.httpClient.delete(`http://localhost:3000/list/${listId}`, {
+    return this.httpClient.delete(`${environment.apiUrl}/list/${listId}`, {
       headers: { Authorization: this.accesToken },
     });
   }
@@ -70,7 +71,7 @@ export class ListService {
   addTask(title: string, listId: string) {
     console.log(title, listId);
     return this.httpClient.post(
-      `http://localhost:3000/card`,
+      `${environment.apiUrl}/card`,
       {
         title,
         listId,
@@ -80,7 +81,7 @@ export class ListService {
   }
 
   deleteTask(cardId: string) {
-    return this.httpClient.delete(`http://localhost:3000/card/${cardId}`, {
+    return this.httpClient.delete(`${environment.apiUrl}/card/${cardId}`, {
       headers: { Authorization: this.accesToken },
     });
   }

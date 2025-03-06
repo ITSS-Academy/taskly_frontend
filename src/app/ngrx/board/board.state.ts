@@ -1,4 +1,4 @@
-import {BoardModel} from '../../models/board.model';
+import { BoardModel } from '../../models/board.model';
 
 export interface BoardState {
   //createBoard
@@ -16,4 +16,10 @@ export interface BoardState {
   isGettingBoard: boolean;
   isGettingBoardSuccess: boolean;
   getBoardError: string;
+
+  //invitedBoards
+  invitedBoards: BoardModel[] | null;
+  isInvitedBoardsGetting: boolean;
+  invitedBoardsGettingError: string | null;
+  isGetInvitedBoardsSuccess: boolean;
 }

@@ -1,4 +1,8 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -16,28 +20,43 @@ import {userReducer} from './ngrx/user/user.reducer';
 import * as userEffects from './ngrx/user/user.effects';
 import {listReducer} from './ngrx/list/list.reducer';
 import * as listEffects from './ngrx/list/list.effects';
+import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
+import {notificationsReducer} from './ngrx/notifications/notifications.reducer';
+import * as notificationsEffects from './ngrx/notifications/notifications.effects';
+import {environment} from '../environments/environment.development';
+
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({eventCoalescing: true}), provideHttpClient(), provideRouter(routes), provideAnimationsAsync(),
+  providers: [
+    provideZoneChangeDetection({eventCoalescing: true}),
+    provideHttpClient(),
+    provideRouter(routes),
+    provideAnimationsAsync(),
     provideStore({
       auth: authReducer,
       board: boardReducer,
       user: userReducer,
-      list: listReducer
+      list: listReducer,
+      notifications: notificationsReducer,
     }),
     provideEffects([
       authEffects,
       boardEffects,
       userEffects,
-      listEffects
+      listEffects,
+      notificationsEffects,
     ]),
-    provideFirebaseApp(() => initializeApp({
-      "projectId": "kanban-246",
-      "appId": "1:656199323172:web:b6a85c041e28e03a8b52b1",
-      "storageBucket": "kanban-246.firebasestorage.app",
-      "apiKey": "AIzaSyAy1F24MJYwj0d2Mya4T7fJgPG3wC4Lwv0",
-      "authDomain": "kanban-246.firebaseapp.com",
-      "messagingSenderId": "656199323172",
-      "measurementId": "G-14D94KVP60"
-    })), provideAuth(() => getAuth())]
+    provideFirebaseApp(() =>
+      initializeApp({
+        projectId: 'kanban-246',
+        appId: '1:656199323172:web:b6a85c041e28e03a8b52b1',
+        storageBucket: 'kanban-246.firebasestorage.app',
+        apiKey: 'AIzaSyAy1F24MJYwj0d2Mya4T7fJgPG3wC4Lwv0',
+        authDomain: 'kanban-246.firebaseapp.com',
+        messagingSenderId: '656199323172',
+        measurementId: 'G-14D94KVP60',
+      }),
+    ),
+    provideAuth(() => getAuth()),
+  ],
 };

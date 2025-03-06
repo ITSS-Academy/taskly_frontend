@@ -1,27 +1,30 @@
 <div class="example-container"
      [ngStyle]="{'background-color': sidebarColor, 'color': sidebarTextColor}">
   <div [ngStyle]="{'background-color': sidebarColor, 'color': sidebarTextColor}">
-    <div class="logo">
-      <mat-icon [ngStyle]="{'color': sidebarTextColor}" class="material-symbols-outlined">assignment</mat-icon>
+    <div class="logo" [ngStyle]="{'color': sidebarTextColor}">
+      <img src="{{logoImage}}" alt="logo" class="logo-img">
       Taskly
     </div>
 
-    <div class="profile">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
-           alt="Profile">
-      <div class="info">
-        <p>Name</p>
-        <span [ngStyle]="{'color': sidebarTextColor}">Workspace Account</span>
+    @if (user) {
+      <div class="profile">
+        <img src="{{this.user.photoUrl  }}"
+             alt="Profile">
+        <div class="info">
+          <p>{{ this.user.name }}</p>
+          <!--        <span [ngStyle]="{'color': sidebarTextColor}">Workspace Account</span>-->
+        </div>
       </div>
-    </div>
+    }
+
 
     <mat-selection-list>
-      <mat-list-item [routerLink]="['home']">
+      <mat-list-item [routerLink]="['home']" routerLinkActive="active-link">
         <mat-icon [ngStyle]="{'color': sidebarTextColor}" class="material-symbols-outlined">home</mat-icon>
         <span [ngStyle]="{'color': sidebarTextColor}">Home</span>
       </mat-list-item>
 
-      <mat-list-item [routerLink]="['alltasks']">
+      <mat-list-item [routerLink]="['alltasks']" routerLinkActive="active-link">
         <mat-icon [ngStyle]="{'color': sidebarTextColor}" class="material-symbols-outlined">send</mat-icon>
         <span [ngStyle]="{'color': sidebarTextColor}">All my tasks</span>
       </mat-list-item>
@@ -35,7 +38,7 @@
     </p>
     <mat-selection-list>
       @for (board of (boards$ | async); track $index) {
-        <mat-list-item [routerLink]="['board','kanban', board.id]">
+        <mat-list-item [routerLink]="['board','kanban', board.id]" routerLinkActive="active-link">
           <img
             src="{{ board.backgroundId !| background | async }}"
             alt="" class="background">
@@ -46,10 +49,10 @@
 
     <p class="section-title" [ngStyle]="{'color': sidebarTextColor}">Invited boards</p>
     <mat-selection-list>
-      @for (board of invitedBoards; track $index) {
-        <mat-list-item>
+      @for (board of (this.invitedBoards$ | async); track $index) {
+        <mat-list-item [routerLink]="['board','kanban', board.id]">
           <img
-            src="{{ board.background }}"
+            src="{{ board.backgroundId!| background | async }}"
             alt="" class="background">
           <span [ngStyle]="{'color': sidebarTextColor}">{{ board.name }}</span>
         </mat-list-item>

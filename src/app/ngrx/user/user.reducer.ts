@@ -74,4 +74,17 @@ export const userReducer = createReducer(
       searchUsersError: errorMessage
     };
   }),
+  on(userActions.clearSearchUsers, (state, {type}) => {
+    console.log(type)
+    return {
+      ...state,
+      searchUsers: [],
+      isSearchingUsers: false,
+      isSearchingUsersSuccess: false,
+      searchUsersError: ''
+    };
+  }),
+  on(userActions.signOut, (state, {type}) => {
+    return initialState
+  })
 );

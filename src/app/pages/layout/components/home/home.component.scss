@@ -25,17 +25,51 @@ body {
   gap: 5px;
   font-weight: bold;
   font-size: 21px;
+  margin-bottom: 12px;
+
+}
+
+.create-board {
+  border: 1px solid var(--md-sys-color-outline-variant);
+
+  p {
+    color: var(--md-sys-color-outline) !important;
+
+  }
 }
 
 .board-container {
-  width: 242px;
-  height: 120px;
-  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  align-content: center;
-  border: 1px solid black;
-  margin-top: 20px;
+  width: 19%;
+  height: 135px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .board-name {
+    position: relative;
+    color: var(--md-sys-color-on-primary);
+    font-size: 18px;
+    z-index: 1;
+  }
+
 }
 
 .your-workspace h1 {
@@ -56,23 +90,8 @@ body {
   display: flex;
   width: 100%;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 20px;
-
-  .work-container,
-  .personal-container {
-    width: 242px;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    text-align: center;
-    font-weight: bold;
-    margin-top: 20px;
-    margin-right: 20px;
-    padding: 20px;
-    border-radius: 10px;
-  }
 
   .new-container {
     width: 242px;

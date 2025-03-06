@@ -4,28 +4,41 @@
     <div class="templates">
       <div class="titles">
         <mat-icon class="material-symbols-outlined">difference</mat-icon>
-        <p>Templates</p>
+        <p class="title">Templates</p>
       </div>
-      <div class="board-container">
-        <p>Basic kanban</p>
+      <div class="template">
+        <div class="board-container"
+             style="background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/05/New-Wallpaper-Full-HD-1920x1080.jpg')">
+          <div class="overlay"></div>
+          <p class="board-name">Basic kanban</p>
+        </div>
       </div>
     </div>
     <div class="workspaces">
       <div class="titles">
         <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
-        <p>Your workspaces</p>
+        <p class="title">Your workspaces</p>
       </div>
-      <div class="workspace">
-        <div class="work-container">
-          <p>Work</p>
+      @if (isGettingBoards) {
+        <ngx-skeleton-loader [theme]="{height: '135px', width: '19%', borderRadius: '10px'}"/>
+      } @else {
+        <div class="workspace">
+          @if (boards$ | async; as data) {
+            @for (board of data; track $index) {
+              <div class="board-container"
+                   (click)="navigateToBoard(board.id!)"
+                   [ngStyle]="{'background-image': 'url(' + (board.backgroundId! | background | async) + ')'}">
+                <div class="overlay"></div>
+                <p class="board-name">{{ board.name }}</p>
+              </div>
+            }
+          } @else {
+            <ngx-skeleton-loader [theme]="{height: '135px', width: '19%', borderRadius: '10px'}"/>
+          }
         </div>
-        <div class="personal-container">
-          <p>Personal</p>
-        </div>
-        <div class="new-container">
-          <p>Tạo bảng mới</p>
-        </div>
-      </div>
+
+      }
     </div>
   </div>
 </div>
+

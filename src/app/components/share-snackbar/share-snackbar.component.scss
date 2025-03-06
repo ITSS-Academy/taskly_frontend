@@ -1,0 +1,13 @@
+::ng-deep.cdk-overlay-pane {
+  background-color: unset !important;
+}
+
+::ng-deep.mat-mdc-snack-bar-actions {
+  display: unset;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

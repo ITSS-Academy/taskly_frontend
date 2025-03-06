@@ -36,47 +36,46 @@
     padding: 2rem;
     position: relative;
     z-index: 999;
-  }
 
-  .logo-title {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    gap: 20px;
-    flex-direction: column;
-
-    .logo {
-      width: 15%;
-      height: fit-content;
-    }
-
-    .title-text {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .logo-title {
+      text-align: center;
       align-items: center;
       justify-content: center;
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
 
-      .welcome {
-        font-size: 30px;
+      .logo {
+        width: 15%;
+        height: fit-content;
+      }
 
-        b {
-          color: var(--md-sys-color-primary-container);
+      .title-text {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+
+        .welcome {
+          font-size: 30px;
+
+          b {
+            color: var(--md-sys-color-primary-container);
+          }
+        }
+
+        .slogan {
+          font-size: 20px;
+          color: var(--md-sys-color-outline);
         }
       }
-
-      .slogan {
-        font-size: 20px;
-        color: var(--md-sys-color-outline);
-      }
     }
-  }
 
-
-  button {
-    width: 70%;
-    border-radius: 8px;
+    button {
+      width: 70%;
+      border-radius: 8px;
+    }
   }
 
   ::ng-deep.mdc-button__label {
