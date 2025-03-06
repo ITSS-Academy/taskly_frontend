@@ -1,5 +1,5 @@
 <div class="task-card" (click)="openDialog()">
-  @if (Array.isArray(task?.members) && task?.members!.length > 0) {
+  @if (Array.isArray(task.members) && task.members.length > 0) {
     <div class="task-header">
       <div class="left">
         <div class="assignees">
@@ -9,9 +9,8 @@
                    style="width: 100%; height: 100%; border-radius: 100%">
             </div>
           }
-          <!--      <div class="more-assignees" *ngIf="task.assignees.length > 2">+{{task.assignees.length - 2}}</div>-->
         </div>
-        
+
         <div class="task-title">
           {{ task.title }}
         </div>
