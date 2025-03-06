@@ -49,4 +49,13 @@ export class BoardService {
       headers: { Authorization: this.accessToken },
     });
   }
+
+  getInvitedBoards() {
+    return this.httpClient.get(
+      `${environment.apiUrl}/board/get-invited-boards`,
+      {
+        headers: { Authorization: this.accessToken },
+      },
+    );
+  }
 }

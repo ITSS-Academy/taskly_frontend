@@ -1,25 +1,60 @@
 <div class="task-card" (click)="openDialog()">
-  <div class="task-header">
-    <div class="assignees">
-      <div class="avatar" *for="let assignee of ['user1', 'user2']; let i = index" [style.zIndex]="100-i">
-        <mat-icon>account_circle</mat-icon>
+  @if (Array.isArray(task?.members) && task?.members!.length > 0) {
+    <div class="task-header">
+      <div class="left">
+        <div class="assignees">
+          @for (user of task.members; track $index) {
+            <div class="avatar" [style.z-index]="100-$index" matTooltip="{{(user.user_id | user | async)?.name}}">
+              <img [src]="(user.user_id | user | async)?.photoUrl" alt="(user.user_id | user | async)?.name"
+                   style="width: 100%; height: 100%; border-radius: 100%">
+            </div>
+          }
+          <!--      <div class="more-assignees" *ngIf="task.assignees.length > 2">+{{task.assignees.length - 2}}</div>-->
+        </div>
+        
+        <div class="task-title">
+          {{ task.title }}
+        </div>
       </div>
-      <!--      <div class="more-assignees" *ngIf="task.assignees.length > 2">+{{task.assignees.length - 2}}</div>-->
+
+      <div class="task-actions">
+        <button mat-icon-button class="more-button" (click)="showMoreOptions(); $event.stopPropagation()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
-    <button mat-icon-button class="close-button" (click)="closeTask()">
-      <mat-icon>close</mat-icon>
-    </button>
+  } @else {
+    <div class="task-header">
+      <div class="task-title">
+        {{ task.title }}
+      </div>
+
+      <div class="task-actions">
+        <button mat-icon-button class="more-button" (click)="showMoreOptions(); $event.stopPropagation()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  }
+
+
+
+  <div class="tags-container">
+    @for (label of task.labels; track $index) {
+      <div class="tag" [ngStyle]="{ backgroundColor: (label.boardLabelId | label | async)?.color }">
+        {{ (label.boardLabelId | label | async)?.name }}
+      </div>
+
+    }
+
   </div>
 
-  <div class="task-title">
-    {{ task.title }}
-  </div>
-
-  <div class="progress-container">
-    <div class="progress-bar">
-      <!--      <div class="progress-fill" [style.width.%]="task.progress" [style.background-color]="getProgressColor()"></div>-->
-    </div>
-  </div>
 
   <div class="task-footer">
     <div class="task-date">
@@ -32,3 +67,4 @@
     </div>
   </div>
 </div>
+

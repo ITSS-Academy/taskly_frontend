@@ -4,6 +4,7 @@ import { UserModel } from '../../models/user.model';
 import { Store } from '@ngrx/store';
 import { AuthState } from '../../ngrx/auth/auth.state';
 import { environment } from '../../../environments/environment.development';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class NotificationsService {
   accessToken!: string;
 
   constructor(
-    private htppClient: HttpClient,
+    private httpClient: HttpClient,
     private store: Store<{ auth: AuthState }>,
   ) {
     this.store.select('auth', 'idToken').subscribe((auth) => {
@@ -23,7 +24,7 @@ export class NotificationsService {
   }
 
   inviteUser(users: UserModel[], boardId: string) {
-    return this.htppClient.post(
+    return this.httpClient.post(
       `${environment.apiUrl}/notifications/board`,
       { users, boardId },
       {
@@ -33,8 +34,30 @@ export class NotificationsService {
   }
 
   getNotifications(offset: number, limit: number) {
-    return this.htppClient.get(
+    return this.httpClient.get(
       `${environment.apiUrl}/notifications/${limit}/${offset}`,
+      {
+        headers: { Authorization: this.accessToken },
+      },
+    );
+  }
+
+  replyInvteBoard(notificationId: string, isAccepted: boolean) {
+    return this.httpClient.put(
+      `${environment.apiUrl}/notifications/isAccept/board`,
+      {
+        notificationId,
+        isAccepted,
+      },
+      {
+        headers: { Authorization: this.accessToken },
+      },
+    );
+  }
+
+  checkNewNotifications(): Observable<boolean> {
+    return this.httpClient.get<boolean>(
+      `${environment.apiUrl}/notifications/isNewNotification`,
       {
         headers: { Authorization: this.accessToken },
       },

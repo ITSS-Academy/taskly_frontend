@@ -8,10 +8,13 @@
     [cdkDropListConnectedTo]="connectedTo"
     class="task-list"
     (cdkDropListDropped)="drop($event)">
-    <app-task *ngFor="let task of tasks" [task]="task" cdkDrag></app-task>
+    @for (task of tasks; track $index) {
+      <app-task [task]="task" cdkDrag></app-task>
+    }
   </div>
 
   <button mat-button class="add-task-button" (click)="addTask()">
-    <mat-icon>add</mat-icon> Add task
+    <mat-icon>add</mat-icon>
+    Add task
   </button>
 </div>
