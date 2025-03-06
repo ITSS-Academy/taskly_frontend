@@ -1,8 +1,6 @@
 import {Component, inject, Input} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe, NgIf } from '@angular/common';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { of } from 'rxjs';
 import { MatIconButton } from '@angular/material/button';
 import { ForDirective } from '../../../../../../../../../../shared/for.directive';
 import { CardModel } from '../../../../../../../../../../models/card.model';
@@ -30,7 +28,7 @@ interface Task {
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
-  imports: [MatIcon, DatePipe, MatCheckbox, MatIconButton, NgIf, ForDirective],
+  imports: [MatIcon, DatePipe,  MatIconButton,  ForDirective],
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent {
@@ -61,11 +59,9 @@ export class TaskComponent {
   //   }
   // }
 
-  protected readonly of = of;
-
   openDialog() {
-    this.dialog.open(TaskDescriptionComponent, {
+    const dialogRef = this.dialog.open(TaskDescriptionComponent, {
       data: this.task,
-    })
+    });
   }
 }
