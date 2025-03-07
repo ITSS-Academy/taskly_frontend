@@ -331,4 +331,28 @@ export const listReducer = createReducer(
       }),
     };
   }),
+  on(listActions.addCountSubtask, (state, {subtask}) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        return {
+          ...list,
+          cards: list.cards
+            ? list.cards.map((card) => {
+              if (card.id === subtask.cardId) {
+                return {
+                  ...card,
+                  checklistCount: card.checklistCount
+                    ? card.checklistCount + 1
+                    : 1,
+                };
+              }
+              ;
+              return card;
+            })
+            : [],
+        };
+      }),
+    }
+  })
 );

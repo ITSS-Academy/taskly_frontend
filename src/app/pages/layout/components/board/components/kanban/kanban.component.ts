@@ -296,7 +296,7 @@ export class KanbanComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     this.store.dispatch(
       listActions.updateCard({
-        cardId: this.lists[previousIndex].cards![event.previousIndex].id,
+        cardId: this.lists[previousIndex].cards![event.previousIndex].id!,
         listId: this.lists[currentIndex]!.id!,
         cardPosition: Number(event.currentIndex),
       }),

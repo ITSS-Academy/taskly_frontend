@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
     this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
     this.backgroundService.setSidebarColor('rgb(245, 255, 248)');
     this.backgroundService.setLogo('rgb(245, 255, 248)');
-    this.store.dispatch(boardActions.getBoards());
+    // this.store.dispatch(boardActions.getBoards());
   }
 
   ngOnInit(): void {

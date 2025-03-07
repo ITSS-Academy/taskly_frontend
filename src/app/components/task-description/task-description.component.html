@@ -43,8 +43,8 @@
                   <div class="assignee-avatar">
                     <mat-icon>account_circle</mat-icon>
                   </div>
-                  <span class="assignee-name">{{ assignee }}</span>
-                  <button mat-icon-button class="remove-assignee-button" (click)="removeAssignee(assignee.user_id)">
+                  <span class="assignee-name">{{ assignee.name }}</span>
+                  <button mat-icon-button class="remove-assignee-button" (click)="removeAssignee(assignee.id)">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
@@ -103,9 +103,8 @@
           <div class="subtasks-list">
             @for (subtask of task.checklistItems; track subtask.id) {
               <div class="subtask-item">
-                <mat-checkbox
-                  [(ngModel)]="subtask.isCompleted"
-                  (change)="toggleSubtask(subtask.isCompleted)">
+                <mat-checkbox [checked]="subtask.isCompleted"
+                              (change)="toggleSubtask(subtask.isCompleted, subtask.id!)">
                   {{ subtask.title }}
                 </mat-checkbox>
                 <button mat-icon-button class="remove-subtask-button" (click)="removeSubtask(subtask.id!)">
@@ -115,20 +114,22 @@
             }
 
             <!-- Add New Subtask -->
-            <div class="add-subtask-container">
-              <mat-checkbox [checked]="false" [disabled]="!newSubtask.trim()"></mat-checkbox>
-              <input
-                matInput
-                class="subtask-input"
-                (keyup.enter)="addSubtask()"
-                placeholder="Add a new subtask">
-              <button
-                mat-icon-button
-                [disabled]="!newSubtask.trim()"
-                (click)="addSubtask()">
-                <mat-icon>add</mat-icon>
-              </button>
-            </div>
+            <form [formGroup]="subTaskForm">
+              <div class="add-subtask-container">
+                <mat-checkbox formControlName="isCompleted"></mat-checkbox>
+                <input
+                  matInput
+                  formControlName="title"
+                  class="subtask-input"
+                  (keyup.enter)="addSubtask()"
+                  placeholder="Add a new subtask">
+                <button
+                  mat-icon-button
+                  (click)="addSubtask()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 

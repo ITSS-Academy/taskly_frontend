@@ -1,5 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {LabelModel} from '../../models/label.model';
+import {ChecklistItemModel} from '../../models/checklistItem.model';
 
 export const getCard = createAction(
   '[Card] Get Card',
@@ -49,4 +50,20 @@ export const updateCardDetailSuccess = createAction(
 export const updateCardDetailFailure = createAction(
   '[Card] Update Card Detail Failure',
   props<{ error: string }>(),
+);
+
+
+export const addNewChecklistItem = createAction(
+  '[Card] Add New Checklist Item',
+  props<{ checklistItem: ChecklistItemModel }>(),
+);
+
+export const toogleChecklistItem = createAction(
+  '[Card] Toggle Checklist Item',
+  props<{ checklistItem: ChecklistItemModel }>(),
+);
+
+export const deleteChecklistItem = createAction(
+  '[Card] Delete Checklist Item',
+  props<{ checklistItemId: string }>(),
 );

@@ -1,5 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {ListCard, ListModel} from '../../models/list.model';
+import {ChecklistItemModel} from '../../models/checklistItem.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
@@ -113,6 +114,11 @@ export const updateLabelToCard = createAction(
 export const updateNewCard = createAction(
   '[Card] Update New Card',
   props<{ card: any }>(),
+);
+
+export const addCountSubtask = createAction(
+  '[Card] Add Count Subtask',
+  props<{ subtask: ChecklistItemModel }>(),
 );
 
 export const storeNewLists = createAction(

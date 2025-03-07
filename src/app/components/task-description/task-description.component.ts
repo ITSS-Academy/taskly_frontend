@@ -30,6 +30,7 @@ import {CardState} from '../../ngrx/card/card.state';
 import * as cardActions from '../../ngrx/card/card.actions';
 import {UserState} from '../../ngrx/user/user.state';
 import {LabelPipe} from '../../shared/pipes/label.pipe';
+import * as checklistItemActions from '../../ngrx/checklistItem/checklistItem.actions';
 
 @Component({
   selector: 'app-task-description',
@@ -62,6 +63,12 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     title: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     dueDate: new FormControl<Date | null>(null),
+  })
+
+  subTaskForm = new FormGroup({
+    title: new FormControl('', [Validators.required]),
+    isCompleted: new FormControl(false),
+    cardId: new FormControl('', [Validators.required]),
   })
 
   // Create a local task copy that we can modify
@@ -122,6 +129,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
             description: this.task.description,
             dueDate: this.task.dueDate,
           });
+          this.subTaskForm.get('cardId')!.setValue(this.task.id);
         }
       }),
       this.store.select('user', 'user').subscribe((user) => {
@@ -161,25 +169,31 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   }
 
   addSubtask() {
-
-
-    this.newSubtask = '';
-
+    if (this.subTaskForm.valid) {
+      this.store.dispatch(checklistItemActions.addNewChecklistItem({
+        checklistItem: {
+          title: this.subTaskForm.value.title!,
+          isCompleted: this.subTaskForm.value.isCompleted!,
+          cardId: this.subTaskForm.value.cardId!,
+        }
+      }));
+      this.subTaskForm.get('isCompleted')!.setValue(false);
+      this.subTaskForm.get('title')!.setValue('');
+    }
   }
 
   removeSubtask(id: string) {
-    const subtask = this.task.checklistItems!.find((s) => s.id === id);
-    if (!subtask) return;
-
-    const wasCompleted = subtask.isCompleted;
-
-    this.task.checklistItems = this.task.checklistItems!.filter(
-      (s) => s.id !== id,
-    );
+    this.store.dispatch(checklistItemActions.deleteChecklistItem({checklistItemId: id}));
   }
 
-  toggleSubtask(completed: boolean) {
+  toggleSubtask(completed: boolean, subtaskId: string) {
     // Recalculate completed count safely
+    this.store.dispatch(checklistItemActions.toggleChecklistItem({
+      checklistItem: {
+        isCompleted: completed,
+        id: subtaskId,
+      }
+    }))
   }
 
   getCompletionPercentage(): number {

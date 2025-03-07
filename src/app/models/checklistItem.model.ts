@@ -2,5 +2,6 @@ export interface ChecklistItemModel {
   id?: string;
   title: string;
   isCompleted: boolean;
-  createdAt: Date;
+  cardId: string;
+  createdAt?: Date;
 }

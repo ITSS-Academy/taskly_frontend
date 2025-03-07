@@ -1,5 +1,5 @@
-import { BoardState } from './board.state';
-import { createReducer, on } from '@ngrx/store';
+import {BoardState} from './board.state';
+import {createReducer, on} from '@ngrx/store';
 import * as boardActions from './board.actions';
 
 const initialState: BoardState = {
@@ -33,7 +33,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: false,
     };
   }),
-  on(boardActions.createBoardSuccess, (state, { board }) => {
+  on(boardActions.createBoardSuccess, (state, {board}) => {
     console.log(board);
     return {
       ...state,
@@ -43,7 +43,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: true,
     };
   }),
-  on(boardActions.createBoardFail, (state, { error }) => {
+  on(boardActions.createBoardFail, (state, {error}) => {
     return {
       ...state,
       isBoardCreating: false,
@@ -58,7 +58,7 @@ export const boardReducer = createReducer(
       isBoardsGetting: true,
     };
   }),
-  on(boardActions.getBoardsSuccess, (state, { boards }) => {
+  on(boardActions.getBoardsSuccess, (state, {boards}) => {
     console.log(boards);
     return {
       ...state,
@@ -68,7 +68,7 @@ export const boardReducer = createReducer(
       isGetBoardsSuccess: true,
     };
   }),
-  on(boardActions.getBoardsFail, (state, { error }) => {
+  on(boardActions.getBoardsFail, (state, {error}) => {
     return {
       ...state,
       isBoardsGetting: false,
@@ -77,6 +77,7 @@ export const boardReducer = createReducer(
     };
   }),
   on(boardActions.getBoard, (state) => {
+    console.log('getBoard');
     return {
       ...state,
       board: null,
@@ -85,7 +86,7 @@ export const boardReducer = createReducer(
       getBoardError: '',
     };
   }),
-  on(boardActions.getBoardSuccess, (state, { type, board }) => {
+  on(boardActions.getBoardSuccess, (state, {type, board}) => {
     console.log(type);
     console.log(board);
     return {
@@ -96,7 +97,7 @@ export const boardReducer = createReducer(
       getBoardError: '',
     };
   }),
-  on(boardActions.getBoardFailure, (state, { errorMessage }) => {
+  on(boardActions.getBoardFailure, (state, {errorMessage}) => {
     return {
       ...state,
       isGettingBoard: false,
@@ -113,7 +114,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: false,
     };
   }),
-  on(boardActions.getInvitedBoardsSuccess, (state, { boards }) => {
+  on(boardActions.getInvitedBoardsSuccess, (state, {boards}) => {
     return {
       ...state,
       invitedBoards: boards,
@@ -122,7 +123,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: true,
     };
   }),
-  on(boardActions.getInvitedBoardsFail, (state, { error }) => {
+  on(boardActions.getInvitedBoardsFail, (state, {error}) => {
     return {
       ...state,
       isInvitedBoardsGetting: false,
@@ -130,7 +131,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: false,
     };
   }),
-  on(boardActions.acceptInvitation, (state, { board }) => {
+  on(boardActions.acceptInvitation, (state, {board}) => {
     console.log(board);
     return {
       ...state,

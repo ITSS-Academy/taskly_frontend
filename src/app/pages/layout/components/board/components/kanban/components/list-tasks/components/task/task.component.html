@@ -4,8 +4,8 @@
       <div class="left">
         <div class="assignees">
           @for (user of task.members; track $index) {
-            <div class="avatar" [style.z-index]="100-$index" matTooltip="{{(user.user_id | user | async)?.name}}">
-              <img [src]="(user.user_id | user | async)?.photoUrl" alt="(user.user_id | user | async)?.name"
+            <div class="avatar" [style.z-index]="100-$index" matTooltip="{{user.name}}">
+              <img [src]="user.photoUrl" alt="(user.user_id | user | async)?.name"
                    style="width: 100%; height: 100%; border-radius: 100%">
             </div>
           }

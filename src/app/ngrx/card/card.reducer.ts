@@ -95,4 +95,65 @@ export const cardReducer = createReducer(
       isUpdateTaskFailure: error,
     };
   }),
+  on(cardActions.addNewChecklistItem, (state, {checklistItem}) => {
+    console.log(checklistItem);
+    return {
+      ...state,
+      card: {
+        ...state.card,
+        id: state.card!.id,
+        title: state.card!.title,
+        description: state.card!.description,
+        comments: state.card!.comments,
+        attachments: state.card!.attachments,
+        dueDate: state.card!.dueDate,
+        members: state.card!.members,
+        labels: state.card!.labels,
+        checklistItems: state.card!.checklistItems ? [...state.card!.checklistItems, checklistItem] : [checklistItem],
+      },
+    };
+  }),
+  on(cardActions.toogleChecklistItem, (state, {checklistItem}) => {
+    return {
+      ...state,
+      card: {
+        ...state.card,
+        id: state.card!.id,
+        title: state.card!.title,
+        description: state.card!.description,
+        comments: state.card!.comments,
+        attachments: state.card!.attachments,
+        dueDate: state.card!.dueDate,
+        members: state.card!.members,
+        labels: state.card!.labels,
+        checklistItems: state.card!.checklistItems!.map((item) => {
+          if (item.id === checklistItem.id) {
+            return {
+              ...item,
+              isCompleted: !item.isCompleted,
+            };
+          }
+          return item;
+        }),
+      },
+    };
+  }),
+  on(cardActions.deleteChecklistItem, (state, {checklistItemId}) => {
+    return {
+      ...state,
+      card: {
+        ...state.card,
+        id: state.card!.id,
+        title: state.card!.title,
+        description: state.card!.description,
+        comments: state.card!.comments,
+        attachments: state.card!.attachments,
+        dueDate: state.card!.dueDate,
+        members: state.card!.members,
+        labels: state.card!.labels,
+        checklistItems: state.card!.checklistItems!.filter((item) => item.id !== checklistItemId),
+      },
+    }
+  })
 );
+
