@@ -37,7 +37,6 @@
   h2 {
     margin: 0;
     font-size: 18px;
-    color: #673ab7; // Purple color to match your image
   }
 
   .close-button {
@@ -51,6 +50,9 @@
   padding: 16px;
   flex-grow: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .task-description-footer {
@@ -66,7 +68,15 @@
 }
 
 .form-group {
-  margin-bottom: 24px;
+
+  textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    resize: none;
+    min-height: 100px;
+  }
 
   label {
     display: block;
@@ -356,7 +366,19 @@
     }
   }
 }
+
 .tags-labels-row {
   display: flex;
   gap: 10px; /* Adjust the gap as needed */
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 25px;
+  height: fit-content;
+  min-width: 55px;
+  font-size: 12px;
 }
