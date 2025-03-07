@@ -24,25 +24,6 @@
           </mat-form-field>
         </div>
 
-        <!-- Tags and Labels Buttons in the same row -->
-        <div class="form-group tags-labels-row">
-          @for (label of this.task.labels || []; track $index) {
-
-            <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
-              {{ label.name }}
-            </div>
-
-          }
-          <button mat-stroked-button class="tag-button">
-            <mat-icon>tag</mat-icon>
-            Tags
-          </button>
-          <button mat-stroked-button class="label-button" (click)="openLabelDialog()">
-            <mat-icon>label</mat-icon>
-            Labels
-          </button>
-        </div>
-
         <!-- Notes -->
         <div class="form-group">
           <mat-form-field appearance="outline" class="full-width">
@@ -73,14 +54,33 @@
           </div>
         </div>
 
-        <!-- Date -->
-        <div class="form-group">
-          <mat-form-field appearance="outline" class="date-field">
-            <mat-label>Date</mat-label>
-            <input matInput [matDatepicker]="picker" [value]="this.task.dueDate">
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
+        <div class="tag-date-container">
+          <div class="tag-container">
+            <button mat-stroked-button class="tag-button" (click)="openLabelDialog()">
+              <mat-icon>tag</mat-icon>
+              Tags
+            </button>
+            <!-- Tags and Labels Buttons in the same row -->
+            <div class="form-group tags-labels-row">
+              @for (label of this.task.labels || []; track $index) {
+
+                <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
+                  {{ label.name }}
+                </div>
+
+              }
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="date-field">
+              <mat-label>Date</mat-label>
+              <input matInput [matDatepicker]="picker" [value]="this.task.dueDate">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
         </div>
 
         <!-- Checklist -->
