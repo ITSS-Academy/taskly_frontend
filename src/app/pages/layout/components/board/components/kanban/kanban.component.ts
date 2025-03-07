@@ -414,8 +414,8 @@ export class KanbanComponent implements OnInit, OnDestroy, AfterViewChecked {
       setTimeout(() => this.columnInput.nativeElement.focus(), 0);
     }
 
-    // if (this.list.isInEditMode && this.taskInput) {
-    //   setTimeout(() => this.taskInput.nativeElement.focus(), 0);
-    // }
+    if (this.list.isInEditMode && this.taskInput) {
+      setTimeout(() => this.taskInput.nativeElement.focus(), 0);
+    }
   }
 }

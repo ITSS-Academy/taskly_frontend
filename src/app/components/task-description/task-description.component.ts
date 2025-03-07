@@ -1,10 +1,10 @@
 import {
-  Component,
+  Component, ElementRef,
   EventEmitter,
   inject,
   OnDestroy,
   OnInit,
-  Output,
+  Output, ViewChild,
 } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -31,6 +31,7 @@ import * as cardActions from '../../ngrx/card/card.actions';
 import {UserState} from '../../ngrx/user/user.state';
 import {LabelPipe} from '../../shared/pipes/label.pipe';
 import * as checklistItemActions from '../../ngrx/checklistItem/checklistItem.actions';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'app-task-description',
@@ -53,6 +54,7 @@ import * as checklistItemActions from '../../ngrx/checklistItem/checklistItem.ac
   styleUrl: './task-description.component.scss',
 })
 export class TaskDescriptionComponent implements OnInit, OnDestroy {
+
   newTag = '';
   newSubtask = '';
   newComment = '';
@@ -83,23 +85,26 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
 
   boardId!: string;
+  boardMembers = [
+    {
+      id: '1',
+      name: 'Nguyen Dang Gia Tuong'
+    },
+    {
+      id: '2',
+      name: 'Jane Doe'
+    },
+    {
+      id: '3',
+      name: 'Alice'
+    },
+  ]
   subscriptions: Subscription[] = [];
 
   completedItems = 0;
   totalItems = 0;
 
   isGettingCard!: Observable<boolean>;
-
-  constructor(
-    private store: Store<{
-      board: BoardState;
-      label: LabelState;
-      card: CardState;
-      user: UserState;
-    }>,
-  ) {
-    this.store.dispatch(cardActions.getCard({cardId: this.cardId}));
-  }
 
   ngOnInit() {
     this.subscriptions.push(
@@ -137,6 +142,17 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       }),
     );
     this.isGettingCard = this.store.select('card', 'isGettingCard');
+  }
+
+  constructor(
+    private store: Store<{
+      board: BoardState;
+      label: LabelState;
+      card: CardState;
+      user: UserState;
+    }>,
+  ) {
+    this.store.dispatch(cardActions.getCard({cardId: this.cardId}));
   }
 
   ngOnDestroy() {
