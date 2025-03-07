@@ -55,3 +55,5 @@ export const acceptInvitation = createAction(
   '[Board] Accept Invitation',
   props<{ board: BoardModel }>(),
 );
+
+export const clearBoardBackground = createAction('[Board] Clear Board State');
