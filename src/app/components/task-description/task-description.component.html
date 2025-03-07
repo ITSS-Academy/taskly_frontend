@@ -21,7 +21,7 @@
           <div class="form-group">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Title</mat-label>
-              <input matInput formControlName="title">
+              <input matInput formControlName="title" #titleInput>
             </mat-form-field>
           </div>
 
@@ -49,28 +49,42 @@
                   </button>
                 </div>
               }
-              <button mat-stroked-button class="add-assignee-button" (click)="showAssigneeSelector = true">
+              <button mat-stroked-button class="add-assignee-button" (click)="showAssigneeSelector = true"
+                      [matMenuTriggerFor]="menu">
                 <mat-icon>add</mat-icon>
                 Add
               </button>
+              <mat-menu #menu="matMenu">
+                @for (member of this.boardMembers; track $index) {
+                  <button mat-menu-item class="assignee-button">
+                    <img src="/assets/images/background1.jpg" alt="">
+                    <span class="assignee-name">{{ member.name }}</span>
+                  </button>
+                }
+              </mat-menu>
+
             </div>
           </div>
 
           <div class="tag-date-container">
             <div class="tag-container">
-              <button mat-stroked-button class="tag-button" (click)="openLabelDialog()">
-                <mat-icon>tag</mat-icon>
-                Tags
-              </button>
+              <div class="tag-header">
+                <label>Tags</label>
+              </div>
               <!-- Tags and Labels Buttons in the same row -->
               <div class="form-group tags-labels-row">
                 @for (label of this.task.labels || []; track $index) {
-
                   <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
                     {{ label.name }}
                   </div>
-
                 }
+
+                <div class="add-tag-btn">
+                  <button mat-stroked-button class="create-label-button tag" (click)="openLabelDialog()">
+                    <mat-icon>add</mat-icon>
+                    Add tag
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -195,8 +209,8 @@
       </div>
 
       <div class="task-description-footer">
-        <button mat-button class="cancel-button" (click)="onClose()">Cancel</button>
-        <button mat-raised-button color="primary" class="save-button" (click)="saveChanges()">Accept</button>
+        <button mat-stroked-button class="cancel-button" (click)="onClose()">Cancel</button>
+        <button mat-flat-button color="primary" class="save-button" (click)="saveChanges()">Accept</button>
       </div>
     </div>
   </div>

@@ -90,7 +90,6 @@
         <div class="task-list">
           @for (card of list.cards; track $index) {
             <app-task [task]="card" cdkDrag></app-task>
-            <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
           }
 
         </div>
@@ -130,7 +129,7 @@
       <div class="input-container">
         <mat-form-field>
           <mat-label>Column Name</mat-label>
-          <input #columnInput matInput [formControl]="listName">
+          <input #columnInput matInput (keyup.enter)="addNewList()" [formControl]="listName">
         </mat-form-field>
         <div class="btn-container">
           <button mat-stroked-button (click)="cancelAddList()">Cancel</button>

@@ -2,6 +2,7 @@ import {
   AfterViewChecked,
   Component,
   ElementRef,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -45,6 +46,8 @@ import { MaterialModule } from '../../../../../../shared/modules/material.module
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GatewayService } from '../../../../../../services/gateway/gateway.service';
 import { CardState } from '../../../../../../ngrx/card/card.state';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ShareSnackbarComponent } from '../../../../../../components/share-snackbar/share-snackbar.component';
 
 interface Task {
   id: string;
@@ -99,6 +102,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     }>,
     private gateway: GatewayService,
   ) {}
+
+  private _snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
@@ -226,6 +231,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   addTask(listId: string) {
+    if (this.isAddingList) {
+      this.isAddingList = !this.isAddingList;
+      this.listName.reset();
+    }
     this.list.isInEditMode = true;
     // find in lists, then switch isInEditMode to true
     this.lists = this.lists.map((list) => {
@@ -241,13 +250,20 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   addNewList() {
-    this.store.dispatch(
-      listActions.addNewList({
-        listName: this.listName.value!,
-        boardId: this.boardId,
-      }),
-    );
-    this.listName.reset();
+    if (this.listName.valid) {
+      this.store.dispatch(
+        listActions.addNewList({
+          listName: this.listName.value!,
+          boardId: this.boardId,
+        }),
+      );
+      this.listName.reset();
+      this.isAddingList = false;
+    } else {
+      this._snackBar.openFromComponent(ShareSnackbarComponent, {
+        data: 'Please fill in the form',
+      });
+    }
   }
 
   onColumnDrop($event: CdkDragDrop<any>) {
@@ -358,7 +374,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   createNewTask(listId: string) {
-    if (this.cardName.errors) {
+    if (!this.cardName.valid) {
+      this._snackBar.openFromComponent(ShareSnackbarComponent, {
+        data: 'Please fill in the form',
+      });
       return;
     }
     this.store.dispatch(
@@ -396,10 +415,17 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   cancelAddList() {
+    this.listName.reset();
     this.isAddingList = false;
   }
 
   onBtnAddList() {
+    if (this.list.isInEditMode) {
+      this.lists = this.lists.map((list) => {
+        return { ...list, isInEditMode: false };
+      });
+      this.cardName.reset();
+    }
     this.isAddingList = true;
   }
 

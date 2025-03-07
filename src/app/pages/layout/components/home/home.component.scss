@@ -1,7 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
   background-color: #f0f0f0;
 }
 
@@ -53,6 +52,12 @@ body {
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
+
+  &:hover {
+    .overlay {
+      background: rgba(0, 0, 0, 0.58);
+    }
+  }
 
   .overlay {
     position: absolute;
