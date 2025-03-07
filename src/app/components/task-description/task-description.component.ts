@@ -11,25 +11,25 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
-import { AsyncPipe, DatePipe, NgForOf, NgIf, NgStyle } from '@angular/common';
-import { MaterialModule } from '../../shared/modules/material.module';
-import { LabelDialogComponent } from '../label-dialog/label-dialog.component';
-import { Store } from '@ngrx/store';
-import { BoardState } from '../../ngrx/board/board.state';
-import { Observable, Subscription } from 'rxjs';
-import { LabelState } from '../../ngrx/label/label.state';
+import {FormControl, FormGroup, FormsModule} from '@angular/forms';
+import {AsyncPipe, DatePipe, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {MaterialModule} from '../../shared/modules/material.module';
+import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
+import {Store} from '@ngrx/store';
+import {BoardState} from '../../ngrx/board/board.state';
+import {Observable, Subscription} from 'rxjs';
+import {LabelState} from '../../ngrx/label/label.state';
 import * as labelActions from '../../ngrx/label/label.actions';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { TextFieldModule } from '@angular/cdk/text-field';
-import { CommentModel } from '../../models/comment.model';
-import { ChecklistItemModel } from '../../models/checklistItem.model';
-import { CardModel } from '../../models/card.model';
-import { CardState } from '../../ngrx/card/card.state';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {TextFieldModule} from '@angular/cdk/text-field';
+import {CommentModel} from '../../models/comment.model';
+import {ChecklistItemModel} from '../../models/checklistItem.model';
+import {CardModel} from '../../models/card.model';
+import {CardState} from '../../ngrx/card/card.state';
 import * as cardActions from '../../ngrx/card/card.actions';
-import { UserState } from '../../ngrx/user/user.state';
-import { LabelPipe } from '../../shared/pipes/label.pipe';
+import {UserState} from '../../ngrx/user/user.state';
+import {LabelPipe} from '../../shared/pipes/label.pipe';
 
 @Component({
   selector: 'app-task-description',
@@ -55,6 +55,13 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   newSubtask = '';
   newComment = '';
   showAssigneeSelector = false;
+
+  taskUpdatedForm = new FormGroup({
+    id: new FormControl(''),
+    title: new FormControl(''),
+    description: new FormControl(''),
+    dueDate: new FormControl(''),
+  })
 
   // Create a local task copy that we can modify
   task!: CardModel;
@@ -83,7 +90,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       user: UserState;
     }>,
   ) {
-    this.store.dispatch(cardActions.getCard({ cardId: this.cardId }));
+    this.store.dispatch(cardActions.getCard({cardId: this.cardId}));
   }
 
   ngOnInit() {
@@ -130,9 +137,11 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  addTag() {}
+  addTag() {
+  }
 
-  removeTag(tag: string) {}
+  removeTag(tag: string) {
+  }
 
   addSubtask() {
     if (this.newSubtask.trim()) {
@@ -191,9 +200,10 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     return comment.userId === this.currentUser;
   }
 
-  removeAssignee(memberId: string) {}
+  removeAssignee(memberId: string) {
+  }
 
   openLabelDialog() {
-    this.store.dispatch(labelActions.getLabelsInBoard({ id: this.boardId }));
+    this.store.dispatch(labelActions.getLabelsInBoard({id: this.boardId}));
   }
 }

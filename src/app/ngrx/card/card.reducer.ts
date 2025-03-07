@@ -1,5 +1,5 @@
-import { createReducer, on } from '@ngrx/store';
-import { CardState } from './card.state';
+import {createReducer, on} from '@ngrx/store';
+import {CardState} from './card.state';
 import * as cardActions from './card.actions';
 
 const initialState: CardState = {
@@ -7,6 +7,10 @@ const initialState: CardState = {
   isGettingCard: false,
   isGetCardSuccess: false,
   isGetCardFailure: null,
+
+  isUpdatingCard: false,
+  isUpdateCardSuccess: false,
+  isUpdateCardFailure: null,
 };
 
 export const cardReducer = createReducer(
@@ -19,7 +23,7 @@ export const cardReducer = createReducer(
       isGetCardFailure: null,
     };
   }),
-  on(cardActions.getCardSuccess, (state, { card }) => {
+  on(cardActions.getCardSuccess, (state, {card}) => {
     return {
       ...state,
       card,
@@ -28,7 +32,7 @@ export const cardReducer = createReducer(
       isGetCardFailure: null,
     };
   }),
-  on(cardActions.getCardFailure, (state, { error }) => {
+  on(cardActions.getCardFailure, (state, {error}) => {
     return {
       ...state,
       isGettingCard: false,
@@ -36,7 +40,7 @@ export const cardReducer = createReducer(
       isGetCardFailure: error,
     };
   }),
-  on(cardActions.updateLabel, (state, { labels }) => {
+  on(cardActions.updateLabel, (state, {labels}) => {
     console.log(labels);
     return {
       ...state,

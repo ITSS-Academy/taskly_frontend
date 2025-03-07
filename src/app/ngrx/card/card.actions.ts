@@ -1,5 +1,5 @@
-import { createAction, props } from '@ngrx/store';
-import { LabelModel } from '../../models/label.model';
+import {createAction, props} from '@ngrx/store';
+import {LabelModel} from '../../models/label.model';
 
 export const getCard = createAction(
   '[Card] Get Card',
@@ -20,5 +20,29 @@ export const updateLabel = createAction(
   '[Card] Update Label',
   props<{
     labels: LabelModel[];
+  }>(),
+);
+
+export const updateCard = createAction(
+  '[Card] Update Card',
+  props<{
+    card: {
+      id: string;
+      title: string;
+      dueDate: Date | null;
+      description: string;
+    }
+  }>(),
+);
+
+export const updateCardSuccess = createAction(
+  '[Card] Update Card Success',
+  props<{
+    card: {
+      id: string;
+      title: string;
+      dueDate: Date | null;
+      description: string;
+    }
   }>(),
 );
