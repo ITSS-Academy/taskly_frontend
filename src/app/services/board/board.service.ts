@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BoardModel } from '../../models/board.model';
-import { Store } from '@ngrx/store';
-import { AuthState } from '../../ngrx/auth/auth.state';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {BoardModel} from '../../models/board.model';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../ngrx/auth/auth.state';
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +31,7 @@ export class BoardService {
       console.log(board);
 
       return this.httpClient.post(`${environment.apiUrl}/board`, formData, {
-        headers: { Authorization: this.accessToken },
+        headers: {Authorization: this.accessToken},
       });
     }
 
@@ -40,13 +40,13 @@ export class BoardService {
 
   getAllBoards() {
     return this.httpClient.get(`${environment.apiUrl}/board/get-all-by-uid`, {
-      headers: { Authorization: this.accessToken },
+      headers: {Authorization: this.accessToken},
     });
   }
 
   getBoard(id: string): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}/board/${id}`, {
-      headers: { Authorization: this.accessToken },
+      headers: {Authorization: this.accessToken},
     });
   }
 
@@ -54,7 +54,7 @@ export class BoardService {
     return this.httpClient.get(
       `${environment.apiUrl}/board/get-invited-boards`,
       {
-        headers: { Authorization: this.accessToken },
+        headers: {Authorization: this.accessToken},
       },
     );
   }

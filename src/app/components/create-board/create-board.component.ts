@@ -46,9 +46,9 @@ export class CreateBoardComponent {
   }
 
   createBoard() {
+    console.log('Creating board with title:', this.boardForm.get('image')?.value);
     if (this.boardForm.get('title')?.valid && this.boardForm.get('image')?.valid) {
       console.log('Creating board with title:', this.boardForm.get('title')?.value);
-      this.dialogRef.close();
 
       this.store.dispatch(boardActions.createBoard({
         board: {
@@ -56,6 +56,8 @@ export class CreateBoardComponent {
           background: this.boardForm.get('image')!.value,
         }
       }));
+
+      this.dialogRef.close();
     }
   }
 
@@ -72,6 +74,7 @@ export class CreateBoardComponent {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       const reader = new FileReader();
+      this.boardForm.get('image')?.setValue(file);
 
       reader.onload = () => {
         this.imagePreview = reader.result as string; // Gán ảnh vào biến để hiển thị
