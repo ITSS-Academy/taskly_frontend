@@ -27,8 +27,8 @@
         <div class="form-group tags-labels-row">
           @for (label of this.task.labels || []; track $index) {
 
-            <div class="tag" [ngStyle]="{ backgroundColor: (label.boardLabelId | label | async)?.color }">
-              {{ (label.boardLabelId | label | async)?.name }}
+            <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
+              {{ label.name }}
             </div>
 
           }

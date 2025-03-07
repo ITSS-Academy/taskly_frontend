@@ -60,9 +60,9 @@ export const addLabelToTask = createEffect(
           mergeMap((label: any) => [
             listActions.updateLabelToCard({
               cardId: label.cardId,
-              labels: label.labelIds,
+              labels: label.labelData,
             }),
-            cardActions.updateLabel({ labels: label.labelIds }),
+            cardActions.updateLabel({ labels: label.labelData }),
             labelActions.addLabelToTaskSuccess({ label: label }),
           ]),
           catchError((error) =>

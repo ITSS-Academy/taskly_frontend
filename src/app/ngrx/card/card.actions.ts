@@ -19,8 +19,6 @@ export const getCardFailure = createAction(
 export const updateLabel = createAction(
   '[Card] Update Label',
   props<{
-    labels: {
-      boardLabelId: string;
-    }[];
+    labels: LabelModel[];
   }>(),
 );

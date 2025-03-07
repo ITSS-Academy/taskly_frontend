@@ -7,11 +7,7 @@ export interface CardModel {
   title: string;
   description: string | null;
   dueDate: Date | null;
-  labels:
-    | {
-        boardLabelId: string;
-      }[]
-    | null;
+  labels: LabelModel[] | null;
   members:
     | {
         user_id: string;
