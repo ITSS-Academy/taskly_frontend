@@ -6,7 +6,7 @@ export interface CardState {
   isGetCardSuccess: boolean;
   isGetCardFailure: any;
 
-  isUpdatingCard: boolean;
-  isUpdateCardSuccess: boolean;
-  isUpdateCardFailure: any;
+  isUpdatingTask: boolean;
+  isUpdateTaskSuccess: boolean;
+  isUpdateTaskFailure: any;
 }

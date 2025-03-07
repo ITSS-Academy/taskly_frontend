@@ -23,8 +23,8 @@ export const updateLabel = createAction(
   }>(),
 );
 
-export const updateCard = createAction(
-  '[Card] Update Card',
+export const updateCardDetail = createAction(
+  '[Card] Update  Card Detail',
   props<{
     card: {
       id: string;
@@ -35,14 +35,18 @@ export const updateCard = createAction(
   }>(),
 );
 
-export const updateCardSuccess = createAction(
-  '[Card] Update Card Success',
+export const updateCardDetailSuccess = createAction(
+  '[Card] Update Card Detail Success',
   props<{
     card: {
-      id: string;
       title: string;
       dueDate: Date | null;
       description: string;
     }
   }>(),
+);
+
+export const updateCardDetailFailure = createAction(
+  '[Card] Update Card Detail Failure',
+  props<{ error: string }>(),
 );

@@ -110,6 +110,11 @@ export const updateLabelToCard = createAction(
   props<{ cardId: string; labels: ListModel[] }>(),
 );
 
+export const updateNewCard = createAction(
+  '[Card] Update New Card',
+  props<{ card: any }>(),
+);
+
 export const storeNewLists = createAction(
   '[List] Store New Lists',
   props<{ lists: ListModel[] }>(),

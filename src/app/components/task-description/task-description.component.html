@@ -17,71 +17,74 @@
       <div class="task-description-content">
 
         <!-- Title -->
-        <div class="form-group">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Title</mat-label>
-            <input matInput [value]="this.task.title">
-          </mat-form-field>
-        </div>
-
-        <!-- Notes -->
-        <div class="form-group">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Notes</mat-label>
-            <textarea matInput [value]="this.task.description" placeholder="Insert your notes here..."></textarea>
-          </mat-form-field>
-        </div>
-
-        <!-- Assignee -->
-        <div class="form-group">
-          <label>Assignee</label>
-          <div class="assignees-container">
-            @for (assignee of this.task.members || []; track $index) {
-              <div class="assignee-chip">
-                <div class="assignee-avatar">
-                  <mat-icon>account_circle</mat-icon>
-                </div>
-                <span class="assignee-name">{{ assignee }}</span>
-                <button mat-icon-button class="remove-assignee-button" (click)="removeAssignee(assignee.user_id)">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-            }
-            <button mat-stroked-button class="add-assignee-button" (click)="showAssigneeSelector = true">
-              <mat-icon>add</mat-icon>
-              Add
-            </button>
+        <form [formGroup]="taskUpdatedForm">
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Title</mat-label>
+              <input matInput formControlName="title">
+            </mat-form-field>
           </div>
-        </div>
 
-        <div class="tag-date-container">
-          <div class="tag-container">
-            <button mat-stroked-button class="tag-button" (click)="openLabelDialog()">
-              <mat-icon>tag</mat-icon>
-              Tags
-            </button>
-            <!-- Tags and Labels Buttons in the same row -->
-            <div class="form-group tags-labels-row">
-              @for (label of this.task.labels || []; track $index) {
+          <!-- Notes -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Notes</mat-label>
+              <textarea matInput placeholder="Insert your notes here..."
+                        formControlName="description"></textarea>
+            </mat-form-field>
+          </div>
 
-                <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
-                  {{ label.name }}
+          <!-- Assignee -->
+          <div class="form-group">
+            <label>Assignee</label>
+            <div class="assignees-container">
+              @for (assignee of this.task.members || []; track $index) {
+                <div class="assignee-chip">
+                  <div class="assignee-avatar">
+                    <mat-icon>account_circle</mat-icon>
+                  </div>
+                  <span class="assignee-name">{{ assignee }}</span>
+                  <button mat-icon-button class="remove-assignee-button" (click)="removeAssignee(assignee.user_id)">
+                    <mat-icon>close</mat-icon>
+                  </button>
                 </div>
-
               }
+              <button mat-stroked-button class="add-assignee-button" (click)="showAssigneeSelector = true">
+                <mat-icon>add</mat-icon>
+                Add
+              </button>
             </div>
           </div>
 
-          <!-- Date -->
-          <div class="form-group">
-            <mat-form-field appearance="outline" class="date-field">
-              <mat-label>Date</mat-label>
-              <input matInput [matDatepicker]="picker" [value]="this.task.dueDate">
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+          <div class="tag-date-container">
+            <div class="tag-container">
+              <button mat-stroked-button class="tag-button" (click)="openLabelDialog()">
+                <mat-icon>tag</mat-icon>
+                Tags
+              </button>
+              <!-- Tags and Labels Buttons in the same row -->
+              <div class="form-group tags-labels-row">
+                @for (label of this.task.labels || []; track $index) {
+
+                  <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
+                    {{ label.name }}
+                  </div>
+
+                }
+              </div>
+            </div>
+
+            <!-- Date -->
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="date-field">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dueDate">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
           </div>
-        </div>
+        </form>
 
         <!-- Checklist -->
         <div class="form-group">
@@ -117,7 +120,6 @@
               <input
                 matInput
                 class="subtask-input"
-                [(ngModel)]="newSubtask"
                 (keyup.enter)="addSubtask()"
                 placeholder="Add a new subtask">
               <button

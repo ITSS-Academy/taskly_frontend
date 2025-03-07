@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AuthState } from '../../ngrx/auth/auth.state';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../ngrx/auth/auth.state';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +27,19 @@ export class CardService {
         Authorization: this.accessToken,
       },
     });
+  }
+
+  updateCard(card: {
+    id: string;
+    title: string;
+    description: string;
+    dueDate: Date | null;
+  }) {
+    console.log('call update card');
+    return this.http.put(`${environment.apiUrl}/card`, card, {
+      headers: {
+        Authorization: this.accessToken,
+      }
+    })
   }
 }

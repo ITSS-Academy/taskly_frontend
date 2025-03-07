@@ -8,9 +8,9 @@ const initialState: CardState = {
   isGetCardSuccess: false,
   isGetCardFailure: null,
 
-  isUpdatingCard: false,
-  isUpdateCardSuccess: false,
-  isUpdateCardFailure: null,
+  isUpdatingTask: false,
+  isUpdateTaskSuccess: false,
+  isUpdateTaskFailure: null,
 };
 
 export const cardReducer = createReducer(
@@ -56,6 +56,43 @@ export const cardReducer = createReducer(
         attachments: state.card!.attachments!,
         dueDate: state.card!.dueDate!,
       },
+    };
+  }),
+  on(cardActions.updateCardDetail, (state, {type, card}) => {
+    console.log(type);
+    return {
+      ...state,
+      isUpdatingTask: true,
+      isUpdateTaskSuccess: false,
+      isUpdateTaskFailure: null,
+    };
+  }),
+  on(cardActions.updateCardDetailSuccess, (state, {card}) => {
+    return {
+      ...state,
+      card: {
+        ...state.card,
+        id: state.card!.id,
+        title: card.title,
+        description: card.description,
+        labels: state.card!.labels,
+        members: state.card!.members,
+        checklistItems: state.card!.checklistItems,
+        comments: state.card!.comments,
+        attachments: state.card!.attachments,
+        dueDate: card.dueDate,
+      },
+      isUpdatingTask: false,
+      isUpdateTaskSuccess: true,
+      isUpdateTaskFailure: null,
+    };
+  }),
+  on(cardActions.updateCardDetailFailure, (state, {error}) => {
+    return {
+      ...state,
+      isUpdatingTask: false,
+      isUpdateTaskSuccess: false,
+      isUpdateTaskFailure: error,
     };
   }),
 );

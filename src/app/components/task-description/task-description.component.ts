@@ -11,7 +11,7 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import {FormControl, FormGroup, FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AsyncPipe, DatePipe, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
@@ -46,6 +46,7 @@ import {LabelPipe} from '../../shared/pipes/label.pipe';
     AsyncPipe,
     NgStyle,
     LabelPipe,
+    ReactiveFormsModule,
   ],
   templateUrl: 'task-description.component.html',
   styleUrl: './task-description.component.scss',
@@ -57,10 +58,10 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   showAssigneeSelector = false;
 
   taskUpdatedForm = new FormGroup({
-    id: new FormControl(''),
-    title: new FormControl(''),
+    id: new FormControl('', [Validators.required]),
+    title: new FormControl('', [Validators.required]),
     description: new FormControl(''),
-    dueDate: new FormControl(''),
+    dueDate: new FormControl<Date | null>(null),
   })
 
   // Create a local task copy that we can modify
@@ -115,6 +116,12 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
             (item) => item.isCompleted,
           ).length;
           this.totalItems = this.task.checklistItems!.length;
+          this.taskUpdatedForm.setValue({
+            id: this.task.id,
+            title: this.task.title,
+            description: this.task.description,
+            dueDate: this.task.dueDate,
+          });
         }
       }),
       this.store.select('user', 'user').subscribe((user) => {
@@ -134,7 +141,17 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   }
 
   saveChanges() {
-    this.dialogRef.close();
+    if (this.taskUpdatedForm.valid) {
+      this.store.dispatch(cardActions.updateCardDetail({
+        card: {
+          id: this.taskUpdatedForm.value.id!,
+          title: this.taskUpdatedForm.value.title!,
+          description: this.taskUpdatedForm.value.description ? this.taskUpdatedForm.value.description : '',
+          dueDate: this.taskUpdatedForm.value.dueDate ? this.taskUpdatedForm.value.dueDate : null,
+        }
+      }));
+      this.dialogRef.close();
+    }
   }
 
   addTag() {
@@ -144,20 +161,10 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   }
 
   addSubtask() {
-    if (this.newSubtask.trim()) {
-      // Generate a unique ID to prevent potential conflicts
-      const newId = Date.now().toString();
 
-      this.task.checklistItems!.push({
-        id: newId,
-        title: this.newSubtask,
-        isCompleted: false,
-        createdAt: new Date(),
-      });
 
-      this.totalItems = this.task.checklistItems!.length;
-      this.newSubtask = '';
-    }
+    this.newSubtask = '';
+
   }
 
   removeSubtask(id: string) {
