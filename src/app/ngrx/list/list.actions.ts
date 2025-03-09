@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ListCard, ListModel } from '../../models/list.model';
 import { ChecklistItemModel } from '../../models/checklistItem.model';
+import { UserModel } from '../../models/user.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
@@ -113,6 +114,17 @@ export const deleteCardFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const addNewMemberToCard = createAction(
+  '[List] Add New Member To Card',
+  props<{ cardId: string; user: UserModel }>(),
+);
+
+export const removeMemberFromCard = createAction(
+  '[List] Remove Member From Card',
+  props<{ cardId: string; userId: string }>(),
+);
+
+///
 export const updateLabelToCard = createAction(
   '[Card] Update Label To Card',
   props<{ cardId: string; labels: ListModel[] }>(),
@@ -123,9 +135,19 @@ export const updateNewCard = createAction(
   props<{ card: any }>(),
 );
 
-export const addCountSubtask = createAction(
-  '[Card] Add Count Subtask',
+export const addCSubtaskToCard = createAction(
+  '[Card] Add Subtask To Card',
   props<{ subtask: ChecklistItemModel }>(),
+);
+
+export const toogleChecklistItem = createAction(
+  '[List] Toggle Checklist Item In List',
+  props<{ checklistItem: ChecklistItemModel }>(),
+);
+
+export const deleteChecklistItem = createAction(
+  '[List] Delete Checklist Item In List',
+  props<{ checklistItemId: string }>(),
 );
 
 export const startUpdateCard = createAction('[Card] Start Update Card');

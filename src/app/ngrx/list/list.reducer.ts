@@ -1,6 +1,7 @@
 import { ListState } from './list.state';
 import { createReducer, on } from '@ngrx/store';
 import * as listActions from './list.actions';
+import { ChecklistItemModel } from '../../models/checklistItem.model';
 
 const initialState: ListState = {
   lists: [],
@@ -370,7 +371,8 @@ export const listReducer = createReducer(
       }),
     };
   }),
-  on(listActions.addCountSubtask, (state, { subtask }) => {
+  on(listActions.addCSubtaskToCard, (state, { subtask }) => {
+    console.log(subtask);
     return {
       ...state,
       lists: state.lists.map((list) => {
@@ -381,12 +383,60 @@ export const listReducer = createReducer(
                 if (card.id === subtask.cardId) {
                   return {
                     ...card,
-                    checklistCount: card.checklistCount
-                      ? card.checklistCount + 1
-                      : 1,
+                    checklistItems: card.checklistItems
+                      ? card.checklistItems.concat(subtask)
+                      : [subtask],
                   };
                 }
                 return card;
+              })
+            : [],
+        };
+      }),
+    };
+  }),
+  on(listActions.toogleChecklistItem, (state, { checklistItem }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        return {
+          ...list,
+          cards: list.cards
+            ? list.cards.map((card) => {
+                return {
+                  ...card,
+                  checklistItems: card.checklistItems
+                    ? card.checklistItems.map((item: ChecklistItemModel) => {
+                        if (item.id === checklistItem.id) {
+                          return checklistItem;
+                        }
+                        return item;
+                      })
+                    : [],
+                };
+              })
+            : [],
+        };
+      }),
+    };
+  }),
+  on(listActions.deleteChecklistItem, (state, { checklistItemId }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        return {
+          ...list,
+          cards: list.cards
+            ? list.cards.map((card) => {
+                return {
+                  ...card,
+                  checklistItems: card.checklistItems
+                    ? card.checklistItems.filter(
+                        (item: ChecklistItemModel) =>
+                          item.id !== checklistItemId,
+                      )
+                    : [],
+                };
               })
             : [],
         };
@@ -405,6 +455,52 @@ export const listReducer = createReducer(
     return {
       ...state,
       isUpdatingCardSuccess: false,
+    };
+  }),
+  on(listActions.addNewMemberToCard, (state, { cardId, user }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        return {
+          ...list,
+          cards: list.cards
+            ? list.cards.map((card) => {
+                if (card.id === cardId) {
+                  return {
+                    ...card,
+                    members: card.members ? card.members.concat(user) : [user],
+                  };
+                }
+                return card;
+              })
+            : [],
+        };
+      }),
+    };
+  }),
+  on(listActions.removeMemberFromCard, (state, { cardId, userId }) => {
+    return {
+      ...state,
+      lists: state.lists.map((list) => {
+        return {
+          ...list,
+          cards: list.cards
+            ? list.cards.map((card) => {
+                if (card.id === cardId) {
+                  return {
+                    ...card,
+                    members: card.members
+                      ? card.members.filter(
+                          (member: any) => member.id !== userId,
+                        )
+                      : [],
+                  };
+                }
+                return card;
+              })
+            : [],
+        };
+      }),
     };
   }),
 );

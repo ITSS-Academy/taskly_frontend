@@ -49,6 +49,7 @@ import { GatewayService } from '../../../../../../services/gateway/gateway.servi
 import { CardState } from '../../../../../../ngrx/card/card.state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShareSnackbarComponent } from '../../../../../../components/share-snackbar/share-snackbar.component';
+import { ChecklistItemState } from '../../../../../../ngrx/checklistItem/checklistItem.state';
 
 interface Task {
   id: string;
@@ -100,139 +101,27 @@ export class KanbanComponent implements OnInit, OnDestroy {
       board: BoardState;
       list: ListState;
       card: CardState;
+      checklistItem: ChecklistItemState;
     }>,
     private gateway: GatewayService,
   ) {}
 
   private _snackBar = inject(MatSnackBar);
   isUpdatingCard$!: Observable<boolean>;
-  routeSubscription!: Subscription;
 
   ngOnInit(): void {
-    this.routeSubscription = this.activatedRoute.params.subscribe((params) => {
-      const newBoardId = params['id'];
-      if (this.boardId) {
-        this.gateway.disconnect();
-      }
-      this.boardId = newBoardId;
-      this.gateway.connect();
-
-      this.subscriptions.forEach((sub) => sub.unsubscribe());
-      this.subscriptions = [];
-      this.store.dispatch(listActions.clearListStore());
-
-      this.store.dispatch(boardActions.getBoard({ boardId: this.boardId }));
-      this.store.dispatch(listActions.getLists({ boardId: this.boardId }));
-      this.subscriptions.push(
-        this.store
-          .select('list', 'isGettingListsSuccess')
-          .subscribe((isGettingListsSuccess) => {
-            if (isGettingListsSuccess) {
-              this.subscriptions.push(
-                this.store
-                  .select('board', 'board')
-                  .pipe(
-                    filter((board) => !!board),
-                    distinctUntilKeyChanged('id'),
-                    switchMap((board) =>
-                      this.store.select('list', 'lists').pipe(
-                        map((lists) => ({
-                          board,
-                          lists:
-                            lists?.filter(
-                              (list) => list.boardId === board.id,
-                            ) ?? [],
-                        })),
-                        take(1),
-                      ),
-                    ),
-                  )
-                  .subscribe(({ board, lists }) => {
-                    if (lists.length > 0 && board.listsCount) {
-                      console.log(
-                        '🚀 Joining board:',
-                        board.id,
-                        'with lists:',
-                        lists,
-                      );
-                      this.gateway.joinBoard(board, lists);
-                    } else if (!board.listsCount) {
-                      console.log(
-                        '🚀 Joining board:',
-                        board.id,
-                        'with lists:',
-                        [],
-                      );
-                      this.gateway.joinBoard(board, []);
-                    }
-                  }),
-              );
-            }
-          }),
-
-        this.store.select('list', 'lists').subscribe((lists) => {
-          console.log(lists);
-          this.lists = lists;
-        }),
-        this.store
-          .select('list', 'isAddingListSuccess')
-          .subscribe((isAddingListSuccess) => {
-            if (isAddingListSuccess) {
-              this.gateway.onListChange(this.boardId, this.lists);
-            }
-          }),
-
-        this.store
-          .select('card', 'isUpdateTaskSuccess')
-          .subscribe((isSuccess) => {
-            if (isSuccess) {
-              this.gateway.onListChange(this.boardId, this.lists);
-            }
-          }),
-        this.store
-          .select('list', 'isDeletingListSuccess')
-          .subscribe((isDeletingListSuccess) => {
-            if (isDeletingListSuccess) {
-              this.gateway.onListChange(this.boardId, this.lists);
-            }
-          }),
-        this.store
-          .select('list', 'isDeletingCardSuccess')
-          .subscribe((isDeletingCardSuccess) => {
-            if (isDeletingCardSuccess) {
-              this.gateway.onListChange(this.boardId, this.lists);
-            }
-          }),
-        this.store
-          .select('list', 'isUpdatingListsSuccess')
-          .subscribe((isUpdatingListsSuccess) => {
-            if (isUpdatingListsSuccess) {
-              this.gateway.onListChange(this.boardId, this.lists);
-            }
-          }),
-        this.store
-          .select('list', 'isAddingCardSuccess')
-          .subscribe((isAddingCardSuccess) => {
-            if (isAddingCardSuccess) {
-              this.gateway.onListChange(this.boardId, this.lists);
-            }
-          }),
-        this.store
-          .select('list', 'isUpdatingCardSuccess')
-          .pipe(
-            filter((isUpdating) => isUpdating),
-            tap(() => {
-              this.gateway.onListChange(this.boardId, this.lists);
-              this.store.dispatch(listActions.resetUpdatingCardSuccess());
-            }),
-          )
-          .subscribe(),
-        this.gateway.listenListChange().subscribe((lists: ListModel[]) => {
-          // this.lists = lists;
-          this.store.dispatch(listActions.storeNewLists({ lists }));
-        }),
-      );
-    });
+    this.subscriptions.push(
+      this.store.select('list', 'lists').subscribe((lists) => {
+        console.log('lists in kanban');
+        console.log(lists);
+        this.lists = lists;
+      }),
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+          this.boardId = board.id!;
+        }
+      }),
+    );
     this.board$ = this.store.select('board', 'board');
     this.isUpdatingCard$ = this.store.select('list', 'isUpdatingCard');
   }
@@ -415,9 +304,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.log('destroy');
     this.subscriptions.forEach((sub) => sub.unsubscribe());
-    this.store.dispatch(listActions.clearListStore());
-    this.routeSubscription.unsubscribe();
-    this.gateway.disconnect();
   }
 
   cancelAddList() {

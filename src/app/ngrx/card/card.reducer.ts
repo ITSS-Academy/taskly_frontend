@@ -12,6 +12,14 @@ const initialState: CardState = {
   isUpdatingTask: false,
   isUpdateTaskSuccess: false,
   isUpdateTaskFailure: null,
+
+  isAddingNewMember: false,
+  isAddNewMemberSuccess: false,
+  isAddNewMemberFailure: null,
+
+  isRemovingMember: false,
+  isRemoveMemberSuccess: false,
+  isRemoveMemberFailure: null,
 };
 
 export const cardReducer = createReducer(
@@ -237,6 +245,78 @@ export const cardReducer = createReducer(
           (item) => item.id !== checklistItemId,
         ),
       },
+    };
+  }),
+  on(cardActions.addNewMember, (state, { cardId, userId }) => {
+    return {
+      ...state,
+      isAddingNewMember: true,
+      isAddNewMemberSuccess: false,
+      isAddNewMemberFailure: null,
+    };
+  }),
+  on(cardActions.addNewMemberSuccess, (state, { cardId, user }) => {
+    return {
+      ...state,
+      card: {
+        ...state.card,
+        id: state.card!.id,
+        title: state.card!.title,
+        description: state.card!.description,
+        comments: state.card!.comments,
+        attachments: state.card!.attachments,
+        dueDate: state.card!.dueDate,
+        members: [...state.card!.members!, user],
+        labels: state.card!.labels,
+        checklistItems: state.card!.checklistItems,
+      },
+      isAddingNewMember: false,
+      isAddNewMemberSuccess: true,
+      isAddNewMemberFailure: null,
+    };
+  }),
+  on(cardActions.addNewMemberFailure, (state, { error }) => {
+    return {
+      ...state,
+      isAddingNewMember: false,
+      isAddNewMemberSuccess: false,
+      isAddNewMemberFailure: error,
+    };
+  }),
+  on(cardActions.removeMember, (state, { cardId, userId }) => {
+    return {
+      ...state,
+      isRemovingMember: true,
+      isRemoveMemberSuccess: false,
+      isRemoveMemberFailure: null,
+    };
+  }),
+  on(cardActions.removeMemberSuccess, (state, { cardId, userId }) => {
+    return {
+      ...state,
+      card: {
+        ...state.card,
+        id: state.card!.id,
+        title: state.card!.title,
+        description: state.card!.description,
+        comments: state.card!.comments,
+        attachments: state.card!.attachments,
+        dueDate: state.card!.dueDate,
+        members: state.card!.members!.filter((member) => member.id !== userId),
+        labels: state.card!.labels,
+        checklistItems: state.card!.checklistItems,
+      },
+      isRemovingMember: false,
+      isRemoveMemberSuccess: true,
+      isRemoveMemberFailure: null,
+    };
+  }),
+  on(cardActions.removeMemberFailure, (state, { error }) => {
+    return {
+      ...state,
+      isRemovingMember: false,
+      isRemoveMemberSuccess: false,
+      isRemoveMemberFailure: error,
     };
   }),
 );

@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe, DatePipe, NgIf, NgStyle } from '@angular/common';
-import { forkJoin, of, Subscription } from 'rxjs';
+import { BehaviorSubject, forkJoin, of, Subscription } from 'rxjs';
 import { MatIconButton } from '@angular/material/button';
 import { CardModel } from '../../../../../../../../../../models/card.model';
 import { BoardState } from '../../../../../../../../../../ngrx/board/board.state';
@@ -40,7 +40,16 @@ interface Task {
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent implements OnInit, OnDestroy {
-  @Input() task!: ListCard;
+  private taskSubject = new BehaviorSubject<ListCard | null>(null);
+  task$ = this.taskSubject.asObservable();
+
+  taskId!: string;
+
+  @Input() set task(value: ListCard) {
+    this.taskId = value.id!;
+    this.taskSubject.next(value);
+  }
+
   readonly dialog = inject(MatDialog);
   subscription: Subscription[] = [];
 
@@ -56,10 +65,20 @@ export class TaskComponent implements OnInit, OnDestroy {
   totalSubtasks!: number;
 
   ngOnInit() {
-    this.totalSubtasks = this.task.checklistItems!.length;
-    this.completedSubtasks = this.task.checklistItems!.filter(
-      (subtask) => subtask.isCompleted === true,
-    ).length;
+    this.subscription.push(
+      this.task$.subscribe((task) => {
+        if (task) {
+          this.totalSubtasks = task.checklistItems
+            ? task.checklistItems.length
+            : 0;
+          this.completedSubtasks = task.checklistItems
+            ? task.checklistItems.filter(
+                (subtask) => subtask.isCompleted === true,
+              ).length
+            : 0;
+        }
+      }),
+    );
   }
 
   ngOnDestroy() {
@@ -69,8 +88,8 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   closeTask() {
     // Implement logic to remove/archive task
-    console.log('Closing task:', this.task.id);
-    this.store.dispatch(listActions.deleteCard({ cardId: this.task.id! }));
+    console.log('Closing task:', this.taskId);
+    this.store.dispatch(listActions.deleteCard({ cardId: this.taskId! }));
   }
 
   // getProgressColor() {
@@ -87,7 +106,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   openDialog() {
     this.dialog.open(TaskDescriptionComponent, {
-      data: this.task.id,
+      data: this.taskId,
     });
   }
 

@@ -1,6 +1,7 @@
 import { NotificationsState } from './notifications.state';
 import { createReducer, on } from '@ngrx/store';
 import * as notificationsActions from './notifications.actions';
+import { clearAddNewMember } from './notifications.actions';
 
 const initialState: NotificationsState = {
   notifications: [],
@@ -14,6 +15,7 @@ const initialState: NotificationsState = {
   isCheckingNewNotificationsSuccess: false,
   isCheckingNewNotificationsFailure: false,
 
+  invitingUsers: [],
   isInvitingUser: false,
   isInvitingUserSuccess: false,
   isInvitingUserFailure: false,
@@ -21,13 +23,16 @@ const initialState: NotificationsState = {
   isReplyingInvitation: false,
   isReplyingInvitationSuccess: false,
   isReplyingInvitationFailure: false,
+
+  addedToCardUsers: [],
 };
 
 export const notificationsReducer = createReducer(
   initialState,
-  on(notificationsActions.inviteUser, (state) => {
+  on(notificationsActions.inviteUser, (state, { invitedUser }) => {
     return {
       ...state,
+      invitingUsers: invitedUser.map((user) => user.id),
       isInvitingUser: true,
       isInvitingUserSuccess: false,
       isInvitingUserFailure: false,
@@ -161,4 +166,28 @@ export const notificationsReducer = createReducer(
       };
     },
   ),
+  on(notificationsActions.setInvitingUsers, (state, { userIds }) => {
+    return {
+      ...state,
+      invitingUsers: userIds,
+    };
+  }),
+  on(notificationsActions.replyInviteBoard, (state) => {
+    return {
+      ...state,
+      invitingUsers: [],
+    };
+  }),
+  on(notificationsActions.addAddedToCardUsers, (state, { userIds }) => {
+    return {
+      ...state,
+      addedToCardUsers: userIds,
+    };
+  }),
+  on(notificationsActions.clearAddNewMember, (state) => {
+    return {
+      ...state,
+      addedToCardUsers: [],
+    };
+  }),
 );

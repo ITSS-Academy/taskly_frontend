@@ -68,3 +68,21 @@ export const updateIsNewNotifications = createAction(
   '[Notifications] Update Is New Notifications',
   props<{ isNewNotifications: boolean }>(),
 );
+
+export const setInvitingUsers = createAction(
+  '[Notifications] Set Inviting Users',
+  props<{ userIds: string[] }>(),
+);
+
+export const clearInvitingUsers = createAction(
+  '[Notifications] Clear Inviting Users',
+);
+
+export const addAddedToCardUsers = createAction(
+  '[Notifications] Add Added To Card Users',
+  props<{ userIds: string[] }>(),
+);
+
+export const clearAddNewMember = createAction(
+  '[Notifications] Clear Add New Member',
+);

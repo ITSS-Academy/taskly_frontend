@@ -56,8 +56,8 @@
               </button>
               <mat-menu #menu="matMenu">
                 @for (member of this.boardMembers; track $index) {
-                  <button mat-menu-item class="assignee-button">
-                    <img src="/assets/images/background1.jpg" alt="">
+                  <button mat-menu-item class="assignee-button" (click)="addNewMemberToCard(member.id)">
+                    <img src="{{member.photoUrl}}" alt="">
                     <span class="assignee-name">{{ member.name }}</span>
                   </button>
                 }

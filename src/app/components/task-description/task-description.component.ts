@@ -25,7 +25,7 @@ import { MaterialModule } from '../../shared/modules/material.module';
 import { LabelDialogComponent } from '../label-dialog/label-dialog.component';
 import { Store } from '@ngrx/store';
 import { BoardState } from '../../ngrx/board/board.state';
-import { Observable, Subscription } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { LabelState } from '../../ngrx/label/label.state';
 import * as labelActions from '../../ngrx/label/label.actions';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -40,6 +40,11 @@ import { UserState } from '../../ngrx/user/user.state';
 import { LabelPipe } from '../../shared/pipes/label.pipe';
 import * as checklistItemActions from '../../ngrx/checklistItem/checklistItem.actions';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { ChecklistItemState } from '../../ngrx/checklistItem/checklistItem.state';
+import { GatewayService } from '../../services/gateway/gateway.service';
+import { UserModel } from '../../models/user.model';
+import { UserService } from '../../services/user/user.service';
+import * as notiActions from '../../ngrx/notifications/notifications.actions';
 
 @Component({
   selector: 'app-task-description',
@@ -92,20 +97,8 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
 
   boardId!: string;
-  boardMembers = [
-    {
-      id: '1',
-      name: 'Nguyen Dang Gia Tuong',
-    },
-    {
-      id: '2',
-      name: 'Jane Doe',
-    },
-    {
-      id: '3',
-      name: 'Alice',
-    },
-  ];
+  memberIds: string[] = [];
+  boardMembers: UserModel[] = [];
   subscriptions: Subscription[] = [];
 
   completedItems = 0;
@@ -118,6 +111,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
           this.boardId = board.id!;
+          this.memberIds = board.members!;
         }
       }),
       this.store
@@ -129,9 +123,6 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
         }),
       this.store.select('card', 'card').subscribe((card) => {
         if (card) {
-          console.log(
-            '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
-          );
           console.log(card);
           this.task = card;
           this.completedItems = this.task.checklistItems!.filter(
@@ -152,6 +143,11 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       }),
     );
     this.isGettingCard = this.store.select('card', 'isGettingCard');
+    forkJoin(
+      this.memberIds.map((id) => this.userSerivce.getUserById(id)),
+    ).subscribe((members) => {
+      this.boardMembers = members;
+    });
   }
 
   constructor(
@@ -160,7 +156,9 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       label: LabelState;
       card: CardState;
       user: UserState;
+      checklistItem: ChecklistItemState;
     }>,
+    private userSerivce: UserService,
   ) {
     this.store.dispatch(cardActions.getCard({ cardId: this.cardId }));
   }
@@ -257,7 +255,17 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     return comment.userId === this.currentUser;
   }
 
-  removeAssignee(memberId: string) {}
+  removeAssignee(memberId: string) {
+    this.store.dispatch(
+      cardActions.removeMember({
+        cardId: this.task.id,
+        userId: memberId,
+      }),
+    );
+    this.store.dispatch(
+      notiActions.addAddedToCardUsers({ userIds: [memberId] }),
+    );
+  }
 
   openLabelDialog() {
     this.store.dispatch(labelActions.getLabelsInBoard({ id: this.boardId }));
@@ -271,5 +279,15 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
 
     return brightness > 186 ? '#000000' : '#FFFFFF';
+  }
+
+  addNewMemberToCard(userId: string) {
+    this.store.dispatch(
+      cardActions.addNewMember({
+        cardId: this.task.id,
+        userId: userId,
+      }),
+    );
+    this.store.dispatch(notiActions.addAddedToCardUsers({ userIds: [userId] }));
   }
 }

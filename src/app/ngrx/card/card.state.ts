@@ -1,4 +1,4 @@
-import {CardModel} from '../../models/card.model';
+import { CardModel } from '../../models/card.model';
 
 export interface CardState {
   card: CardModel | null;
@@ -9,4 +9,12 @@ export interface CardState {
   isUpdatingTask: boolean;
   isUpdateTaskSuccess: boolean;
   isUpdateTaskFailure: any;
+
+  isAddingNewMember: boolean;
+  isAddNewMemberSuccess: boolean;
+  isAddNewMemberFailure: any;
+
+  isRemovingMember: boolean;
+  isRemoveMemberSuccess: boolean;
+  isRemoveMemberFailure: any;
 }

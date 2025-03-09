@@ -57,7 +57,7 @@ export const updatePosition$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.updatePosition),
-      switchMap(({ list, boardId }) => {
+      mergeMap(({ list, boardId }) => {
         return listService.updateLists(list, boardId).pipe(
           map((lists: any) => {
             console.log(lists);
