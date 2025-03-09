@@ -46,7 +46,7 @@
 
   <div class="tags-container">
     @for (label of task.labels; track $index) {
-      <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
+      <div class="tag" [ngStyle]="{ backgroundColor: label.color, color: this.getContrastTextColor(label.color!) }">
         {{ label.name }}
       </div>
 
@@ -59,11 +59,12 @@
     <div class="task-date">
       {{ task.dueDate | date:'d MMM yyyy' }}
     </div>
-    <div class="task-status">
-      <!--      <mat-checkbox [checked]="task.checklistItems === task.totalSubtasks" [disabled]="true" *ngIf="task.completedSubtasks === task.totalSubtasks"></mat-checkbox>-->
-      <!--      <span *ngIf="task.completedSubtasks !== task.totalSubtasks">☐</span>-->
-      <!--      {{task.completedSubtasks}}/{{task.totalSubtasks}}-->
-    </div>
+    @if (totalSubtasks > 0) {
+      <div class="task-status">
+        <mat-checkbox [checked]="this.completedSubtasks === this.totalSubtasks" [disabled]="true"></mat-checkbox>
+        {{ completedSubtasks }}/{{ totalSubtasks }}
+      </div>
+    }
   </div>
 </div>
 

@@ -71,27 +71,29 @@
   class="list-container"
 >
   @for (list of lists; track $index) {
-    <div cdkDropList
-         (cdkDropListDropped)="onCardDrop($event)"
-         [cdkDropListData]="list.cards || []"
-         [id]="indexToString($index)"
-
-         cdkDrag
-         class="full-height-container">
+    <div
+      cdkDropList
+      (cdkDropListDropped)="onCardDrop($event)"
+      [cdkDropListData]="list.cards || []"
+      [id]="indexToString($index)"
+      cdkDrag
+      class="full-height-container">
       <div class="list-column">
         <div class="list-header" cdkDragHandle>
           <h2>{{ list.title }}</h2>
-
           <button mat-icon-button (click)="removeList(list.id!)">
             <mat-icon>close</mat-icon>
           </button>
         </div>
 
-        <div class="task-list">
-          @for (card of list.cards; track $index) {
-            <app-task [task]="card" cdkDrag></app-task>
-          }
+        <div class="task-list"
 
+        >
+          @for (card of list.cards; track $index) {
+            <app-task [task]="card" (cdkDragStarted)="onDragStarted()"
+                      cdkDrag></app-task>
+          }
+          <div cdkDragPlaceholder class="task-placeholder"></div>
         </div>
 
         @if (!list.isInEditMode) {
@@ -116,6 +118,7 @@
         }
       </div>
     </div>
+
   }
   @if (!isAddingList) {
     <div class="list-column add-list-column">

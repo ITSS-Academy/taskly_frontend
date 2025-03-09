@@ -1,6 +1,6 @@
-import {createAction, props} from '@ngrx/store';
-import {ListCard, ListModel} from '../../models/list.model';
-import {ChecklistItemModel} from '../../models/checklistItem.model';
+import { createAction, props } from '@ngrx/store';
+import { ListCard, ListModel } from '../../models/list.model';
+import { ChecklistItemModel } from '../../models/checklistItem.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
@@ -52,11 +52,18 @@ export const updateCard = createAction(
     cardId: string;
     listId: string;
     cardPosition: number;
+    previousListId: string;
   }>(),
 );
 export const updateCardSuccess = createAction(
   '[Card] Update Card Success',
-  props<{ cards: ListCard[]; listId: string; cardId: string }>(),
+  props<{
+    cards: ListCard[];
+    listId: string;
+    cardId: string;
+    previousListId: string;
+    cardPosition: number;
+  }>(),
 );
 export const updateCardFailure = createAction(
   '[Card] Update Card Failure',
@@ -119,6 +126,12 @@ export const updateNewCard = createAction(
 export const addCountSubtask = createAction(
   '[Card] Add Count Subtask',
   props<{ subtask: ChecklistItemModel }>(),
+);
+
+export const startUpdateCard = createAction('[Card] Start Update Card');
+
+export const resetUpdatingCardSuccess = createAction(
+  '[List] Reset Updating Card Success',
 );
 
 export const storeNewLists = createAction(

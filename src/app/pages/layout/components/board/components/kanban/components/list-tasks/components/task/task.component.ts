@@ -18,6 +18,8 @@ import * as cardActions from '../../../../../../../../../../ngrx/card/card.actio
 import { CardState } from '../../../../../../../../../../ngrx/card/card.state';
 import { LabelService } from '../../../../../../../../../../services/label/label.service';
 import { LabelModel } from '../../../../../../../../../../models/label.model';
+import { ChecklistItemModel } from '../../../../../../../../../../models/checklistItem.model';
+import { MaterialModule } from '../../../../../../../../../../shared/modules/material.module';
 
 interface Task {
   id: string;
@@ -34,16 +36,7 @@ interface Task {
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
-  imports: [
-    MatIcon,
-    DatePipe,
-    MatIconButton,
-    LabelPipe,
-    AsyncPipe,
-    UserPipe,
-    NgStyle,
-    MatTooltip,
-  ],
+  imports: [DatePipe, LabelPipe, AsyncPipe, UserPipe, NgStyle, MaterialModule],
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent implements OnInit, OnDestroy {
@@ -51,31 +44,22 @@ export class TaskComponent implements OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
   subscription: Subscription[] = [];
 
-  // labels: LabelModel[] = [];
-
   constructor(
     private store: Store<{
       board: BoardState;
       list: ListState;
       card: CardState;
     }>,
-    private labelService: LabelService,
   ) {}
 
-  ngOnInit() {
-    // const labelIdsRequest = this.task.labels?.map((label) =>
-    //   this.labelService.getLabel(label.boardLabelId),
-    // );
+  completedSubtasks!: number;
+  totalSubtasks!: number;
 
-    this.subscription
-      .push
-      // forkJoin(labelIdsRequest!).subscribe((labels) => {
-      //   if (labels) {
-      //     this.labels = labels.map((label) => label!);
-      //     console.log('Labels:', this.labels);
-      //   }
-      // })
-      ();
+  ngOnInit() {
+    this.totalSubtasks = this.task.checklistItems!.length;
+    this.completedSubtasks = this.task.checklistItems!.filter(
+      (subtask) => subtask.isCompleted === true,
+    ).length;
   }
 
   ngOnDestroy() {
@@ -105,6 +89,16 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.dialog.open(TaskDescriptionComponent, {
       data: this.task.id,
     });
+  }
+
+  getContrastTextColor(hexColor: string) {
+    let r = parseInt(hexColor.substring(1, 3), 16);
+    let g = parseInt(hexColor.substring(3, 5), 16);
+    let b = parseInt(hexColor.substring(5, 7), 16);
+
+    let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+
+    return brightness > 186 ? '#000000' : '#FFFFFF';
   }
 
   showMoreOptions() {}

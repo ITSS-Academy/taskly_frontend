@@ -288,6 +288,7 @@ app-task[cdkDrag] {
 .cdk-drop-list-dragging.full-height-container {
   .list-column {
     border: var(--md-sys-color-primary) solid 1px;
+    padding: 15px;
   }
 }
 

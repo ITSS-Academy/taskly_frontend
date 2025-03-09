@@ -1,5 +1,5 @@
-import {ListState} from './list.state';
-import {createReducer, on} from '@ngrx/store';
+import { ListState } from './list.state';
+import { createReducer, on } from '@ngrx/store';
 import * as listActions from './list.actions';
 
 const initialState: ListState = {
@@ -35,7 +35,7 @@ const initialState: ListState = {
 
 export const listReducer = createReducer(
   initialState,
-  on(listActions.addNewList, (state, {type, listName, boardId}) => {
+  on(listActions.addNewList, (state, { type, listName, boardId }) => {
     console.log(type);
     return {
       ...state,
@@ -44,7 +44,7 @@ export const listReducer = createReducer(
       addListError: '',
     };
   }),
-  on(listActions.addNewListSuccess, (state, {list}) => {
+  on(listActions.addNewListSuccess, (state, { list }) => {
     return {
       ...state,
       lists: [...state.lists, list],
@@ -53,7 +53,7 @@ export const listReducer = createReducer(
       addListError: '',
     };
   }),
-  on(listActions.addNewListFailure, (state, {error}) => {
+  on(listActions.addNewListFailure, (state, { error }) => {
     return {
       ...state,
       isAddingList: false,
@@ -61,13 +61,13 @@ export const listReducer = createReducer(
       addListError: error,
     };
   }),
-  on(listActions.storeLists, (state, {lists}) => {
+  on(listActions.storeLists, (state, { lists }) => {
     return {
       ...state,
       lists: lists,
     };
   }),
-  on(listActions.getLists, (state, {type, boardId}) => {
+  on(listActions.getLists, (state, { type, boardId }) => {
     return {
       ...state,
       isGettingLists: true,
@@ -75,7 +75,7 @@ export const listReducer = createReducer(
       getListsError: '',
     };
   }),
-  on(listActions.getListsSuccess, (state, {type, lists}) => {
+  on(listActions.getListsSuccess, (state, { type, lists }) => {
     console.log(type);
     console.log(lists);
     return {
@@ -86,7 +86,7 @@ export const listReducer = createReducer(
       getListsError: '',
     };
   }),
-  on(listActions.getListsFailure, (state, {error}) => {
+  on(listActions.getListsFailure, (state, { error }) => {
     return {
       ...state,
       isGettingLists: false,
@@ -94,7 +94,7 @@ export const listReducer = createReducer(
       getListsError: error,
     };
   }),
-  on(listActions.updatePosition, (state, {type, list, boardId}) => {
+  on(listActions.updatePosition, (state, { type, list, boardId }) => {
     console.log(type);
     return {
       ...state,
@@ -103,7 +103,7 @@ export const listReducer = createReducer(
       updateListsError: '',
     };
   }),
-  on(listActions.updatePositionSuccess, (state, {lists, type}) => {
+  on(listActions.updatePositionSuccess, (state, { lists, type }) => {
     console.log(type);
     console.log(lists);
 
@@ -112,7 +112,7 @@ export const listReducer = createReducer(
       if (state.lists) {
         const foundList = state.lists.find((l) => l.id === list.id);
         const cards = foundList ? foundList.cards : []; // Nếu không tìm thấy, gán rỗng
-        return {...list, cards};
+        return { ...list, cards };
       }
       return list;
     });
@@ -126,7 +126,7 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.updatePositionFailure, (state, {error, type}) => {
+  on(listActions.updatePositionFailure, (state, { error, type }) => {
     return {
       ...state,
       isUpdatingLists: false,
@@ -135,8 +135,8 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.updateCard, (state, {type}) => {
-    console.log(type)
+  on(listActions.updateCard, (state, { type }) => {
+    console.log(type);
     return {
       ...state,
       isUpdatingCard: true,
@@ -144,29 +144,66 @@ export const listReducer = createReducer(
       updateCardError: '',
     };
   }),
-  on(listActions.updateCardSuccess, (state, {type, cards, listId, cardId}) => {
-    console.log(cards);
-    console.log(type)
+  on(
+    listActions.updateCardSuccess,
+    (state, { type, cards, listId, cardId, previousListId, cardPosition }) => {
+      console.log(cards);
+      console.log(type);
+      const list = state.lists.find((l) => l.id === previousListId);
+      let card: any;
+      if (list) {
+        card = list.cards!.find((c) => c.id === cardId);
+      }
+      console.log(card);
 
-    return {
-      ...state,
-      lists: state.lists.map((list) => {
-        if (list.id === listId) {
-          return {...list, cards};
-        } else {
-          return {
-            ...list,
-            cards: list.cards
-              ? list.cards.filter((card) => card.id !== cardId)
-              : [],
-          };
-        }
-      }),
-      isUpdatingCardSuccess: true,
-      isUpdatingCard: false,
-    };
-  }),
-  on(listActions.updateCardFailure, (state, {error, type}) => {
+      if (previousListId != listId) {
+        return {
+          ...state,
+          lists: state.lists.map((list) => {
+            if (list.id === previousListId) {
+              return {
+                ...list,
+                cards: list.cards
+                  ? list.cards.filter((card) => card.id !== cardId)
+                  : [],
+              };
+            }
+            if (list.id === listId) {
+              return {
+                ...list,
+                cards: list.cards
+                  ? [
+                      ...list.cards.slice(0, cardPosition),
+                      card,
+                      ...list.cards.slice(cardPosition),
+                    ]
+                  : [card],
+              };
+            }
+            return list;
+          }),
+          isUpdatingCardSuccess: true,
+          isUpdatingCard: false,
+        };
+      } else {
+        return {
+          ...state,
+          lists: state.lists.map((list) => {
+            if (list.id === listId) {
+              return {
+                ...list,
+                cards: cards,
+              };
+            }
+            return list;
+          }),
+          isUpdatingCardSuccess: true,
+          isUpdatingCard: false,
+        };
+      }
+    },
+  ),
+  on(listActions.updateCardFailure, (state, { error, type }) => {
     console.log(error);
     console.log(type);
     return {
@@ -177,7 +214,7 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.deleteList, (state, {type, listId}) => {
+  on(listActions.deleteList, (state, { type, listId }) => {
     console.log(type);
     console.log(state);
     return {
@@ -187,7 +224,7 @@ export const listReducer = createReducer(
       deleteListError: '',
     };
   }),
-  on(listActions.deleteListSuccess, (state, {listId, type}) => {
+  on(listActions.deleteListSuccess, (state, { listId, type }) => {
     console.log(type);
     return {
       ...state,
@@ -197,7 +234,7 @@ export const listReducer = createReducer(
       deleteListError: '',
     };
   }),
-  on(listActions.deleteListFailure, (state, {error, type}) => {
+  on(listActions.deleteListFailure, (state, { error, type }) => {
     return {
       ...state,
       isDeletingList: false,
@@ -210,7 +247,7 @@ export const listReducer = createReducer(
     return initialState;
   }),
 
-  on(listActions.addCard, (state, {card, listId}) => {
+  on(listActions.addCard, (state, { card, listId }) => {
     return {
       ...state,
       isAddingCard: true,
@@ -218,16 +255,16 @@ export const listReducer = createReducer(
       addCardError: '',
     };
   }),
-  on(listActions.addCardSuccess, (state, {card, listId}) => {
+  on(listActions.addCardSuccess, (state, { card, listId }) => {
     console.log(state.lists);
 
     return {
       ...state,
       lists: state.lists.map((list) => {
         if (list.id === listId && list.cards) {
-          return {...list, cards: [...list.cards, card]};
+          return { ...list, cards: [...list.cards, card] };
         } else if (list.id === listId && !list.cards) {
-          return {...list, cards: [card]};
+          return { ...list, cards: [card] };
         }
         return list;
       }),
@@ -237,7 +274,7 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.addCardFailure, (state, {error}) => {
+  on(listActions.addCardFailure, (state, { error }) => {
     return {
       ...state,
       isAddingCard: false,
@@ -246,14 +283,14 @@ export const listReducer = createReducer(
     };
   }),
 
-  on(listActions.deleteCard, (state, {cardId}) => {
+  on(listActions.deleteCard, (state, { cardId }) => {
     return {
       ...state,
       isDeletingCard: true,
       isDeletingCardSuccess: false,
     };
   }),
-  on(listActions.deleteCardSuccess, (state, {cardId}) => {
+  on(listActions.deleteCardSuccess, (state, { cardId }) => {
     return {
       ...state,
       lists: state.lists.map((list) => {
@@ -268,7 +305,7 @@ export const listReducer = createReducer(
       isDeletingCardSuccess: true,
     };
   }),
-  on(listActions.deleteCardFailure, (state, {error}) => {
+  on(listActions.deleteCardFailure, (state, { error }) => {
     return {
       ...state,
       isDeletingCard: false,
@@ -276,13 +313,13 @@ export const listReducer = createReducer(
       deleteCardError: error,
     };
   }),
-  on(listActions.storeNewLists, (state, {lists}) => {
+  on(listActions.storeNewLists, (state, { lists }) => {
     return {
       ...state,
       lists: lists,
     };
   }),
-  on(listActions.updateLabelToCard, (state, {cardId, labels}) => {
+  on(listActions.updateLabelToCard, (state, { cardId, labels }) => {
     console.log(cardId);
     console.log(labels);
     console.log(state);
@@ -293,20 +330,20 @@ export const listReducer = createReducer(
           ...list,
           cards: list.cards
             ? list.cards.map((card) => {
-              if (card.id === cardId) {
-                return {
-                  ...card,
-                  labels: card.labels ? card.labels.concat(labels) : labels,
-                };
-              }
-              return card;
-            })
+                if (card.id === cardId) {
+                  return {
+                    ...card,
+                    labels: card.labels ? card.labels.concat(labels) : labels,
+                  };
+                }
+                return card;
+              })
             : [],
         };
       }),
     };
   }),
-  on(listActions.updateNewCard, (state, {card}) => {
+  on(listActions.updateNewCard, (state, { card }) => {
     console.log(card);
     return {
       ...state,
@@ -314,24 +351,26 @@ export const listReducer = createReducer(
         if (list.id === card.listId) {
           return {
             ...list,
-            cards: list.cards ? list.cards.map((c) => {
-              if (c.id === card.id) {
-                return {
-                  ...c,
-                  title: card.title,
-                  description: card.description,
-                  dueDate: card.dueDate,
-                };
-              }
-              return c;
-            }) : [],
+            cards: list.cards
+              ? list.cards.map((c) => {
+                  if (c.id === card.id) {
+                    return {
+                      ...c,
+                      title: card.title,
+                      description: card.description,
+                      dueDate: card.dueDate,
+                    };
+                  }
+                  return c;
+                })
+              : [],
           };
         }
         return list;
       }),
     };
   }),
-  on(listActions.addCountSubtask, (state, {subtask}) => {
+  on(listActions.addCountSubtask, (state, { subtask }) => {
     return {
       ...state,
       lists: state.lists.map((list) => {
@@ -339,20 +378,33 @@ export const listReducer = createReducer(
           ...list,
           cards: list.cards
             ? list.cards.map((card) => {
-              if (card.id === subtask.cardId) {
-                return {
-                  ...card,
-                  checklistCount: card.checklistCount
-                    ? card.checklistCount + 1
-                    : 1,
-                };
-              }
-              ;
-              return card;
-            })
+                if (card.id === subtask.cardId) {
+                  return {
+                    ...card,
+                    checklistCount: card.checklistCount
+                      ? card.checklistCount + 1
+                      : 1,
+                  };
+                }
+                return card;
+              })
             : [],
         };
       }),
-    }
-  })
+    };
+  }),
+  on(listActions.startUpdateCard, (state) => {
+    return {
+      ...state,
+      isUpdatingCard: true,
+      isUpdatingCardSuccess: false,
+    };
+  }),
+  on(listActions.resetUpdatingCardSuccess, (state, { type }) => {
+    console.log(type);
+    return {
+      ...state,
+      isUpdatingCardSuccess: false,
+    };
+  }),
 );

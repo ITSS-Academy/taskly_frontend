@@ -45,7 +45,20 @@
 
         <button mat-flat-button class="share-btn" (click)="inviteUsers()">Share</button>
       </div>
+      
+      <h3>Owner</h3>
+      <div class="members-container">
+        <img class="avatar"
+             src="{{(this.owener | user | async)?.photoUrl}}"
+             alt=""
+             matListItemIcon>
+        <div class="user-info">
+          <p class="user-name">{{ (this.owener | user | async)?.name }}</p>
+          <span class="user-email">{{ (this.owener | user | async)?.email }}</span>
+        </div>
+      </div>
 
+      <h3>Members</h3>
       <div class="members-container">
         <img class="avatar"
              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"

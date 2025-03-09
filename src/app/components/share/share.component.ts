@@ -26,6 +26,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.component';
 import { NotificationsState } from '../../ngrx/notifications/notifications.state';
 import { NotificationsService } from '../../services/notification/notifications.service';
+import { BoardState } from '../../ngrx/board/board.state';
+import { UserPipe } from '../../shared/pipes/user.pipe';
 
 export interface Fruit {
   name: string;
@@ -34,7 +36,7 @@ export interface Fruit {
 @Component({
   selector: 'app-share',
   standalone: true,
-  imports: [MaterialModule, AsyncPipe, FormsModule],
+  imports: [MaterialModule, AsyncPipe, FormsModule, UserPipe],
   templateUrl: './share.component.html',
   styleUrl: './share.component.scss',
 })
@@ -47,11 +49,13 @@ export class ShareComponent implements OnInit, OnDestroy {
   subcriptions: Subscription[] = [];
 
   readonly data = inject<string>(MAT_DIALOG_DATA);
+  owener!: string;
 
   constructor(
     private store: Store<{
       user: UserState;
       notifications: NotificationsState;
+      board: BoardState;
     }>,
     private notiSocket: NotificationsService,
   ) {
@@ -67,7 +71,11 @@ export class ShareComponent implements OnInit, OnDestroy {
           this.searchUser = users[0];
         }
       }),
-
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+          this.owener = board.ownerId!;
+        }
+      }),
       this.userNameSubject.pipe(debounceTime(500)).subscribe((value) => {
         if (value !== '') {
           this.store.dispatch(userActions.searchUsers({ email: value }));

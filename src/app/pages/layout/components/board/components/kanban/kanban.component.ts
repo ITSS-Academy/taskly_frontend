@@ -28,6 +28,7 @@ import {
   Subscription,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { TaskComponent } from './components/list-tasks/components/task/task.component';
 
@@ -104,14 +105,17 @@ export class KanbanComponent implements OnInit, OnDestroy {
   ) {}
 
   private _snackBar = inject(MatSnackBar);
+  isUpdatingCard$!: Observable<boolean>;
+  routeSubscription!: Subscription;
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params) => {
+    this.routeSubscription = this.activatedRoute.params.subscribe((params) => {
       const newBoardId = params['id'];
       if (this.boardId) {
-        this.gateway.leaveBoard(this.boardId);
+        this.gateway.disconnect();
       }
       this.boardId = newBoardId;
+      this.gateway.connect();
 
       this.subscriptions.forEach((sub) => sub.unsubscribe());
       this.subscriptions = [];
@@ -215,12 +219,14 @@ export class KanbanComponent implements OnInit, OnDestroy {
           }),
         this.store
           .select('list', 'isUpdatingCardSuccess')
-          .subscribe((isUpdatingCardSuccess) => {
-            if (isUpdatingCardSuccess) {
+          .pipe(
+            filter((isUpdating) => isUpdating),
+            tap(() => {
               this.gateway.onListChange(this.boardId, this.lists);
-            }
-          }),
-
+              this.store.dispatch(listActions.resetUpdatingCardSuccess());
+            }),
+          )
+          .subscribe(),
         this.gateway.listenListChange().subscribe((lists: ListModel[]) => {
           // this.lists = lists;
           this.store.dispatch(listActions.storeNewLists({ lists }));
@@ -228,6 +234,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       );
     });
     this.board$ = this.store.select('board', 'board');
+    this.isUpdatingCard$ = this.store.select('list', 'isUpdatingCard');
   }
 
   addTask(listId: string) {
@@ -300,25 +307,22 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   onCardDrop(event: CdkDragDrop<any[], any>) {
-    console.log(event);
-    console.log('888888888888888888888888888888888888888888888888');
-
     //get list Index
     const previousIndex = parseInt(event.previousContainer.id);
     const currentIndex = parseInt(event.container.id);
-
-    console.log(
-      this.lists[previousIndex].cards![event.previousIndex].id,
-      this.lists[currentIndex]!.id!,
-      Number(event.currentIndex),
-    );
-
     this.store.dispatch(
       listActions.updateCard({
         cardId: this.lists[previousIndex].cards![event.previousIndex].id!,
         listId: this.lists[currentIndex]!.id!,
         cardPosition: Number(event.currentIndex),
+        previousListId: this.lists[previousIndex].id!,
       }),
+    );
+
+    console.log(
+      this.lists[previousIndex].cards![event.previousIndex].id,
+      this.lists[currentIndex]!.id!,
+      Number(event.currentIndex),
     );
 
     if (event.previousContainer === event.container) {
@@ -412,6 +416,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     console.log('destroy');
     this.subscriptions.forEach((sub) => sub.unsubscribe());
     this.store.dispatch(listActions.clearListStore());
+    this.routeSubscription.unsubscribe();
+    this.gateway.disconnect();
   }
 
   cancelAddList() {
@@ -447,4 +453,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
   //     setTimeout(() => this.taskInput.nativeElement.focus(), 0);
   //   }
   // }
+  onDragStarted() {
+    console.log('drag started');
+    this.store.dispatch(listActions.startUpdateCard());
+  }
 }

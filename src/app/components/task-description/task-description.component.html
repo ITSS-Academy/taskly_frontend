@@ -74,7 +74,8 @@
               <!-- Tags and Labels Buttons in the same row -->
               <div class="form-group tags-labels-row">
                 @for (label of this.task.labels || []; track $index) {
-                  <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
+                  <div class="tag"
+                       [ngStyle]="{ backgroundColor: label.color, color: getContrastTextColor(label.color!) }">
                     {{ label.name }}
                   </div>
                 }
@@ -107,11 +108,8 @@
             <div class="subtasks-counter">{{ this.completedItems || 0 }}/{{ this.totalItems || 0 }}</div>
           </div>
 
-          <div class="checklist-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="getCompletionPercentage()"></div>
-            </div>
-          </div>
+          <mat-progress-bar mode="determinate" [value]="getCompletionPercentage()"
+                            style="border-radius: 10px"></mat-progress-bar>
 
           <!-- Subtasks List -->
           <div class="subtasks-list">
@@ -146,6 +144,7 @@
             </form>
           </div>
         </div>
+
 
         <!-- Comments Section -->
         <div class="form-group">
