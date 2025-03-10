@@ -59,12 +59,20 @@
     <div class="task-date">
       {{ (task$ | async)?.dueDate | date:'d MMM yyyy' }}
     </div>
-    @if (totalSubtasks > 0) {
-      <div class="task-status">
-        <mat-checkbox [checked]="this.completedSubtasks === this.totalSubtasks" [disabled]="true"></mat-checkbox>
-        {{ completedSubtasks }}/{{ totalSubtasks }}
-      </div>
-    }
+    <div style="display:flex; gap: 5px; justify-content: end; align-items: center">
+      @if (totalSubtasks > 0) {
+        <div class="task-status">
+          <mat-checkbox [checked]="this.completedSubtasks === this.totalSubtasks" [disabled]="true"></mat-checkbox>
+          {{ completedSubtasks }}/{{ totalSubtasks }}
+        </div>
+      }
+      @if (totalComments != 0) {
+        <div class="task-comments" style="display: flex; align-items: center; gap 3px">
+          <mat-icon style="transform: scale(0.8)">chat_bubble</mat-icon>
+          {{ totalComments }}
+        </div>
+      }
+    </div>
   </div>
 </div>
 
