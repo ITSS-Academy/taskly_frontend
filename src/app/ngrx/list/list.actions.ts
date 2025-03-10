@@ -1,7 +1,7 @@
-import { createAction, props } from '@ngrx/store';
-import { ListCard, ListModel } from '../../models/list.model';
-import { ChecklistItemModel } from '../../models/checklistItem.model';
-import { UserModel } from '../../models/user.model';
+import {createAction, props} from '@ngrx/store';
+import {ListCard, ListModel} from '../../models/list.model';
+import {ChecklistItemModel} from '../../models/checklistItem.model';
+import {UserModel} from '../../models/user.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
@@ -159,6 +159,16 @@ export const resetUpdatingCardSuccess = createAction(
 export const storeNewLists = createAction(
   '[List] Store New Lists',
   props<{ lists: ListModel[] }>(),
+);
+
+export const addCommentCount = createAction(
+  '[List] Add Comment Count',
+  props<{ cardId: string }>(),
+);
+
+export const subtractCommentCount = createAction(
+  '[List] Subtract Comment Count',
+  props<{ cardId: string }>(),
 );
 
 export const clearListStore = createAction('[List] Clear List Store');

@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   ActivatedRoute,
   NavigationEnd,
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { NavbarComponent } from '../../../../components/navbar/navbar.component';
-import { BackgroundColorService } from '../../../../services/background-color/background-color.service';
-import { AsyncPipe, JsonPipe, NgStyle } from '@angular/common';
-import { BoardState } from '../../../../ngrx/board/board.state';
-import { Store } from '@ngrx/store';
+import {NavbarComponent} from '../../../../components/navbar/navbar.component';
+import {BackgroundColorService} from '../../../../services/background-color/background-color.service';
+import {AsyncPipe, JsonPipe, NgStyle} from '@angular/common';
+import {BoardState} from '../../../../ngrx/board/board.state';
+import {Store} from '@ngrx/store';
 import {
   combineLatest,
   distinctUntilKeyChanged,
@@ -23,16 +23,17 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { BoardModel } from '../../../../models/board.model';
-import { BackgroundPipe } from '../../../../shared/pipes/background.pipe';
-import { GatewayService } from '../../../../services/gateway/gateway.service';
-import { ListModel } from '../../../../models/list.model';
-import { ListState } from '../../../../ngrx/list/list.state';
-import { log } from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
+import {BoardModel} from '../../../../models/board.model';
+import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
+import {GatewayService} from '../../../../services/gateway/gateway.service';
+import {ListModel} from '../../../../models/list.model';
+import {ListState} from '../../../../ngrx/list/list.state';
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 import * as boardActions from '../../../../ngrx/board/board.actions';
 import * as listActions from '../../../../ngrx/list/list.actions';
-import { CardState } from '../../../../ngrx/card/card.state';
-import { ChecklistItemState } from '../../../../ngrx/checklistItem/checklistItem.state';
+import {CardState} from '../../../../ngrx/card/card.state';
+import {ChecklistItemState} from '../../../../ngrx/checklistItem/checklistItem.state';
+import {CommentState} from '../../../../ngrx/comment/comment.state';
 
 @Component({
   selector: 'app-board',
@@ -62,6 +63,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       list: ListState;
       card: CardState;
       checklistItem: ChecklistItemState;
+      comment: CommentState
     }>,
   ) {
     this.board$ = this.store.select('board', 'board');
@@ -111,8 +113,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.subscriptions = [];
     this.store.dispatch(listActions.clearListStore());
 
-    this.store.dispatch(boardActions.getBoard({ boardId: this.boardId }));
-    this.store.dispatch(listActions.getLists({ boardId: this.boardId }));
+    this.store.dispatch(boardActions.getBoard({boardId: this.boardId}));
+    this.store.dispatch(listActions.getLists({boardId: this.boardId}));
     this.subscriptions.push(
       this.store
         .select('list', 'isGettingListsSuccess')
@@ -136,7 +138,7 @@ export class BoardComponent implements OnInit, OnDestroy {
                     ),
                   ),
                 )
-                .subscribe(({ board, lists }) => {
+                .subscribe(({board, lists}) => {
                   if (lists.length > 0 && board.listsCount) {
                     console.log(
                       '🚀 Joining board:',
@@ -233,7 +235,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         .subscribe(),
       this.gateway.listenListChange().subscribe((lists: ListModel[]) => {
         // this.lists = lists;
-        this.store.dispatch(listActions.storeNewLists({ lists }));
+        this.store.dispatch(listActions.storeNewLists({lists}));
       }),
       this.store
         .select('checklistItem', 'isDeleteChecklistItemSuccess')
@@ -256,6 +258,26 @@ export class BoardComponent implements OnInit, OnDestroy {
             this.gateway.onListChange(this.boardId, this.lists);
           }
         }),
+      this.store.select('card', 'isAddNewMemberSuccess').subscribe((isAddNewMemberSuccess) => {
+        if (isAddNewMemberSuccess) {
+          this.gateway.onListChange(this.boardId, this.lists);
+        }
+      }),
+      this.store.select('card', 'isRemoveMemberSuccess').subscribe((isRemoveMemberSuccess) => {
+        if (isRemoveMemberSuccess) {
+          this.gateway.onListChange(this.boardId, this.lists);
+        }
+      }),
+      this.store.select('comment', 'isCreateCommentSuccess').subscribe((isCreatingCommentSuccess) => {
+        if (isCreatingCommentSuccess) {
+          this.gateway.onListChange(this.boardId, this.lists);
+        }
+      }),
+      this.store.select('comment', 'isDeleteCommentSuccess').subscribe((isDeletingCommentSuccess) => {
+        if (isDeletingCommentSuccess) {
+          this.gateway.onListChange(this.boardId, this.lists);
+        }
+      }),
     );
   }
 

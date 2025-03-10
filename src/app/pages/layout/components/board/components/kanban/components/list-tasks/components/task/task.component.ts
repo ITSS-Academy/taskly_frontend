@@ -1,25 +1,27 @@
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe, DatePipe, NgIf, NgStyle } from '@angular/common';
-import { BehaviorSubject, forkJoin, of, Subscription } from 'rxjs';
-import { MatIconButton } from '@angular/material/button';
-import { CardModel } from '../../../../../../../../../../models/card.model';
-import { BoardState } from '../../../../../../../../../../ngrx/board/board.state';
-import { Store } from '@ngrx/store';
-import { ListState } from '../../../../../../../../../../ngrx/list/list.state';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {MatIcon} from '@angular/material/icon';
+import {AsyncPipe, DatePipe, NgIf, NgStyle} from '@angular/common';
+import {BehaviorSubject, forkJoin, of, Subscription} from 'rxjs';
+import {MatIconButton} from '@angular/material/button';
+import {CardModel} from '../../../../../../../../../../models/card.model';
+import {BoardState} from '../../../../../../../../../../ngrx/board/board.state';
+import {Store} from '@ngrx/store';
+import {ListState} from '../../../../../../../../../../ngrx/list/list.state';
 import * as listActions from '../../../../../../../../../../ngrx/list/list.actions';
-import { MatDialog } from '@angular/material/dialog';
-import { TaskDescriptionComponent } from '../../../../../../../../../../components/task-description/task-description.component';
-import { LabelPipe } from '../../../../../../../../../../shared/pipes/label.pipe';
-import { UserPipe } from '../../../../../../../../../../shared/pipes/user.pipe';
-import { MatTooltip } from '@angular/material/tooltip';
-import { ListCard } from '../../../../../../../../../../models/list.model';
+import {MatDialog} from '@angular/material/dialog';
+import {
+  TaskDescriptionComponent
+} from '../../../../../../../../../../components/task-description/task-description.component';
+import {LabelPipe} from '../../../../../../../../../../shared/pipes/label.pipe';
+import {UserPipe} from '../../../../../../../../../../shared/pipes/user.pipe';
+import {MatTooltip} from '@angular/material/tooltip';
+import {ListCard} from '../../../../../../../../../../models/list.model';
 import * as cardActions from '../../../../../../../../../../ngrx/card/card.actions';
-import { CardState } from '../../../../../../../../../../ngrx/card/card.state';
-import { LabelService } from '../../../../../../../../../../services/label/label.service';
-import { LabelModel } from '../../../../../../../../../../models/label.model';
-import { ChecklistItemModel } from '../../../../../../../../../../models/checklistItem.model';
-import { MaterialModule } from '../../../../../../../../../../shared/modules/material.module';
+import {CardState} from '../../../../../../../../../../ngrx/card/card.state';
+import {LabelService} from '../../../../../../../../../../services/label/label.service';
+import {LabelModel} from '../../../../../../../../../../models/label.model';
+import {ChecklistItemModel} from '../../../../../../../../../../models/checklistItem.model';
+import {MaterialModule} from '../../../../../../../../../../shared/modules/material.module';
 
 interface Task {
   id: string;
@@ -59,7 +61,8 @@ export class TaskComponent implements OnInit, OnDestroy {
       list: ListState;
       card: CardState;
     }>,
-  ) {}
+  ) {
+  }
 
   completedSubtasks!: number;
   totalSubtasks!: number;
@@ -73,9 +76,10 @@ export class TaskComponent implements OnInit, OnDestroy {
             : 0;
           this.completedSubtasks = task.checklistItems
             ? task.checklistItems.filter(
-                (subtask) => subtask.isCompleted === true,
-              ).length
+              (subtask) => subtask.isCompleted === true,
+            ).length
             : 0;
+          this.totalComments = task.commentsCount ? task.commentsCount : 0;
         }
       }),
     );
@@ -89,7 +93,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   closeTask() {
     // Implement logic to remove/archive task
     console.log('Closing task:', this.taskId);
-    this.store.dispatch(listActions.deleteCard({ cardId: this.taskId! }));
+    this.store.dispatch(listActions.deleteCard({cardId: this.taskId!}));
   }
 
   // getProgressColor() {
@@ -103,6 +107,8 @@ export class TaskComponent implements OnInit, OnDestroy {
   // }
 
   protected readonly of = of;
+
+  totalComments = 0;
 
   openDialog() {
     this.dialog.open(TaskDescriptionComponent, {
@@ -120,7 +126,8 @@ export class TaskComponent implements OnInit, OnDestroy {
     return brightness > 186 ? '#000000' : '#FFFFFF';
   }
 
-  showMoreOptions() {}
+  showMoreOptions() {
+  }
 
   protected readonly Array = Array;
 }

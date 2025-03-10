@@ -30,6 +30,8 @@ import * as cardEffects from './ngrx/card/card.effects';
 import {cardReducer} from './ngrx/card/card.reducer';
 import {checklistItemReducer} from './ngrx/checklistItem/checklistItem.reducer';
 import * as checklistItemEffects from './ngrx/checklistItem/checklistItem.effects';
+import * as CommentEffects from './ngrx/comment/comment.effects';
+import {commentReducer} from './ngrx/comment/comment.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -45,7 +47,8 @@ export const appConfig: ApplicationConfig = {
       notifications: notificationsReducer,
       label: labelReducer,
       card: cardReducer,
-      checklistItem: checklistItemReducer
+      checklistItem: checklistItemReducer,
+      comment: commentReducer
     }),
     provideEffects([
       authEffects,
@@ -55,7 +58,8 @@ export const appConfig: ApplicationConfig = {
       notificationsEffects,
       labelEffects,
       cardEffects,
-      checklistItemEffects
+      checklistItemEffects,
+      CommentEffects
     ]),
     provideFirebaseApp(() =>
       initializeApp({
