@@ -306,4 +306,14 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     );
     this.store.dispatch(notiActions.addAddedToCardUsers({userIds: [userId]}));
   }
+
+  handleCommentKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+
+      if (this.newComment.trim()) {
+        this.addComment();
+      }
+    }
+  }
 }
