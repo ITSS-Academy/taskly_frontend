@@ -75,7 +75,7 @@
               <div class="form-group tags-labels-row">
                 @for (label of this.task.labels || []; track $index) {
                   <div class="tag"
-                       [ngStyle]="{ backgroundColor: label.color, color: getContrastTextColor(label.color!) }">
+                       [ngStyle]="{ backgroundColor: label.color}">
                     {{ label.name }}
                   </div>
                 }

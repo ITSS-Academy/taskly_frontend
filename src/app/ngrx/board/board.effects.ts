@@ -87,3 +87,20 @@ export const getInvitedBoardsEffect = createEffect(
   },
   {functional: true},
 );
+
+export const searchBoardsEffect = createEffect(
+  (actions$ = inject(Actions), boardService = inject(BoardService)) => {
+    return actions$.pipe(
+      ofType(boardActions.searchBoards),
+      switchMap(({search}) => {
+        return boardService.searchBoards(search).pipe(
+          map((boards: any) => boardActions.getBoardsSuccess({boards})),
+          catchError((error) => {
+            return of(boardActions.getBoardsFail({error: error.message}));
+          }),
+        );
+      }),
+    );
+  },
+  {functional: true},
+);

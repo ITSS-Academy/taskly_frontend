@@ -8,7 +8,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatChipsModule} from '@angular/material/chips';
+import {MatChipListbox, MatChipsModule} from '@angular/material/chips';
 import {MatRippleModule} from '@angular/material/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
@@ -82,7 +82,13 @@ const materialModules = [
   MatDialogModule,
   CdkDrag,
   CdkDropList,
-
+  MatChipListbox,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatButtonModule,
+  MatIconModule,
+  MatChipsModule
 ];
 
 @NgModule({
