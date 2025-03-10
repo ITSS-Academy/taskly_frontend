@@ -382,3 +382,9 @@
   min-width: 55px;
   font-size: 12px;
 }
+.tag-date-container {
+  display: flex;
+  flex-direction: row ;
+  justify-content: space-between;
+  gap: 10px;
+}

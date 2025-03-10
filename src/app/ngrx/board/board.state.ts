@@ -22,4 +22,10 @@ export interface BoardState {
   isInvitedBoardsGetting: boolean;
   invitedBoardsGettingError: string | null;
   isGetInvitedBoardsSuccess: boolean;
+
+  //searchBoards
+  searchedBoards: BoardModel[] | null;
+  isSearchingBoards: boolean;
+  searchBoardsError: string | null;
+  isSearchBoardsSuccess: boolean;
 }

@@ -58,4 +58,10 @@ export class BoardService {
       },
     );
   }
+
+  searchBoards(search: string) {
+    return this.httpClient.post(`${environment.apiUrl}/board/search`, {search}, {
+      headers: {Authorization: this.accessToken},
+    });
+  }
 }
