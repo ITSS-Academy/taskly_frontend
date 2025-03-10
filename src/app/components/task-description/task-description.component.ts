@@ -20,31 +20,34 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AsyncPipe, DatePipe, NgForOf, NgIf, NgStyle } from '@angular/common';
-import { MaterialModule } from '../../shared/modules/material.module';
-import { LabelDialogComponent } from '../label-dialog/label-dialog.component';
-import { Store } from '@ngrx/store';
-import { BoardState } from '../../ngrx/board/board.state';
-import { forkJoin, Observable, Subscription } from 'rxjs';
-import { LabelState } from '../../ngrx/label/label.state';
+import {AsyncPipe, DatePipe, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {MaterialModule} from '../../shared/modules/material.module';
+import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
+import {Store} from '@ngrx/store';
+import {BoardState} from '../../ngrx/board/board.state';
+import {forkJoin, Observable, Subscription} from 'rxjs';
+import {LabelState} from '../../ngrx/label/label.state';
 import * as labelActions from '../../ngrx/label/label.actions';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { TextFieldModule } from '@angular/cdk/text-field';
-import { CommentModel } from '../../models/comment.model';
-import { ChecklistItemModel } from '../../models/checklistItem.model';
-import { CardModel } from '../../models/card.model';
-import { CardState } from '../../ngrx/card/card.state';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {TextFieldModule} from '@angular/cdk/text-field';
+import {CommentModel} from '../../models/comment.model';
+import {ChecklistItemModel} from '../../models/checklistItem.model';
+import {CardModel} from '../../models/card.model';
+import {CardState} from '../../ngrx/card/card.state';
 import * as cardActions from '../../ngrx/card/card.actions';
-import { UserState } from '../../ngrx/user/user.state';
-import { LabelPipe } from '../../shared/pipes/label.pipe';
+import {UserState} from '../../ngrx/user/user.state';
+import {LabelPipe} from '../../shared/pipes/label.pipe';
 import * as checklistItemActions from '../../ngrx/checklistItem/checklistItem.actions';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { ChecklistItemState } from '../../ngrx/checklistItem/checklistItem.state';
-import { GatewayService } from '../../services/gateway/gateway.service';
-import { UserModel } from '../../models/user.model';
-import { UserService } from '../../services/user/user.service';
+import {MatMenuTrigger} from '@angular/material/menu';
+import {ChecklistItemState} from '../../ngrx/checklistItem/checklistItem.state';
+import {GatewayService} from '../../services/gateway/gateway.service';
+import {UserModel} from '../../models/user.model';
+import {UserService} from '../../services/user/user.service';
 import * as notiActions from '../../ngrx/notifications/notifications.actions';
+import * as commentActions from '../../ngrx/comment/comment.actions';
+import {CommentState} from '../../ngrx/comment/comment.state';
+import {UserPipe} from '../../shared/pipes/user.pipe';
 
 @Component({
   selector: 'app-task-description',
@@ -61,6 +64,7 @@ import * as notiActions from '../../ngrx/notifications/notifications.actions';
     AsyncPipe,
     NgStyle,
     LabelPipe,
+    UserPipe,
     ReactiveFormsModule,
   ],
   templateUrl: 'task-description.component.html',
@@ -71,6 +75,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   newSubtask = '';
   newComment = '';
   showAssigneeSelector = false;
+  comments: CommentModel[] = [];
 
   taskUpdatedForm = new FormGroup({
     id: new FormControl('', [Validators.required]),
@@ -121,6 +126,11 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
             this.dialog.open(LabelDialogComponent);
           }
         }),
+      this.store.select('comment', 'comments').subscribe((comments) => {
+        if (comments) {
+          this.comments = comments;
+        }
+      }),
       this.store.select('card', 'card').subscribe((card) => {
         if (card) {
           console.log(card);
@@ -157,10 +167,12 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       card: CardState;
       user: UserState;
       checklistItem: ChecklistItemState;
+      comment: CommentState,
     }>,
     private userSerivce: UserService,
   ) {
-    this.store.dispatch(cardActions.getCard({ cardId: this.cardId }));
+    this.store.dispatch(cardActions.getCard({cardId: this.cardId}));
+    this.store.dispatch(commentActions.getComment({cardId: this.cardId}));
   }
 
   ngOnDestroy() {
@@ -192,9 +204,11 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     }
   }
 
-  addTag() {}
+  addTag() {
+  }
 
-  removeTag(tag: string) {}
+  removeTag(tag: string) {
+  }
 
   addSubtask() {
     if (this.subTaskForm.valid) {
@@ -214,7 +228,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
 
   removeSubtask(id: string) {
     this.store.dispatch(
-      checklistItemActions.deleteChecklistItem({ checklistItemId: id }),
+      checklistItemActions.deleteChecklistItem({checklistItemId: id}),
     );
   }
 
@@ -237,18 +251,19 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
 
   addComment() {
     if (this.newComment.trim()) {
-      const newComment: CommentModel = {
-        text: this.newComment,
-        createdAt: new Date(),
-      };
 
-      // this.comments.push(newComment);
+      this.store.dispatch(commentActions.createComment({
+        comment: {
+          cardId: this.task.id,
+          text: this.newComment,
+        }
+      }));
       this.newComment = '';
     }
   }
 
   deleteComment(id: string) {
-    // this.comments = this.comments.filter((c) => c.id !== id);
+    this.store.dispatch(commentActions.deleteComment({commentId: id}));
   }
 
   isCurrentUserAuthor(comment: CommentModel): boolean {
@@ -263,12 +278,12 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       }),
     );
     this.store.dispatch(
-      notiActions.addAddedToCardUsers({ userIds: [memberId] }),
+      notiActions.addAddedToCardUsers({userIds: [memberId]}),
     );
   }
 
   openLabelDialog() {
-    this.store.dispatch(labelActions.getLabelsInBoard({ id: this.boardId }));
+    this.store.dispatch(labelActions.getLabelsInBoard({id: this.boardId}));
   }
 
   getContrastTextColor(hexColor: string) {
@@ -288,6 +303,6 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
         userId: userId,
       }),
     );
-    this.store.dispatch(notiActions.addAddedToCardUsers({ userIds: [userId] }));
+    this.store.dispatch(notiActions.addAddedToCardUsers({userIds: [userId]}));
   }
 }

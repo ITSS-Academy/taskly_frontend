@@ -152,14 +152,15 @@
 
           <!-- Comments List -->
           <div class="comments-list">
-            @for (comment of task.comments; track comment.id) {
+            @for (comment of this.comments; track comment.id) {
               <div class="comment-item">
                 <div class="comment-header">
                   <div class="comment-user">
                     <div class="user-avatar">
-                      <mat-icon>account_circle</mat-icon>
+                      <img src="{{ (comment.userId! | user | async)?.photoUrl}}"
+                           alt="">
                     </div>
-                    <span class="user-name">{{ comment.userId }}</span>
+                    <span class="user-name">{{ (comment.userId! | user | async)?.name }}</span>
                   </div>
                   <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
                 </div>
@@ -167,8 +168,8 @@
                   {{ comment.text }}
                 </div>
                 <div class="comment-actions">
-                  <button mat-button class="comment-action-btn">Reply</button>
-                  <button mat-button class="comment-action-btn" *ngIf="isCurrentUserAuthor(comment)">Edit</button>
+                  <!--                  <button mat-button class="comment-action-btn">Reply</button>-->
+                  <!--                  <button mat-button class="comment-action-btn" *ngIf="isCurrentUserAuthor(comment)">Edit</button>-->
                   <button mat-button class="comment-action-btn" *ngIf="isCurrentUserAuthor(comment)"
                           (click)="deleteComment(comment.id!)">Delete
                   </button>
@@ -181,7 +182,8 @@
           <div class="add-comment-container">
             <div class="comment-input-wrapper">
               <div class="user-avatar">
-                <mat-icon>account_circle</mat-icon>
+                <img src="{{ (this.currentUser | user | async)?.photoUrl}}"
+                     alt="">
               </div>
               <mat-form-field appearance="outline" class="full-width">
               <textarea
