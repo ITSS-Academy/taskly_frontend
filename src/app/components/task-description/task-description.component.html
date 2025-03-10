@@ -114,7 +114,7 @@
           <!-- Subtasks List -->
           <div class="subtasks-list">
             @for (subtask of task.checklistItems; track subtask.id) {
-              <div class="subtask-item">
+              <div class="subtask-item" [ngClass]="{'completed': subtask.isCompleted}">
                 <mat-checkbox [checked]="subtask.isCompleted"
                               (change)="toggleSubtask(subtask.isCompleted, subtask.id!)">
                   {{ subtask.title }}

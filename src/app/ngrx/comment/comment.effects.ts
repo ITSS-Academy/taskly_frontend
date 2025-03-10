@@ -16,8 +16,8 @@ export const createComment = createEffect((
       switchMap(({comment}) => {
         return commentService.createComment(comment).pipe(
           mergeMap((commentResponse: any) => [
+              listActions.addCommentCount({cardId: comment.cardId}),
               commentActions.createCommentSuccess({comment: commentResponse}),
-              listActions.addCommentCount({cardId: comment.cardId})
             ]
           ),
           catchError((error) => of(commentActions.createCommentFailure({error})))
@@ -54,8 +54,8 @@ export const deleteComment = createEffect((
       switchMap(({commentId}) => {
         return commentService.deleteComment(commentId).pipe(
           mergeMap((comment: any) => [
+              listActions.subtractCommentCount({cardId: comment.cardId}),
               commentActions.deleteCommentSuccess({commentId}),
-              listActions.subtractCommentCount({cardId: comment.cardId})
             ]
           ),
           catchError((error) => of(commentActions.deleteCommentFailure({error})))

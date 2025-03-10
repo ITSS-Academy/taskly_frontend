@@ -20,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {AsyncPipe, DatePipe, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
 import {Store} from '@ngrx/store';
@@ -66,6 +66,7 @@ import {UserPipe} from '../../shared/pipes/user.pipe';
     LabelPipe,
     UserPipe,
     ReactiveFormsModule,
+    NgClass,
   ],
   templateUrl: 'task-description.component.html',
   styleUrl: './task-description.component.scss',
