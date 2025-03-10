@@ -1,54 +1,51 @@
-<div class="table">
-  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<div class="table-container">
+  <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-    <!-- Title Column -->
+    <!-- Cột Title -->
     <ng-container matColumnDef="title">
-      <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element.title }}</mat-cell>
+      <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.title }}</mat-cell>
     </ng-container>
 
-    <!-- Board Column -->
-    <!--    <ng-container matColumnDef="board">-->
-    <!--      <mat-header-cell *matHeaderCellDef> Board</mat-header-cell>-->
-    <!--      <mat-cell class="board-hover" *matCellDef="let element">-->
-    <!--        {{ element.board }}-->
-    <!--      </mat-cell>-->
-    <!--    </ng-container>-->
-
-    <!-- List Column -->
+    <!-- Cột List -->
     <ng-container matColumnDef="list">
-      <mat-header-cell *matHeaderCellDef> List</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>List</mat-header-cell>
       <mat-cell *matCellDef="let element">
-        {{ element.list }}
+        {{ getListName(element.listId) }}
       </mat-cell>
     </ng-container>
 
-    <!-- Member Column -->
+    <!-- Cột Members -->
     <ng-container matColumnDef="members">
-      <mat-header-cell *matHeaderCellDef> Members</mat-header-cell>
-      <mat-cell class="members-hover" *matCellDef="let element"> {{ element.members }}
-      </mat-cell>
-    </ng-container>
-
-    <!-- Label Column -->
-    <ng-container matColumnDef="tags">
-      <mat-header-cell *matHeaderCellDef> Label</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <mat-chip aria-label="tags">
-          {{ element.tags }}
-        </mat-chip>
+        <span *ngIf="element.members.length > 0">
+          <ng-container *ngFor="let member of element.members; let last = last">
+            {{ member.name }}{{ last ? '' : ', ' }}
+          </ng-container>
+        </span>
+        <span *ngIf="element.members.length === 0">No members</span>
       </mat-cell>
     </ng-container>
 
-    <mat-header-row class="mat-header-fixed" *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <!-- Cột Labels -->
+    <ng-container matColumnDef="labels">
+      <mat-header-cell *matHeaderCellDef>Label</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <span *ngFor="let label of element.labels"
+              [ngStyle]="{'background-color': label.color, 'color': getContrastTextColor(label.color), 'padding': '4px 8px', 'border-radius': '4px', 'display': 'inline-block', 'margin': '2px'}">
+              {{ label.name }}
+        </span>
 
+      </mat-cell>
+    </ng-container>
+
+    <!-- Header & Rows -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openTaskDescription(row)">
+    </mat-row>
   </mat-table>
 
+  <!-- Phân trang -->
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
 </div>
-
-
-
-

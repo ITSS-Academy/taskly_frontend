@@ -56,4 +56,16 @@ export const acceptInvitation = createAction(
   props<{ board: BoardModel }>(),
 );
 
+export const searchBoards = createAction(
+  '[Board] Search Boards',
+  props<{ search: string }>(),
+);
+export const searchBoardsSuccess = createAction(
+  '[Board] Search Boards Success',
+  props<{ boards: BoardModel[] }>(),
+);
+export const searchBoardsFail = createAction(
+  '[Board] Search Boards Fail',
+  props<{ error: string }>(),
+);
 export const clearBoardBackground = createAction('[Board] Clear Board State');

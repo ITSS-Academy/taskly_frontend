@@ -6,23 +6,29 @@
   overflow: hidden;
   flex-direction: column;
   justify-content: space-between;
+}
 
-
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 70px);
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .mat-mdc-table {
-  width: 100%;
-  max-height: 100%;
+  min-width: 100%;
+  max-height: calc(100vh - 150px); /* Adjust height to prevent overflow */
   overflow: auto;
   color: var(--md-sys-color-on-background);
-
+  flex: 1;
   background-color: var(--md-sys-color-on-primary);
-  //border-radius: 8px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  height: 100%;
+  height: fit-content;
   box-shadow: none;
-
 }
 
 .mat-column-name {

@@ -22,6 +22,11 @@ const initialState: BoardState = {
   isInvitedBoardsGetting: false,
   invitedBoardsGettingError: null,
   isGetInvitedBoardsSuccess: false,
+
+  isSearchingBoards: false,
+  searchedBoards: null,
+  searchBoardsError: null,
+  isSearchBoardsSuccess: false,
 };
 
 export const boardReducer = createReducer(
@@ -141,7 +146,31 @@ export const boardReducer = createReducer(
         : [board],
     };
   }),
-
+  on(boardActions.searchBoards, (state) => {
+    return {
+      ...state,
+      searchedBoards: null,
+      isSearchingBoards: true,
+      searchBoardsError: null,
+      isSearchBoardsSuccess: false,
+    };
+  }),
+  on(boardActions.searchBoardsSuccess, (state, { boards }) => {
+    return {
+      ...state,
+      searchedBoards: boards,
+      isSearchingBoards: false,
+      searchBoardsError: null,
+      isSearchBoardsSuccess: true,
+    };
+  }),
+  on(boardActions.searchBoardsFail, (state, { error }) => {
+    return {
+      ...state,
+      isSearchingBoards: false,
+      searchBoardsError: error,
+      isSearchBoardsSuccess: false,
+    }}),
   on(boardActions.clearBoardBackground, (state) => {
     return {
       ...state,
