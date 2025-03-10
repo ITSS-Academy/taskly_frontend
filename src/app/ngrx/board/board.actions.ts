@@ -1,5 +1,5 @@
-import { createAction, props } from '@ngrx/store';
-import { BoardModel } from '../../models/board.model';
+import {createAction, props} from '@ngrx/store';
+import {BoardModel} from '../../models/board.model';
 
 export const createBoard = createAction(
   '[Board] Create Board',
@@ -54,6 +54,38 @@ export const getInvitedBoardsFail = createAction(
 export const acceptInvitation = createAction(
   '[Board] Accept Invitation',
   props<{ board: BoardModel }>(),
+);
+
+export const changeBoardBackground = createAction(
+  '[Board] Change Board Background',
+  props<{ boardId: string; backgroundId?: string, background?: File }>(),
+);
+
+export const changeBoardBackgroundSuccess = createAction(
+  '[Board] Change Board Background Success',
+  props<{
+    backgroundId: string,
+    background: {
+      fileLocation: string,
+    },
+    boardId: string
+  }>(),
+);
+
+export const changeBoardBackgroundFail = createAction(
+  '[Board] Change Board Background Fail',
+  props<{ error: string }>(),
+);
+
+export const listenBackgroundChange = createAction(
+  '[Board] Listen Background Change',
+  props<{
+    boardId: string,
+    background: {
+      id: string
+      fileLocation: string,
+    },
+  }>(),
 );
 
 export const clearBoardBackground = createAction('[Board] Clear Board State');

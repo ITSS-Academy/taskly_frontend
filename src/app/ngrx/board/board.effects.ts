@@ -87,3 +87,28 @@ export const getInvitedBoardsEffect = createEffect(
   },
   {functional: true},
 );
+
+export const changeBoardBackgroundEffect = createEffect(
+  (actions$ = inject(Actions), boardService = inject(BoardService)) => {
+    return actions$.pipe(
+      ofType(boardActions.changeBoardBackground),
+      switchMap(({boardId, backgroundId, background}) => {
+        return boardService.changeBackground({backgroundId, boardId}, background).pipe(
+          map((data: any) => {
+            return boardActions.changeBoardBackgroundSuccess({
+              backgroundId: data.backgroundId,
+              background: data.background,
+              boardId
+            });
+          }),
+          catchError((error) => {
+            return of(
+              boardActions.changeBoardBackgroundFail({error: error.message}),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  {functional: true},
+);

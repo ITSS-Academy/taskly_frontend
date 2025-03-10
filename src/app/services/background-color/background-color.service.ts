@@ -41,6 +41,7 @@ export class BackgroundColorService {
   }
 
   setBackgroundImage(imageUrl: string): void {
+    console.log('Background Image:', imageUrl);
     this.backgroundImageSource.next(imageUrl);
   }
 

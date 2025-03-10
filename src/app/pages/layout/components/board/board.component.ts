@@ -74,6 +74,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   routeSubscription!: Subscription;
   boardId!: string;
   lists: ListModel[] = [];
+  backgroundId!: string;
 
   ngOnInit(): void {
     console.log('board component oninit');
@@ -166,6 +167,8 @@ export class BoardComponent implements OnInit, OnDestroy {
       }),
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
+          this.backgroundId = board.backgroundId!;
+
           if (
             board.background &&
             typeof board.background === 'object' &&
@@ -237,6 +240,14 @@ export class BoardComponent implements OnInit, OnDestroy {
         // this.lists = lists;
         this.store.dispatch(listActions.storeNewLists({lists}));
       }),
+      this.gateway.listenBackgroundChange().subscribe((background) => {
+        this.backgroundImage = background.background.fileLocation;
+        this.backgroundService.setBackgroundImage(background.background.fileLocation);
+        this.store.dispatch(boardActions.listenBackgroundChange({
+          boardId: background.boardId,
+          background: background.background
+        }));
+      }),
       this.store
         .select('checklistItem', 'isDeleteChecklistItemSuccess')
         .subscribe((isDeleteChecklistItemSuccess) => {
@@ -278,6 +289,17 @@ export class BoardComponent implements OnInit, OnDestroy {
           this.gateway.onListChange(this.boardId, this.lists);
         }
       }),
+      this.store.select('board', 'isChangeBoardBackgroundSuccess').subscribe(
+        (isChangeBoardBackgroundSuccess) => {
+          if (isChangeBoardBackgroundSuccess) {
+            this.backgroundService.setBackgroundImage(this.backgroundImage!);
+            this.gateway.onBackgroundChange(this.boardId, {
+              fileLocation: this.backgroundImage!,
+              id: this.backgroundId
+            });
+          }
+        }
+      )
     );
   }
 

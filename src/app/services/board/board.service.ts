@@ -58,4 +58,22 @@ export class BoardService {
       },
     );
   }
+
+  changeBackground(background: {
+    backgroundId?: string,
+    boardId: string
+  }, file?: File): Observable<any> {
+    if (file) {
+      const formData = new FormData();
+      formData.append('background', file);
+      formData.append('boardId', background.boardId);
+      return this.httpClient.put(`${environment.apiUrl}/background/upload`, formData, {
+        headers: {Authorization: this.accessToken},
+      });
+    } else {
+      return this.httpClient.put(`${environment.apiUrl}/background/upload`, background, {
+        headers: {Authorization: this.accessToken},
+      })
+    }
+  }
 }

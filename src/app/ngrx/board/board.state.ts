@@ -1,4 +1,4 @@
-import { BoardModel } from '../../models/board.model';
+import {BoardModel} from '../../models/board.model';
 
 export interface BoardState {
   //createBoard
@@ -22,4 +22,9 @@ export interface BoardState {
   isInvitedBoardsGetting: boolean;
   invitedBoardsGettingError: string | null;
   isGetInvitedBoardsSuccess: boolean;
+
+  //changeBoardBackground
+  isChangingBoardBackground: boolean;
+  changeBoardBackgroundError: string | null;
+  isChangeBoardBackgroundSuccess: boolean;
 }
