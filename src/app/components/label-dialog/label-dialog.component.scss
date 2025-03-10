@@ -13,6 +13,10 @@
   width: 100%;
 }
 
+::ng-deep mat-form-field {
+  margin-top: 4px !important;
+}
+
 .label-color {
   width: 30px;
   height: 20px;

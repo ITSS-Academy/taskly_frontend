@@ -114,7 +114,7 @@
           <!-- Subtasks List -->
           <div class="subtasks-list">
             @for (subtask of task.checklistItems; track subtask.id) {
-              <div class="subtask-item">
+              <div class="subtask-item" [ngClass]="{'completed': subtask.isCompleted}">
                 <mat-checkbox [checked]="subtask.isCompleted"
                               (change)="toggleSubtask(subtask.isCompleted, subtask.id!)">
                   {{ subtask.title }}
@@ -185,25 +185,28 @@
                 <img src="{{ (this.currentUser | user | async)?.photoUrl}}"
                      alt="">
               </div>
-              <mat-form-field appearance="outline" class="full-width">
-              <textarea
-                matInput
-                [(ngModel)]="newComment"
-                placeholder="Add your comment..."
-                cdkTextareaAutosize
-                #autosize="cdkTextareaAutosize"
-                cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="5"></textarea>
-              </mat-form-field>
-            </div>
-            <div class="comment-actions">
-              <button
-                mat-raised-button
-                color="primary"
-                [disabled]="!newComment.trim()"
-                (click)="addComment()">
-                Comment
-              </button>
+              <div class="comment-field-container">
+                <mat-form-field appearance="outline" class="full-width">
+                  <textarea
+                    matInput
+                    [(ngModel)]="newComment"
+                    placeholder="Add your comment..."
+                    #autosize="cdkTextareaAutosize"
+                    [cdkTextareaAutosize]="false"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    (keydown)="handleCommentKeydown($event)"></textarea>
+                  <div class="send-button-wrapper">
+                    <button
+                      mat-icon-button
+                      class="send-button"
+                      [disabled]="!newComment.trim()"
+                      (click)="addComment()">
+                      <mat-icon>send</mat-icon>
+                    </button>
+                  </div>
+                </mat-form-field>
+              </div>
             </div>
           </div>
         </div>
