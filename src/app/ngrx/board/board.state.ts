@@ -27,4 +27,9 @@ export interface BoardState {
   isChangingBoardBackground: boolean;
   changeBoardBackgroundError: string | null;
   isChangeBoardBackgroundSuccess: boolean;
+  //searchBoards
+  searchedBoards: BoardModel[] | null;
+  isSearchingBoards: boolean;
+  searchBoardsError: string | null;
+  isSearchBoardsSuccess: boolean;
 }

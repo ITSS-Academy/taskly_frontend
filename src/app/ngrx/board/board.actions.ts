@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {BoardModel} from '../../models/board.model';
+import { createAction, props } from '@ngrx/store';
+import { BoardModel } from '../../models/board.model';
 
 export const createBoard = createAction(
   '[Board] Create Board',
@@ -58,17 +58,17 @@ export const acceptInvitation = createAction(
 
 export const changeBoardBackground = createAction(
   '[Board] Change Board Background',
-  props<{ boardId: string; backgroundId?: string, background?: File }>(),
+  props<{ boardId: string; backgroundId?: string; background?: File }>(),
 );
 
 export const changeBoardBackgroundSuccess = createAction(
   '[Board] Change Board Background Success',
   props<{
-    backgroundId: string,
+    backgroundId: string;
     background: {
-      fileLocation: string,
-    },
-    boardId: string
+      fileLocation: string;
+    };
+    boardId: string;
   }>(),
 );
 
@@ -80,12 +80,24 @@ export const changeBoardBackgroundFail = createAction(
 export const listenBackgroundChange = createAction(
   '[Board] Listen Background Change',
   props<{
-    boardId: string,
+    boardId: string;
     background: {
-      id: string
-      fileLocation: string,
-    },
+      id: string;
+      fileLocation: string;
+    };
   }>(),
 );
 
+export const searchBoards = createAction(
+  '[Board] Search Boards',
+  props<{ search: string }>(),
+);
+export const searchBoardsSuccess = createAction(
+  '[Board] Search Boards Success',
+  props<{ boards: BoardModel[] }>(),
+);
+export const searchBoardsFail = createAction(
+  '[Board] Search Boards Fail',
+  props<{ error: string }>(),
+);
 export const clearBoardBackground = createAction('[Board] Clear Board State');

@@ -85,13 +85,6 @@ export class LabelDialogComponent implements OnInit, OnDestroy {
         .select('label', 'isAddLabelToTaskSuccess')
         .subscribe((isAddLabelToTaskSuccess) => {
           if (isAddLabelToTaskSuccess) {
-            this.subscriptions.push(
-              this.store.select('list', 'lists').subscribe((lists) => {
-                if (lists) {
-                  this.gateway.onListChange(this.boardId, lists);
-                }
-              }),
-            );
             this.dialogRef.close();
           }
         }),

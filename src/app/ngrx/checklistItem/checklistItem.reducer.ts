@@ -1,5 +1,5 @@
-import {createReducer, on} from '@ngrx/store';
-import {ChecklistItemState} from './checklistItem.state';
+import { createReducer, on } from '@ngrx/store';
+import { ChecklistItemState } from './checklistItem.state';
 import * as checklistItemActions from './checklistItem.actions';
 
 const initialState: ChecklistItemState = {
@@ -14,35 +14,34 @@ const initialState: ChecklistItemState = {
   isDeletingChecklistItem: false,
   isDeleteChecklistItemSuccess: false,
   isDeleteChecklistItemFailure: null,
-}
+};
 
 export const checklistItemReducer = createReducer(
   initialState,
   on(checklistItemActions.addNewChecklistItem, (state) => {
-
     return {
       ...state,
       isAddingChecklistItem: true,
       isAddChecklistItemSuccess: false,
       isAddChecklistItemFailure: null,
-    }
+    };
   }),
-  on(checklistItemActions.addNewChecklistItemSuccess, (state, {type,}) => {
-    console.log(type)
+  on(checklistItemActions.addNewChecklistItemSuccess, (state, { type }) => {
+    console.log(type);
     return {
       ...state,
       isAddingChecklistItem: false,
       isAddChecklistItemSuccess: true,
       isAddChecklistItemFailure: null,
-    }
+    };
   }),
-  on(checklistItemActions.addNewChecklistItemFailure, (state, {error}) => {
+  on(checklistItemActions.addNewChecklistItemFailure, (state, { error }) => {
     return {
       ...state,
       isAddingChecklistItem: false,
       isAddChecklistItemSuccess: false,
       isAddChecklistItemFailure: error,
-    }
+    };
   }),
   on(checklistItemActions.toggleChecklistItem, (state) => {
     return {
@@ -50,7 +49,7 @@ export const checklistItemReducer = createReducer(
       isTogglingChecklistItem: true,
       isToggleChecklistItemSuccess: false,
       isToggleChecklistItemFailure: null,
-    }
+    };
   }),
   on(checklistItemActions.toggleChecklistItemSuccess, (state) => {
     return {
@@ -58,15 +57,15 @@ export const checklistItemReducer = createReducer(
       isTogglingChecklistItem: false,
       isToggleChecklistItemSuccess: true,
       isToggleChecklistItemFailure: null,
-    }
+    };
   }),
-  on(checklistItemActions.toggleChecklistItemFailure, (state, {error}) => {
+  on(checklistItemActions.toggleChecklistItemFailure, (state, { error }) => {
     return {
       ...state,
       isTogglingChecklistItem: false,
       isToggleChecklistItemSuccess: false,
       isToggleChecklistItemFailure: error,
-    }
+    };
   }),
   on(checklistItemActions.deleteChecklistItem, (state) => {
     return {
@@ -74,7 +73,7 @@ export const checklistItemReducer = createReducer(
       isDeletingChecklistItem: true,
       isDeleteChecklistItemSuccess: false,
       isDeleteChecklistItemFailure: null,
-    }
+    };
   }),
   on(checklistItemActions.deleteChecklistItemSuccess, (state) => {
     return {
@@ -82,14 +81,17 @@ export const checklistItemReducer = createReducer(
       isDeletingChecklistItem: false,
       isDeleteChecklistItemSuccess: true,
       isDeleteChecklistItemFailure: null,
-    }
+    };
   }),
-  on(checklistItemActions.deleteChecklistItemFailure, (state, {error}) => {
+  on(checklistItemActions.deleteChecklistItemFailure, (state, { error }) => {
     return {
       ...state,
       isDeletingChecklistItem: false,
       isDeleteChecklistItemSuccess: false,
       isDeleteChecklistItemFailure: error,
-    }
+    };
+  }),
+  on(checklistItemActions.clearChecklistItemState, (state) => {
+    return initialState;
   }),
 );

@@ -1,7 +1,7 @@
-import {BoardState} from './board.state';
-import {createReducer, on} from '@ngrx/store';
+import { BoardState } from './board.state';
+import { createReducer, on } from '@ngrx/store';
 import * as boardActions from './board.actions';
-import {clearBoardBackground} from './board.actions';
+import { clearBoardBackground } from './board.actions';
 
 const initialState: BoardState = {
   board: null,
@@ -26,6 +26,11 @@ const initialState: BoardState = {
   isChangingBoardBackground: false,
   changeBoardBackgroundError: null,
   isChangeBoardBackgroundSuccess: false,
+
+  isSearchingBoards: false,
+  searchedBoards: null,
+  searchBoardsError: null,
+  isSearchBoardsSuccess: false,
 };
 
 export const boardReducer = createReducer(
@@ -38,7 +43,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: false,
     };
   }),
-  on(boardActions.createBoardSuccess, (state, {board}) => {
+  on(boardActions.createBoardSuccess, (state, { board }) => {
     console.log(board);
     return {
       ...state,
@@ -48,7 +53,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: true,
     };
   }),
-  on(boardActions.createBoardFail, (state, {error}) => {
+  on(boardActions.createBoardFail, (state, { error }) => {
     return {
       ...state,
       isBoardCreating: false,
@@ -63,7 +68,7 @@ export const boardReducer = createReducer(
       isBoardsGetting: true,
     };
   }),
-  on(boardActions.getBoardsSuccess, (state, {boards}) => {
+  on(boardActions.getBoardsSuccess, (state, { boards }) => {
     console.log(boards);
     return {
       ...state,
@@ -73,7 +78,7 @@ export const boardReducer = createReducer(
       isGetBoardsSuccess: true,
     };
   }),
-  on(boardActions.getBoardsFail, (state, {error}) => {
+  on(boardActions.getBoardsFail, (state, { error }) => {
     return {
       ...state,
       isBoardsGetting: false,
@@ -91,7 +96,7 @@ export const boardReducer = createReducer(
       getBoardError: '',
     };
   }),
-  on(boardActions.getBoardSuccess, (state, {type, board}) => {
+  on(boardActions.getBoardSuccess, (state, { type, board }) => {
     console.log(type);
     console.log(board);
     return {
@@ -102,7 +107,7 @@ export const boardReducer = createReducer(
       getBoardError: '',
     };
   }),
-  on(boardActions.getBoardFailure, (state, {errorMessage}) => {
+  on(boardActions.getBoardFailure, (state, { errorMessage }) => {
     return {
       ...state,
       isGettingBoard: false,
@@ -119,7 +124,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: false,
     };
   }),
-  on(boardActions.getInvitedBoardsSuccess, (state, {boards}) => {
+  on(boardActions.getInvitedBoardsSuccess, (state, { boards }) => {
     return {
       ...state,
       invitedBoards: boards,
@@ -128,7 +133,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: true,
     };
   }),
-  on(boardActions.getInvitedBoardsFail, (state, {error}) => {
+  on(boardActions.getInvitedBoardsFail, (state, { error }) => {
     return {
       ...state,
       isInvitedBoardsGetting: false,
@@ -136,7 +141,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: false,
     };
   }),
-  on(boardActions.acceptInvitation, (state, {board}) => {
+  on(boardActions.acceptInvitation, (state, { board }) => {
     console.log(board);
     return {
       ...state,
@@ -145,7 +150,32 @@ export const boardReducer = createReducer(
         : [board],
     };
   }),
-
+  on(boardActions.searchBoards, (state) => {
+    return {
+      ...state,
+      searchedBoards: null,
+      isSearchingBoards: true,
+      searchBoardsError: null,
+      isSearchBoardsSuccess: false,
+    };
+  }),
+  on(boardActions.searchBoardsSuccess, (state, { boards }) => {
+    return {
+      ...state,
+      searchedBoards: boards,
+      isSearchingBoards: false,
+      searchBoardsError: null,
+      isSearchBoardsSuccess: true,
+    };
+  }),
+  on(boardActions.searchBoardsFail, (state, { error }) => {
+    return {
+      ...state,
+      isSearchingBoards: false,
+      searchBoardsError: error,
+      isSearchBoardsSuccess: false,
+    };
+  }),
   on(boardActions.clearBoardBackground, (state) => {
     return {
       ...state,
@@ -160,29 +190,38 @@ export const boardReducer = createReducer(
       isChangeBoardBackgroundSuccess: false,
     };
   }),
-  on(boardActions.changeBoardBackgroundSuccess, (state, {boardId, backgroundId, background}) => {
-    return {
-      ...state,
-      board: state.board ? {
-        ...state.board,
-        backgroundId: backgroundId,
-        background: background ? {fileLocation: background.fileLocation} : null,
-      } : null,
-      boards: state.boards ? state.boards.map((board) => {
-        if (board.id === boardId) {
-          return {
-            ...board,
-            backgroundId: backgroundId,
-          };
-        }
-        return board;
-      }) : [],
-      isChangingBoardBackground: false,
-      changeBoardBackgroundError: null,
-      isChangeBoardBackgroundSuccess: true,
-    };
-  }),
-  on(boardActions.changeBoardBackgroundFail, (state, {error}) => {
+  on(
+    boardActions.changeBoardBackgroundSuccess,
+    (state, { boardId, backgroundId, background }) => {
+      return {
+        ...state,
+        board: state.board
+          ? {
+              ...state.board,
+              backgroundId: backgroundId,
+              background: background
+                ? { fileLocation: background.fileLocation }
+                : null,
+            }
+          : null,
+        boards: state.boards
+          ? state.boards.map((board) => {
+              if (board.id === boardId) {
+                return {
+                  ...board,
+                  backgroundId: backgroundId,
+                };
+              }
+              return board;
+            })
+          : [],
+        isChangingBoardBackground: false,
+        changeBoardBackgroundError: null,
+        isChangeBoardBackgroundSuccess: true,
+      };
+    },
+  ),
+  on(boardActions.changeBoardBackgroundFail, (state, { error }) => {
     return {
       ...state,
       isChangingBoardBackground: false,
@@ -190,25 +229,29 @@ export const boardReducer = createReducer(
       isChangeBoardBackgroundSuccess: false,
     };
   }),
-  on(boardActions.listenBackgroundChange, (state, {background, boardId}) => {
+  on(boardActions.listenBackgroundChange, (state, { background, boardId }) => {
     console.log(background, boardId);
-    console.log(state.boards)
+    console.log(state.boards);
     return {
       ...state,
-      board: state.board ? {
-        ...state.board,
-        background: background,
-      } : null,
-      boards: state.boards ? state.boards.map((board) => {
-        if (board.id === boardId) {
-          return {
-            ...board,
+      board: state.board
+        ? {
+            ...state.board,
             background: background,
-            backgroundId: background.id,
-          };
-        }
-        return board;
-      }) : [],
-    }
-  })
+          }
+        : null,
+      boards: state.boards
+        ? state.boards.map((board) => {
+            if (board.id === boardId) {
+              return {
+                ...board,
+                background: background,
+                backgroundId: background.id,
+              };
+            }
+            return board;
+          })
+        : [],
+    };
+  }),
 );
