@@ -13,4 +13,5 @@ export interface BoardModel {
     | null;
   createdAt?: Date | null;
   listsCount?: number;
+  members?: string[];
 }

@@ -61,6 +61,7 @@
 <!--  </div>-->
 <!--</div>-->
 
+
 <div
   cdkDropList
   cdkDropListGroup
@@ -70,48 +71,54 @@
   class="list-container"
 >
   @for (list of lists; track $index) {
-    <div class="list-column" cdkDrag>
-      <div class="list-header">
-        <h2>{{ list.title }}</h2>
-
-        <button mat-icon-button (click)="removeList(list.id!)">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-
-      <div
-        cdkDropList
-        (cdkDropListDropped)="onCardDrop($event)"
-        [cdkDropListData]="list.cards || []"
-        [id]="indexToString($index)"
-        class="task-list">
-
-        @for (card of list.cards; track $index) {
-          <app-task [task]="card" cdkDrag></app-task>
-        }
-
-      </div>
-      @if (!list.isInEditMode) {
-        <button mat-stroked-button class="add-task-button" (click)="addTask(list.id!)">
-          <mat-icon>add</mat-icon>
-          Add task
-        </button>
-      } @else {
-        <div class="input-container">
-          <mat-form-field>
-            <mat-label>Task Name</mat-label>
-            <input matInput #taskInput [formControl]="cardName" (keydown)="onEnterPress($event,list.id!)">
-          </mat-form-field>
-          <div class="btn-container">
-            <button mat-stroked-button (click)="cancelEdit(list.id!)">Cancel</button>
-            <button mat-flat-button (click)="createNewTask(list.id!)">
-              <mat-icon>add</mat-icon>
-              Add
-            </button>
-          </div>
+    <div
+      cdkDropList
+      (cdkDropListDropped)="onCardDrop($event)"
+      [cdkDropListData]="list.cards || []"
+      [id]="indexToString($index)"
+      cdkDrag
+      class="full-height-container">
+      <div class="list-column">
+        <div class="list-header" cdkDragHandle>
+          <h2>{{ list.title }}</h2>
+          <button mat-icon-button (click)="removeList(list.id!)">
+            <mat-icon>close</mat-icon>
+          </button>
         </div>
-      }
+
+        <div class="task-list"
+
+        >
+          @for (card of list.cards; track $index) {
+            <app-task [task]="card" (cdkDragStarted)="onDragStarted()"
+                      cdkDrag></app-task>
+          }
+          <div cdkDragPlaceholder class="task-placeholder"></div>
+        </div>
+
+        @if (!list.isInEditMode) {
+          <button mat-stroked-button class="add-task-button" (click)="addTask(list.id!)">
+            <mat-icon>add</mat-icon>
+            Add task
+          </button>
+        } @else {
+          <div class="input-container">
+            <mat-form-field>
+              <mat-label>Task Name</mat-label>
+              <input matInput #taskInput [formControl]="cardName" (keydown)="onEnterPress($event,list.id!)">
+            </mat-form-field>
+            <div class="btn-container">
+              <button mat-stroked-button (click)="cancelEdit(list.id!)">Cancel</button>
+              <button mat-flat-button (click)="createNewTask(list.id!)">
+                <mat-icon>add</mat-icon>
+                Add
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     </div>
+
   }
   @if (!isAddingList) {
     <div class="list-column add-list-column">
@@ -125,7 +132,7 @@
       <div class="input-container">
         <mat-form-field>
           <mat-label>Column Name</mat-label>
-          <input #columnInput matInput [formControl]="listName">
+          <input #columnInput matInput (keyup.enter)="addNewList()" [formControl]="listName">
         </mat-form-field>
         <div class="btn-container">
           <button mat-stroked-button (click)="cancelAddList()">Cancel</button>
@@ -140,3 +147,7 @@
     </div>
   }
 </div>
+
+
+
+

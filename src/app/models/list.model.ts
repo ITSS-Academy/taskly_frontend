@@ -1,4 +1,5 @@
 import { LabelModel } from './label.model';
+import { ChecklistItemModel } from './checklistItem.model';
 
 export interface ListModel {
   id: string | null;
@@ -15,7 +16,7 @@ export interface ListCard {
   dueDate?: Date;
   labels?: LabelModel[];
   members?: any[];
-  checklistCount?: number;
+  checklistItems?: ChecklistItemModel[];
   commentsCount?: number;
   attachmentsCount?: number;
 }

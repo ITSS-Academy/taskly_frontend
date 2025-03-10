@@ -63,7 +63,8 @@ export const authReducer = createReducer(initialState,
       logoutErrorMessage: error
     }
   }),
-  on(authActions.storeAccessToken, (state, {accessToken}) => {
+  on(authActions.storeAccessToken, (state, {accessToken, type}) => {
+    console.log(type)
     return {
       ...state,
       idToken: accessToken

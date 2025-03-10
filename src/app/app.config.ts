@@ -3,35 +3,37 @@ import {
   importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter} from '@angular/router';
 
-import { routes } from './app.routes';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideStore } from '@ngrx/store';
-import { provideEffects } from '@ngrx/effects';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { provideHttpClient } from '@angular/common/http';
-import { authReducer } from './ngrx/auth/auth.reducer';
+import {routes} from './app.routes';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
+import {provideStore} from '@ngrx/store';
+import {provideEffects} from '@ngrx/effects';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {getAuth, provideAuth} from '@angular/fire/auth';
+import {provideHttpClient} from '@angular/common/http';
+import {authReducer} from './ngrx/auth/auth.reducer';
 import * as authEffects from './ngrx/auth/auth.effects';
-import { boardReducer } from './ngrx/board/board.reducer';
+import {boardReducer} from './ngrx/board/board.reducer';
 import * as boardEffects from './ngrx/board/board.effects';
-import { userReducer } from './ngrx/user/user.reducer';
+import {userReducer} from './ngrx/user/user.reducer';
 import * as userEffects from './ngrx/user/user.effects';
-import { listReducer } from './ngrx/list/list.reducer';
+import {listReducer} from './ngrx/list/list.reducer';
 import * as listEffects from './ngrx/list/list.effects';
-import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { notificationsReducer } from './ngrx/notifications/notifications.reducer';
+import {SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
+import {notificationsReducer} from './ngrx/notifications/notifications.reducer';
 import * as notificationsEffects from './ngrx/notifications/notifications.effects';
-import { environment } from '../environments/environment.development';
-import { labelReducer } from './ngrx/label/label.reducer';
+import {environment} from '../environments/environment.development';
+import {labelReducer} from './ngrx/label/label.reducer';
 import * as labelEffects from './ngrx/label/label.effects';
 import * as cardEffects from './ngrx/card/card.effects';
-import { cardReducer } from './ngrx/card/card.reducer';
+import {cardReducer} from './ngrx/card/card.reducer';
+import {checklistItemReducer} from './ngrx/checklistItem/checklistItem.reducer';
+import * as checklistItemEffects from './ngrx/checklistItem/checklistItem.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZoneChangeDetection({eventCoalescing: true}),
     provideHttpClient(),
     provideRouter(routes),
     provideAnimationsAsync(),
@@ -43,6 +45,7 @@ export const appConfig: ApplicationConfig = {
       notifications: notificationsReducer,
       label: labelReducer,
       card: cardReducer,
+      checklistItem: checklistItemReducer
     }),
     provideEffects([
       authEffects,
@@ -52,6 +55,7 @@ export const appConfig: ApplicationConfig = {
       notificationsEffects,
       labelEffects,
       cardEffects,
+      checklistItemEffects
     ]),
     provideFirebaseApp(() =>
       initializeApp({

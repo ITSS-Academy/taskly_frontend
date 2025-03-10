@@ -13,7 +13,13 @@ import {
 } from '@angular/material/dialog';
 import { UserState } from '../../ngrx/user/user.state';
 import { Store } from '@ngrx/store';
-import { debounceTime, Observable, Subject, Subscription } from 'rxjs';
+import {
+  debounceTime,
+  forkJoin,
+  Observable,
+  Subject,
+  Subscription,
+} from 'rxjs';
 import * as userActions from '../../ngrx/user/user.actions';
 import { UserModel } from '../../models/user.model';
 import { AsyncPipe } from '@angular/common';
@@ -26,6 +32,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.component';
 import { NotificationsState } from '../../ngrx/notifications/notifications.state';
 import { NotificationsService } from '../../services/notification/notifications.service';
+import { BoardState } from '../../ngrx/board/board.state';
+import { UserPipe } from '../../shared/pipes/user.pipe';
+import { UserService } from '../../services/user/user.service';
 
 export interface Fruit {
   name: string;
@@ -34,7 +43,7 @@ export interface Fruit {
 @Component({
   selector: 'app-share',
   standalone: true,
-  imports: [MaterialModule, AsyncPipe, FormsModule],
+  imports: [MaterialModule, AsyncPipe, FormsModule, UserPipe],
   templateUrl: './share.component.html',
   styleUrl: './share.component.scss',
 })
@@ -47,13 +56,19 @@ export class ShareComponent implements OnInit, OnDestroy {
   subcriptions: Subscription[] = [];
 
   readonly data = inject<string>(MAT_DIALOG_DATA);
+  owener!: string;
+  owner!: Observable<UserModel>;
+  memberIds!: string[];
+  members!: UserModel[];
 
   constructor(
     private store: Store<{
       user: UserState;
       notifications: NotificationsState;
+      board: BoardState;
     }>,
     private notiSocket: NotificationsService,
+    private userService: UserService,
   ) {
     console.log(this.data);
   }
@@ -67,7 +82,12 @@ export class ShareComponent implements OnInit, OnDestroy {
           this.searchUser = users[0];
         }
       }),
-
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+          this.owener = board.ownerId!;
+          this.memberIds = board.members!;
+        }
+      }),
       this.userNameSubject.pipe(debounceTime(500)).subscribe((value) => {
         if (value !== '') {
           this.store.dispatch(userActions.searchUsers({ email: value }));
@@ -88,6 +108,12 @@ export class ShareComponent implements OnInit, OnDestroy {
           }
         }),
     );
+    this.owner = this.userService.getUserById(this.owener);
+    forkJoin(
+      this.memberIds.map((member) => this.userService.getUserById(member)),
+    ).subscribe((users) => {
+      this.members = users;
+    });
   }
 
   readonly dialog = inject(MatDialog);
@@ -150,6 +176,7 @@ export class ShareComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subcriptions.forEach((sub) => sub.unsubscribe());
     this.subcriptions = [];
+    // this.store.dispatch();
   }
 
   inviteUsers() {
@@ -159,8 +186,5 @@ export class ShareComponent implements OnInit, OnDestroy {
         boardId: this.data,
       }),
     );
-    for (let i = 0; i < this.users().length; i++) {
-      this.notiSocket.sendNoti(this.users()[i]);
-    }
   }
 }

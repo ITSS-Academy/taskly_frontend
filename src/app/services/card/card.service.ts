@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AuthState} from '../../ngrx/auth/auth.state';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment.development';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../../ngrx/auth/auth.state';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +39,34 @@ export class CardService {
     return this.http.put(`${environment.apiUrl}/card`, card, {
       headers: {
         Authorization: this.accessToken,
-      }
-    })
+      },
+    });
+  }
+
+  addNewMember(cardId: string, userId: string) {
+    return this.http.post(
+      `${environment.apiUrl}/card/add-new-member`,
+      { cardId, userId },
+      {
+        headers: {
+          Authorization: this.accessToken,
+        },
+      },
+    );
+  }
+
+  removeMember(cardId: string, userId: string) {
+    return this.http.put(
+      `${environment.apiUrl}/card/remove-member`,
+      {
+        cardId,
+        userId,
+      },
+      {
+        headers: {
+          Authorization: this.accessToken,
+        },
+      },
+    );
   }
 }

@@ -18,6 +18,7 @@
     display: flex;
     flex-direction: column;
     height: fit-content;
+    cursor: default;
 
     h2 {
       margin: 0 0 16px 0;
@@ -28,6 +29,7 @@
 
     .task-list {
       flex-grow: 1;
+      position: relative;
       min-height: 100px;
       display: flex;
       flex-direction: column;
@@ -86,13 +88,44 @@
 }
 
 /* Add these styles to handle drag and drop */
-.cdk-drag-preview {
+app-task.cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
+  opacity: 0.4;
+  cursor: grab;
+
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
   0 8px 10px 1px rgba(0, 0, 0, 0.14),
-  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  0 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
+  width: 100% !important;
+  min-width: 280px;
+  max-width: 280px;
 }
+
+.full-height-container.cdk-drag-placeholder {
+  opacity: 0.2;
+}
+
+.full-height-container.cdk-drag-preview {
+  min-width: 280px;
+  max-width: 280px;
+
+  .list-column {
+    touch-action: none;
+    user-select: none;
+    cursor: default;
+    min-width: 280px;
+    max-width: 280px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
 
 .cdk-drag-placeholder {
   opacity: 0;
@@ -143,6 +176,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: grab;
 }
 
 ::ng-deep.mdc-text-field--filled:not(.mdc-text-field--disabled) {
@@ -171,3 +205,92 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+
+.drag-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999; /* Đảm bảo luôn nằm trên */
+}
+
+app-task[cdkDrag] {
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+
+.full-height-container[cdkDrag] {
+  min-width: 280px;
+  max-width: 280px;
+
+  .list-column {
+    touch-action: none;
+    user-select: none;
+    cursor: default;
+    min-width: 280px;
+    max-width: 280px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+
+
+    h2 {
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      font-weight: 500;
+      //text-align: center;
+    }
+
+    .task-list {
+      flex-grow: 1;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 68vh;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      padding: 10px 0;
+    }
+
+    .add-task-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #757575;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 8px;
+
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.cdk-drop-list-dragging.full-height-container {
+  .list-column {
+    border: var(--md-sys-color-primary) solid 1px;
+    padding: 15px;
+  }
+}
+
+
+

@@ -35,12 +35,12 @@ export class LabelListComponent implements OnInit, OnDestroy {
 
 
   colors: string[] = [
-    '#D5E8D4', '#FFF2CC', '#F8CECC', '#F5E1FD', '#E3D7FF',
-    '#6DECB9', '#FFE599', '#FFAB91', '#FF8A80', '#B39DDB',
-    '#1B5E20', '#996515', '#B71C1C', '#6A1B9A', '#303F9F',
-    '#C5CAE9', '#B2EBF2', '#D7FCC9', '#F8BBD0', '#D6D6D6',
-    '#64B5F6', '#81C784', '#AED581', '#FF80AB', '#9E9E9E',
-    '#01579B', '#00838F', '#2E7D32', '#8E24AA', '#546E7A'
+    '#D5E8D4', '#FFF2CC', '#F8CECC', '#F5E1FD', '#C5CAE9',
+    '#A8D5A0', '#FFE599', '#FFAB91', '#E1BEE7', '#90CAF9',
+    '#81C784', '#FFD54F', '#FF8A80', '#CE93D8', '#64B5F6',
+    '#B2EBF2', '#FFCCBC', '#F8BBD0', '#D6D6D6', '#80CBC4',
+    '#80DEEA', '#FFAB91', '#F48FB1', '#BDBDBD', '#4DB6AC',
+    '#4DD0E1', '#FF8A65', '#F06292', '#9E9E9E', '#26A69A'
   ];
 
   boardId!: string;

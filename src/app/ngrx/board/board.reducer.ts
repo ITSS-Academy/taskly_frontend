@@ -1,6 +1,7 @@
 import { BoardState } from './board.state';
 import { createReducer, on } from '@ngrx/store';
 import * as boardActions from './board.actions';
+import { clearBoardBackground } from './board.actions';
 
 const initialState: BoardState = {
   board: null,
@@ -82,6 +83,7 @@ export const boardReducer = createReducer(
     };
   }),
   on(boardActions.getBoard, (state) => {
+    console.log('getBoard');
     return {
       ...state,
       board: null,
@@ -168,6 +170,11 @@ export const boardReducer = createReducer(
       isSearchingBoards: false,
       searchBoardsError: error,
       isSearchBoardsSuccess: false,
+    }}),
+  on(boardActions.clearBoardBackground, (state) => {
+    return {
+      ...state,
+      board: null,
     };
   }),
 );

@@ -53,6 +53,12 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 .task-description-footer {
@@ -71,7 +77,6 @@
 
   textarea {
     width: 100%;
-    padding: 8px;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     resize: none;
@@ -99,9 +104,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 12px;
+  padding: 0 8px;
   border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border-radius: 25px;
   background-color: white;
 }
 
@@ -128,13 +133,12 @@
 }
 
 .assignee-avatar {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e0e0e0;
   margin-right: 4px;
 
   mat-icon {
@@ -165,8 +169,7 @@
 .add-assignee-button {
   display: flex;
   align-items: center;
-  padding: 4px 12px;
-  border: 1px dashed #e0e0e0;
+  padding: 4px 16px;
   border-radius: 20px;
 }
 
@@ -261,7 +264,7 @@
     flex: 1;
     border: none;
     background: transparent;
-    padding: 4px 8px;
+    padding: 4px 0;
     font-size: 14px;
     outline: none;
   }
@@ -369,7 +372,8 @@
 
 .tags-labels-row {
   display: flex;
-  gap: 10px; /* Adjust the gap as needed */
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -382,9 +386,63 @@
   min-width: 55px;
   font-size: 12px;
 }
+
 .tag-date-container {
   display: flex;
-  flex-direction: row ;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
+
+  mat-icon {
+    margin: 0;
+  }
+}
+
+::ng-deep.mat-mdc-menu-panel {
+  background-color: unset;
+}
+
+.assignee-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  max-width: 200px;
+
+  img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+}
+
+::ng-deep.mat-mdc-menu-item-text {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.assignee-name {
+  font-size: 16px;
+  font-weight: 500;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.tag-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.tag-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

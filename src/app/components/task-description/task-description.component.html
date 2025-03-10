@@ -21,7 +21,7 @@
           <div class="form-group">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Title</mat-label>
-              <input matInput formControlName="title">
+              <input matInput formControlName="title" #titleInput>
             </mat-form-field>
           </div>
 
@@ -43,34 +43,49 @@
                   <div class="assignee-avatar">
                     <mat-icon>account_circle</mat-icon>
                   </div>
-                  <span class="assignee-name">{{ assignee }}</span>
-                  <button mat-icon-button class="remove-assignee-button" (click)="removeAssignee(assignee.user_id)">
+                  <span class="assignee-name">{{ assignee.name }}</span>
+                  <button mat-icon-button class="remove-assignee-button" (click)="removeAssignee(assignee.id)">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
               }
-              <button mat-stroked-button class="add-assignee-button" (click)="showAssigneeSelector = true">
+              <button mat-stroked-button class="add-assignee-button" (click)="showAssigneeSelector = true"
+                      [matMenuTriggerFor]="menu">
                 <mat-icon>add</mat-icon>
                 Add
               </button>
+              <mat-menu #menu="matMenu">
+                @for (member of this.boardMembers; track $index) {
+                  <button mat-menu-item class="assignee-button" (click)="addNewMemberToCard(member.id)">
+                    <img src="{{member.photoUrl}}" alt="">
+                    <span class="assignee-name">{{ member.name }}</span>
+                  </button>
+                }
+              </mat-menu>
+
             </div>
           </div>
 
           <div class="tag-date-container">
             <div class="tag-container">
-              <button mat-stroked-button class="tag-button" (click)="openLabelDialog()">
-                <mat-icon>tag</mat-icon>
-                Tags
-              </button>
+              <div class="tag-header">
+                <label>Tags</label>
+              </div>
               <!-- Tags and Labels Buttons in the same row -->
               <div class="form-group tags-labels-row">
                 @for (label of this.task.labels || []; track $index) {
-
-                  <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
+                  <div class="tag"
+                       [ngStyle]="{ backgroundColor: label.color}">
                     {{ label.name }}
                   </div>
-
                 }
+
+                <div class="add-tag-btn">
+                  <button mat-stroked-button class="create-label-button tag" (click)="openLabelDialog()">
+                    <mat-icon>add</mat-icon>
+                    Add tag
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -93,19 +108,15 @@
             <div class="subtasks-counter">{{ this.completedItems || 0 }}/{{ this.totalItems || 0 }}</div>
           </div>
 
-          <div class="checklist-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="getCompletionPercentage()"></div>
-            </div>
-          </div>
+          <mat-progress-bar mode="determinate" [value]="getCompletionPercentage()"
+                            style="border-radius: 10px"></mat-progress-bar>
 
           <!-- Subtasks List -->
           <div class="subtasks-list">
             @for (subtask of task.checklistItems; track subtask.id) {
               <div class="subtask-item">
-                <mat-checkbox
-                  [(ngModel)]="subtask.isCompleted"
-                  (change)="toggleSubtask(subtask.isCompleted)">
+                <mat-checkbox [checked]="subtask.isCompleted"
+                              (change)="toggleSubtask(subtask.isCompleted, subtask.id!)">
                   {{ subtask.title }}
                 </mat-checkbox>
                 <button mat-icon-button class="remove-subtask-button" (click)="removeSubtask(subtask.id!)">
@@ -115,22 +126,25 @@
             }
 
             <!-- Add New Subtask -->
-            <div class="add-subtask-container">
-              <mat-checkbox [checked]="false" [disabled]="!newSubtask.trim()"></mat-checkbox>
-              <input
-                matInput
-                class="subtask-input"
-                (keyup.enter)="addSubtask()"
-                placeholder="Add a new subtask">
-              <button
-                mat-icon-button
-                [disabled]="!newSubtask.trim()"
-                (click)="addSubtask()">
-                <mat-icon>add</mat-icon>
-              </button>
-            </div>
+            <form [formGroup]="subTaskForm">
+              <div class="add-subtask-container">
+                <mat-checkbox formControlName="isCompleted"></mat-checkbox>
+                <input
+                  matInput
+                  formControlName="title"
+                  class="subtask-input"
+                  (keyup.enter)="addSubtask()"
+                  placeholder="Add a new subtask">
+                <button
+                  mat-icon-button
+                  (click)="addSubtask()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
+
 
         <!-- Comments Section -->
         <div class="form-group">
@@ -194,8 +208,8 @@
       </div>
 
       <div class="task-description-footer">
-        <button mat-button class="cancel-button" (click)="onClose()">Cancel</button>
-        <button mat-raised-button color="primary" class="save-button" (click)="saveChanges()">Accept</button>
+        <button mat-stroked-button class="cancel-button" (click)="onClose()">Cancel</button>
+        <button mat-flat-button color="primary" class="save-button" (click)="saveChanges()">Accept</button>
       </div>
     </div>
   </div>

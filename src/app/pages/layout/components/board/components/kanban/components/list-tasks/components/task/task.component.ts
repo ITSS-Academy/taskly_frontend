@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe, DatePipe, NgIf, NgStyle } from '@angular/common';
-import { forkJoin, of, Subscription } from 'rxjs';
+import { BehaviorSubject, forkJoin, of, Subscription } from 'rxjs';
 import { MatIconButton } from '@angular/material/button';
 import { CardModel } from '../../../../../../../../../../models/card.model';
 import { BoardState } from '../../../../../../../../../../ngrx/board/board.state';
@@ -18,6 +18,8 @@ import * as cardActions from '../../../../../../../../../../ngrx/card/card.actio
 import { CardState } from '../../../../../../../../../../ngrx/card/card.state';
 import { LabelService } from '../../../../../../../../../../services/label/label.service';
 import { LabelModel } from '../../../../../../../../../../models/label.model';
+import { ChecklistItemModel } from '../../../../../../../../../../models/checklistItem.model';
+import { MaterialModule } from '../../../../../../../../../../shared/modules/material.module';
 
 interface Task {
   id: string;
@@ -34,24 +36,22 @@ interface Task {
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
-  imports: [
-    MatIcon,
-    DatePipe,
-    MatIconButton,
-    LabelPipe,
-    AsyncPipe,
-    UserPipe,
-    NgStyle,
-    MatTooltip,
-  ],
+  imports: [DatePipe, LabelPipe, AsyncPipe, UserPipe, NgStyle, MaterialModule],
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent implements OnInit, OnDestroy {
-  @Input() task!: ListCard;
+  private taskSubject = new BehaviorSubject<ListCard | null>(null);
+  task$ = this.taskSubject.asObservable();
+
+  taskId!: string;
+
+  @Input() set task(value: ListCard) {
+    this.taskId = value.id!;
+    this.taskSubject.next(value);
+  }
+
   readonly dialog = inject(MatDialog);
   subscription: Subscription[] = [];
-
-  // labels: LabelModel[] = [];
 
   constructor(
     private store: Store<{
@@ -59,23 +59,26 @@ export class TaskComponent implements OnInit, OnDestroy {
       list: ListState;
       card: CardState;
     }>,
-    private labelService: LabelService,
   ) {}
 
-  ngOnInit() {
-    // const labelIdsRequest = this.task.labels?.map((label) =>
-    //   this.labelService.getLabel(label.boardLabelId),
-    // );
+  completedSubtasks!: number;
+  totalSubtasks!: number;
 
-    this.subscription
-      .push
-      // forkJoin(labelIdsRequest!).subscribe((labels) => {
-      //   if (labels) {
-      //     this.labels = labels.map((label) => label!);
-      //     console.log('Labels:', this.labels);
-      //   }
-      // })
-      ();
+  ngOnInit() {
+    this.subscription.push(
+      this.task$.subscribe((task) => {
+        if (task) {
+          this.totalSubtasks = task.checklistItems
+            ? task.checklistItems.length
+            : 0;
+          this.completedSubtasks = task.checklistItems
+            ? task.checklistItems.filter(
+                (subtask) => subtask.isCompleted === true,
+              ).length
+            : 0;
+        }
+      }),
+    );
   }
 
   ngOnDestroy() {
@@ -85,8 +88,8 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   closeTask() {
     // Implement logic to remove/archive task
-    console.log('Closing task:', this.task.id);
-    this.store.dispatch(listActions.deleteCard({ cardId: this.task.id! }));
+    console.log('Closing task:', this.taskId);
+    this.store.dispatch(listActions.deleteCard({ cardId: this.taskId! }));
   }
 
   // getProgressColor() {
@@ -103,8 +106,18 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   openDialog() {
     this.dialog.open(TaskDescriptionComponent, {
-      data: this.task.id,
+      data: this.taskId,
     });
+  }
+
+  getContrastTextColor(hexColor: string) {
+    let r = parseInt(hexColor.substring(1, 3), 16);
+    let g = parseInt(hexColor.substring(3, 5), 16);
+    let b = parseInt(hexColor.substring(5, 7), 16);
+
+    let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+
+    return brightness > 186 ? '#000000' : '#FFFFFF';
   }
 
   showMoreOptions() {}

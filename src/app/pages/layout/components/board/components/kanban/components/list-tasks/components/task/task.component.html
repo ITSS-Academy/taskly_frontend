@@ -1,18 +1,18 @@
 <div class="task-card" (click)="openDialog()">
-  @if (Array.isArray(task.members) && task.members.length > 0) {
+  @if (Array.isArray((task$ | async)?.members) && (task$ | async)!.members!.length > 0) {
     <div class="task-header">
       <div class="left">
         <div class="assignees">
-          @for (user of task.members; track $index) {
-            <div class="avatar" [style.z-index]="100-$index" matTooltip="{{(user.user_id | user | async)?.name}}">
-              <img [src]="(user.user_id | user | async)?.photoUrl" alt="(user.user_id | user | async)?.name"
+          @for (user of (task$ | async)?.members; track $index) {
+            <div class="avatar" [style.z-index]="100-$index" matTooltip="{{user.name}}">
+              <img [src]="user.photoUrl" alt="(user.user_id | user | async)?.name"
                    style="width: 100%; height: 100%; border-radius: 100%">
             </div>
           }
         </div>
 
         <div class="task-title">
-          {{ task.title }}
+          {{ (task$ | async)?.title }}
         </div>
       </div>
 
@@ -28,7 +28,7 @@
   } @else {
     <div class="task-header">
       <div class="task-title">
-        {{ task.title }}
+        {{ (task$ | async)?.title }}
       </div>
 
       <div class="task-actions">
@@ -45,8 +45,8 @@
 
 
   <div class="tags-container">
-    @for (label of task.labels; track $index) {
-      <div class="tag" [ngStyle]="{ backgroundColor: label.color }">
+    @for (label of (task$ | async)?.labels; track $index) {
+      <div class="tag" [ngStyle]="{ backgroundColor: label.color, color: this.getContrastTextColor(label.color!) }">
         {{ label.name }}
       </div>
 
@@ -57,13 +57,14 @@
 
   <div class="task-footer">
     <div class="task-date">
-      {{ task.dueDate | date:'d MMM yyyy' }}
+      {{ (task$ | async)?.dueDate | date:'d MMM yyyy' }}
     </div>
-    <div class="task-status">
-      <!--      <mat-checkbox [checked]="task.checklistItems === task.totalSubtasks" [disabled]="true" *ngIf="task.completedSubtasks === task.totalSubtasks"></mat-checkbox>-->
-      <!--      <span *ngIf="task.completedSubtasks !== task.totalSubtasks">☐</span>-->
-      <!--      {{task.completedSubtasks}}/{{task.totalSubtasks}}-->
-    </div>
+    @if (totalSubtasks > 0) {
+      <div class="task-status">
+        <mat-checkbox [checked]="this.completedSubtasks === this.totalSubtasks" [disabled]="true"></mat-checkbox>
+        {{ completedSubtasks }}/{{ totalSubtasks }}
+      </div>
+    }
   </div>
 </div>
 

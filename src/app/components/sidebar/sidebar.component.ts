@@ -1,19 +1,19 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MaterialModule } from '../../shared/modules/material.module';
-import { MatSidenav } from '@angular/material/sidenav';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AsyncPipe, NgStyle } from '@angular/common';
-import { BackgroundColorService } from '../../services/background-color/background-color.service';
-import { Store } from '@ngrx/store';
-import { BoardState } from '../../ngrx/board/board.state';
-import { Observable, Subscription, take } from 'rxjs';
-import { BoardModel } from '../../models/board.model';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MaterialModule} from '../../shared/modules/material.module';
+import {MatSidenav} from '@angular/material/sidenav';
+import {RouterLink, RouterLinkActive} from '@angular/router';
+import {AsyncPipe, NgStyle} from '@angular/common';
+import {BackgroundColorService} from '../../services/background-color/background-color.service';
+import {Store} from '@ngrx/store';
+import {BoardState} from '../../ngrx/board/board.state';
+import {Observable, Subscription, take} from 'rxjs';
+import {BoardModel} from '../../models/board.model';
 import * as boardActions from '../../ngrx/board/board.actions';
-import { BackgroundPipe } from '../../shared/pipes/background.pipe';
-import { MatDialog } from '@angular/material/dialog';
-import { CreateBoardComponent } from '../create-board/create-board.component';
-import { UserState } from '../../ngrx/user/user.state';
-import { UserModel } from '../../models/user.model';
+import {BackgroundPipe} from '../../shared/pipes/background.pipe';
+import {MatDialog} from '@angular/material/dialog';
+import {CreateBoardComponent} from '../create-board/create-board.component';
+import {UserState} from '../../ngrx/user/user.state';
+import {UserModel} from '../../models/user.model';
 
 @Component({
   selector: 'app-sidebar',

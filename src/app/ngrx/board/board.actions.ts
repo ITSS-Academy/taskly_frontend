@@ -68,3 +68,4 @@ export const searchBoardsFail = createAction(
   '[Board] Search Boards Fail',
   props<{ error: string }>(),
 );
+export const clearBoardBackground = createAction('[Board] Clear Board State');

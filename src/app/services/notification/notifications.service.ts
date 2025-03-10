@@ -13,8 +13,9 @@ export class NotificationsService {
     this.socket.emit('join', userId);
   }
 
-  sendNoti(user: UserModel) {
-    this.socket.emit('send', { reciever: user.id });
+  sendNoti(userId: string) {
+    console.log('send noti');
+    this.socket.emit('send', { reciever: userId });
   }
 
   onNewNoti() {

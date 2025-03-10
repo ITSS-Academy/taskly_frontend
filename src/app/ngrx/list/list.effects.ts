@@ -1,16 +1,16 @@
 import * as listActions from './list.actions';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {inject} from '@angular/core';
-import {ListService} from '../../services/list/list.service';
-import {catchError, map, of, switchMap} from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { inject } from '@angular/core';
+import { ListService } from '../../services/list/list.service';
+import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 
 export const addList$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.addNewList),
-      switchMap(({listName, boardId}) => {
+      switchMap(({ listName, boardId }) => {
         return listService.addNewList(listName, boardId).pipe(
-          map((list: any) => listActions.addNewListSuccess({list})),
+          map((list: any) => listActions.addNewListSuccess({ list })),
           catchError((error) =>
             of(
               listActions.addNewListFailure({
@@ -31,11 +31,11 @@ export const getLists$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.getLists),
-      switchMap(({boardId}) => {
+      switchMap(({ boardId }) => {
         return listService.getLists(boardId).pipe(
           map((lists: any) => {
             // console.log(lists);
-            return listActions.getListsSuccess({lists})
+            return listActions.getListsSuccess({ lists });
           }),
           catchError((error) =>
             of(
@@ -57,11 +57,11 @@ export const updatePosition$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.updatePosition),
-      switchMap(({list, boardId}) => {
+      mergeMap(({ list, boardId }) => {
         return listService.updateLists(list, boardId).pipe(
           map((lists: any) => {
             console.log(lists);
-            return listActions.updatePositionSuccess({lists});
+            return listActions.updatePositionSuccess({ lists });
           }),
           catchError((error) =>
             of(
@@ -83,9 +83,9 @@ export const deleteList$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.deleteList),
-      switchMap(({listId}) => {
+      switchMap(({ listId }) => {
         return listService.deleteList(listId).pipe(
-          map(() => listActions.deleteListSuccess({listId})),
+          map(() => listActions.deleteListSuccess({ listId })),
           catchError((error) =>
             of(
               listActions.deleteListFailure({
@@ -106,7 +106,7 @@ export const updateCard$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.updateCard),
-      switchMap(({cardId, listId, cardPosition}) => {
+      mergeMap(({ cardId, listId, cardPosition, previousListId }) => {
         return listService.updateListCard(cardId, listId, cardPosition).pipe(
           map((value, index) => {
             console.log(value);
@@ -114,6 +114,8 @@ export const updateCard$ = createEffect(
               cards: value as any,
               listId,
               cardId,
+              previousListId,
+              cardPosition,
             });
           }),
           catchError((error) =>
@@ -136,10 +138,10 @@ export const addCard$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.addCard),
-      switchMap(({card, listId}) => {
+      switchMap(({ card, listId }) => {
         return listService.addTask(card, listId).pipe(
           map((card: any) => {
-            return listActions.addCardSuccess({card: card.data[0], listId});
+            return listActions.addCardSuccess({ card: card.data[0], listId });
           }),
           catchError((error) =>
             of(
@@ -161,9 +163,9 @@ export const deleteCard$ = createEffect(
   (action$ = inject(Actions), listService = inject(ListService)) => {
     return action$.pipe(
       ofType(listActions.deleteCard),
-      switchMap(({cardId}) => {
+      switchMap(({ cardId }) => {
         return listService.deleteTask(cardId).pipe(
-          map(() => listActions.deleteCardSuccess({cardId})),
+          map(() => listActions.deleteCardSuccess({ cardId })),
           catchError((error) =>
             of(
               listActions.deleteCardFailure({

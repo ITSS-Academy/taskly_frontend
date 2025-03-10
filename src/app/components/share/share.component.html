@@ -46,16 +46,31 @@
         <button mat-flat-button class="share-btn" (click)="inviteUsers()">Share</button>
       </div>
 
+      <h3>Owner</h3>
       <div class="members-container">
         <img class="avatar"
-             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
+             src="{{(owner | async)?.photoUrl}}"
              alt=""
              matListItemIcon>
         <div class="user-info">
-          <p class="user-name">Trinh Tu Hao</p>
-          <span class="user-email">tuhaotrinh</span>
+          <p class="user-name">{{ (owner | async)?.name }}</p>
+          <span class="user-email">{{ (owner| async)?.email }}</span>
         </div>
       </div>
+
+      <h3>Members</h3>
+      @for (user of this.members; track $index) {
+        <div class="members-container">
+          <img class="avatar"
+               src="{{user.photoUrl}}"
+               alt=""
+               matListItemIcon>
+          <div class="user-info">
+            <p class="user-name">{{ user.name }}</p>
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+        </div>
+      }
     </div>
     <!--    <button mat-stroked-button (click)="openSnackBar()" aria-label="Show an example snack-bar">-->
     <!--      Snackbar-->
