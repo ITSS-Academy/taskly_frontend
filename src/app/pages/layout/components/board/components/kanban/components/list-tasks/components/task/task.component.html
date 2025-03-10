@@ -17,7 +17,7 @@
       </div>
 
       <div class="task-actions">
-        <button mat-icon-button class="more-button" (click)="showMoreOptions(); $event.stopPropagation()">
+        <button mat-icon-button class="more-button" (click)="openDialog(); $event.stopPropagation()">
           <mat-icon>more_vert</mat-icon>
         </button>
         <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
@@ -32,7 +32,7 @@
       </div>
 
       <div class="task-actions">
-        <button mat-icon-button class="more-button" (click)="showMoreOptions(); $event.stopPropagation()">
+        <button mat-icon-button class="more-button" (click)="openDialog(); $event.stopPropagation()">
           <mat-icon>more_vert</mat-icon>
         </button>
         <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
