@@ -22,6 +22,15 @@ const initialState: BoardState = {
   isInvitedBoardsGetting: false,
   invitedBoardsGettingError: null,
   isGetInvitedBoardsSuccess: false,
+
+  isChangingBoardBackground: false,
+  changeBoardBackgroundError: null,
+  isChangeBoardBackgroundSuccess: false,
+
+  isSearchingBoards: false,
+  searchedBoards: null,
+  searchBoardsError: null,
+  isSearchBoardsSuccess: false,
 };
 
 export const boardReducer = createReducer(
@@ -141,11 +150,108 @@ export const boardReducer = createReducer(
         : [board],
     };
   }),
-
+  on(boardActions.searchBoards, (state) => {
+    return {
+      ...state,
+      searchedBoards: null,
+      isSearchingBoards: true,
+      searchBoardsError: null,
+      isSearchBoardsSuccess: false,
+    };
+  }),
+  on(boardActions.searchBoardsSuccess, (state, { boards }) => {
+    return {
+      ...state,
+      searchedBoards: boards,
+      isSearchingBoards: false,
+      searchBoardsError: null,
+      isSearchBoardsSuccess: true,
+    };
+  }),
+  on(boardActions.searchBoardsFail, (state, { error }) => {
+    return {
+      ...state,
+      isSearchingBoards: false,
+      searchBoardsError: error,
+      isSearchBoardsSuccess: false,
+    };
+  }),
   on(boardActions.clearBoardBackground, (state) => {
     return {
       ...state,
       board: null,
+    };
+  }),
+  on(boardActions.changeBoardBackground, (state) => {
+    return {
+      ...state,
+      isChangingBoardBackground: true,
+      changeBoardBackgroundError: null,
+      isChangeBoardBackgroundSuccess: false,
+    };
+  }),
+  on(
+    boardActions.changeBoardBackgroundSuccess,
+    (state, { boardId, backgroundId, background }) => {
+      return {
+        ...state,
+        board: state.board
+          ? {
+              ...state.board,
+              backgroundId: backgroundId,
+              background: background
+                ? { fileLocation: background.fileLocation }
+                : null,
+            }
+          : null,
+        boards: state.boards
+          ? state.boards.map((board) => {
+              if (board.id === boardId) {
+                return {
+                  ...board,
+                  backgroundId: backgroundId,
+                };
+              }
+              return board;
+            })
+          : [],
+        isChangingBoardBackground: false,
+        changeBoardBackgroundError: null,
+        isChangeBoardBackgroundSuccess: true,
+      };
+    },
+  ),
+  on(boardActions.changeBoardBackgroundFail, (state, { error }) => {
+    return {
+      ...state,
+      isChangingBoardBackground: false,
+      changeBoardBackgroundError: error,
+      isChangeBoardBackgroundSuccess: false,
+    };
+  }),
+  on(boardActions.listenBackgroundChange, (state, { background, boardId }) => {
+    console.log(background, boardId);
+    console.log(state.boards);
+    return {
+      ...state,
+      board: state.board
+        ? {
+            ...state.board,
+            background: background,
+          }
+        : null,
+      boards: state.boards
+        ? state.boards.map((board) => {
+            if (board.id === boardId) {
+              return {
+                ...board,
+                background: background,
+                backgroundId: background.id,
+              };
+            }
+            return board;
+          })
+        : [],
     };
   }),
 );

@@ -20,7 +20,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {AsyncPipe, DatePipe, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
 import {Store} from '@ngrx/store';
@@ -57,7 +57,6 @@ import {UserPipe} from '../../shared/pipes/user.pipe';
     DatePipe,
     MaterialModule,
     NgIf,
-    NgForOf,
     MatDatepickerModule,
     MatNativeDateModule,
     TextFieldModule,
@@ -66,6 +65,7 @@ import {UserPipe} from '../../shared/pipes/user.pipe';
     LabelPipe,
     UserPipe,
     ReactiveFormsModule,
+    NgClass,
   ],
   templateUrl: 'task-description.component.html',
   styleUrl: './task-description.component.scss',
@@ -286,16 +286,6 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     this.store.dispatch(labelActions.getLabelsInBoard({id: this.boardId}));
   }
 
-  getContrastTextColor(hexColor: string) {
-    let r = parseInt(hexColor.substring(1, 3), 16);
-    let g = parseInt(hexColor.substring(3, 5), 16);
-    let b = parseInt(hexColor.substring(5, 7), 16);
-
-    let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
-
-    return brightness > 186 ? '#000000' : '#FFFFFF';
-  }
-
   addNewMemberToCard(userId: string) {
     this.store.dispatch(
       cardActions.addNewMember({
@@ -304,5 +294,15 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       }),
     );
     this.store.dispatch(notiActions.addAddedToCardUsers({userIds: [userId]}));
+  }
+
+  handleCommentKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+
+      if (this.newComment.trim()) {
+        this.addComment();
+      }
+    }
   }
 }

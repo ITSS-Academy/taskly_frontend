@@ -319,4 +319,7 @@ export const cardReducer = createReducer(
       isRemoveMemberFailure: error,
     };
   }),
+  on(cardActions.clearCardState, (state) => {
+    return initialState;
+  }),
 );

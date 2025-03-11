@@ -1,38 +1,38 @@
-<div class="container">
-    <h2 mat-dialog-title>Filter</h2>
-    <mat-dialog-content class="mat-typography notifications">
-        <section class="example-section">
-            <p class="title">Assignees</p>
-            <span class="example-list-section">
-    <ul>
-      @for (subtask of task().subtasks; track subtask; let i = $index) {
-          <li>
-          <mat-checkbox [checked]="subtask.completed" (change)="update($event.checked, i)">
-              <img class="avatar"
-                   [src]="subtask.imgUrl"
-                   alt="Profile">
-              {{ subtask.name }}
-          </mat-checkbox>
-        </li>
-      }
-    </ul>
-  </span>
-        </section>
+<!--<div class="container">-->
+<!--    <h2 mat-dialog-title>Filter</h2>-->
+<!--    <mat-dialog-content class="mat-typography notifications">-->
+<!--        <section class="example-section">-->
+<!--            <p class="title">Assignees</p>-->
+<!--            <span class="example-list-section">-->
+<!--    <ul>-->
+<!--      @for (subtask of members()  track subtask; let i = $index) {-->
+<!--          <li>-->
+<!--          <mat-checkbox [checked]="subtask.completed" (change)="update($event.checked, i)">-->
+<!--              <img class="avatar"-->
+<!--                   [src]="subtask.imgUrl"-->
+<!--                   alt="Profile">-->
+<!--              {{ subtask.name }}-->
+<!--          </mat-checkbox>-->
+<!--        </li>-->
+<!--      }-->
+<!--    </ul>-->
+<!--  </span>-->
+<!--        </section>-->
 
-        <section class="example-section">
-            <p class="title">Tags</p>
-            <span class="example-list-section">
-    <ul>
-      @for (tag of tags().subtasks; track tag; let i = $index) {
-          <li>
-          <mat-checkbox [checked]="tag.completed" (change)="updateTags($event.checked, i)">
-            {{ tag.name }}
-          </mat-checkbox>
-        </li>
-      }
-    </ul>
-  </span>
-        </section>
-    </mat-dialog-content>
+<!--        <section class="example-section">-->
+<!--            <p class="title">Tags</p>-->
+<!--            <span class="example-list-section">-->
+<!--    <ul>-->
+<!--      @for (tag of tags(); track tag; let i = $index) {-->
+<!--          <li>-->
+<!--          <mat-checkbox [checked]="tag.completed" (change)="updateTags($event.checked, i)">-->
+<!--            {{ tag.name }}-->
+<!--          </mat-checkbox>-->
+<!--        </li>-->
+<!--      }-->
+<!--    </ul>-->
+<!--  </span>-->
+<!--        </section>-->
+<!--    </mat-dialog-content>-->
 
-</div>
+<!--</div>-->

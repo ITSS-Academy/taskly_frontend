@@ -7,6 +7,10 @@
   align-items: center;
   padding: 0 16px;
   height: 60px;
+  position: fixed;
+  z-index: 1000;
+  width: calc(100% - 260px);
+  right: 0;
 
   .logo {
     font-weight: bold;

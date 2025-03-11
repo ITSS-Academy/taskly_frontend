@@ -98,3 +98,5 @@ export const deleteChecklistItem = createAction(
   '[Card] Delete Checklist Item',
   props<{ checklistItemId: string }>(),
 );
+
+export const clearCardState = createAction('[Card] Clear Card State');
