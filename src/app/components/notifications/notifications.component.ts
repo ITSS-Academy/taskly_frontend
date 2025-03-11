@@ -5,8 +5,7 @@ import { Store } from '@ngrx/store';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
 import { NotificationsService } from '../../services/notification/notifications.service';
 import { forkJoin, Observable, Subscription } from 'rxjs';
-import { NotificationsModel } from '../../../../../../donezo_frontend/src/app/models/notifications.model';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
 import { UserPipe } from '../../shared/pipes/user.pipe';
 import { BoardPipe } from '../../shared/pipes/board.pipe';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
@@ -14,6 +13,7 @@ import { BoardModel } from '../../models/board.model';
 import { BoardService } from '../../services/board/board.service';
 import { UserService } from '../../services/user/user.service';
 import * as boardActions from '../../ngrx/board/board.actions';
+import { NotificationsModel } from '../../models/notifications.model';
 
 @Component({
   selector: 'app-notifications-api',
@@ -25,6 +25,7 @@ import * as boardActions from '../../ngrx/board/board.actions';
     AsyncPipe,
     BoardPipe,
     NgxSkeletonLoaderComponent,
+    DatePipe,
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',

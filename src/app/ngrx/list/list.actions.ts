@@ -1,7 +1,7 @@
-import {createAction, props} from '@ngrx/store';
-import {ListCard, ListModel} from '../../models/list.model';
-import {ChecklistItemModel} from '../../models/checklistItem.model';
-import {UserModel} from '../../models/user.model';
+import { createAction, props } from '@ngrx/store';
+import { ListCard, ListModel } from '../../models/list.model';
+import { ChecklistItemModel } from '../../models/checklistItem.model';
+import { UserModel } from '../../models/user.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
@@ -126,14 +126,16 @@ export const removeMemberFromCard = createAction(
 
 export const getFilteredCards = createAction(
   '[List] Get Filtered Cards',
-  props<{ labels: string[]; userIds: string[] ; boardId: string}>(),
+  props<{ labels: string[]; userIds: string[]; boardId: string }>(),
 );
 
 export const getFilteredCardsSuccess = createAction(
   '[List] Get Filtered Cards Success',
-  props<{ cards:{
-    id:string
-    }[] }>(),
+  props<{
+    cards: {
+      id: string;
+    }[];
+  }>(),
 );
 
 export const getFilteredCardsFailure = createAction(
@@ -150,6 +152,11 @@ export const checkIsFiltering = createAction(
 export const updateLabelToCard = createAction(
   '[Card] Update Label To Card',
   props<{ cardId: string; labels: ListModel[] }>(),
+);
+
+export const removeLabelFromCard = createAction(
+  '[Card] Remove Label From Card',
+  props<{ cardId: string; labelIds: string[] }>(),
 );
 
 export const updateNewCard = createAction(

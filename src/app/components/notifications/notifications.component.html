@@ -16,11 +16,36 @@
               <button mat-flat-button (click)="this.acceptInvitation(noti.id!)">Accept</button>
             </div>
           </mat-list-item>
-        } @else {
-          <mat-list-item>
+        } @else if (noti.type == 'added_to_card') {
+          <mat-list-item matTooltip="You have added to card {{ noti.cardTitle }}">
             <mat-icon matListItemIcon>folder</mat-icon>
-            <div matListItemTitle>card</div>
-            <div matListItemLine>{{ noti.createdAt }}</div>
+            <div matListItemTitle>You have added to card {{ noti.cardTitle }}</div>
+            <div matListItemLine>{{ noti.createdAt | date }}</div>
+          </mat-list-item>
+
+        } @else if (noti.type == 'accept_invite') {
+          <mat-list-item matTooltip="{{ noti.senderName }}  has accessed the board {{ noti.boardName }}">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{ noti.senderName }}  has accessed the board {{ noti.boardName }}</div>
+            <div matListItemLine>{{ noti.createdAt | date }}</div>
+          </mat-list-item>
+        } @else if (noti.type == 'removed_from_card') {
+          <mat-list-item matTooltip="{{ noti.senderName }}  has removed you from card{{ noti.cardTitle }}">
+            <mat-icon matListItemIcon>folder</mat-icon>
+            <div matListItemTitle>{{ noti.senderName }}  has removed you from card{{ noti.cardTitle }}</div>
+            <div matListItemLine>{{ noti.createdAt | date }}</div>
+          </mat-list-item>
+        } @else if (noti.type == 'removed_from_board') {
+          <mat-list-item matTooltip="{{ noti.senderName }} has removed you from board{{ noti.cardTitle }}">
+            <mat-icon matListItemIcon>group</mat-icon>
+            <div matListItemTitle>{{ noti.senderName }} has removed you from board{{ noti.cardTitle }}</div>
+            <div matListItemLine>{{ noti.createdAt | date }}</div>
+          </mat-list-item>
+        } @else {
+          <mat-list-item matTooltip="{{ noti.senderName }} has declined your invitation">
+            <mat-icon matListItemIcon>group</mat-icon>
+            <div matListItemTitle>{{ noti.senderName }} has declined your invitation</div>
+            <div matListItemLine>{{ noti.createdAt |date }}</div>
           </mat-list-item>
         }
       }

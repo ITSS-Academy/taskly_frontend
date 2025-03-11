@@ -1,30 +1,30 @@
 <div class="container">
-    <h2 mat-dialog-title>Filter</h2>
-    <mat-dialog-content class="mat-typography notifications">
-        <section class="example-section">
-            <p class="title">Assignees</p>
-            <span class="example-list-section">
+  <h2 mat-dialog-title>Filter</h2>
+  <mat-dialog-content class="mat-typography notifications">
+    <section class="example-section">
+      <p class="title">Assignees</p>
+      <span class="example-list-section">
     <ul>
       @for (member of members(); track $index) {
-          <li>
+        <li>
           <mat-checkbox [checked]="member.isChecked" (change)="update($event.checked,member.id)">
               <img class="avatar"
                    [src]="(member.id | user | async)?.photoUrl "
                    alt="Profile">
-              {{ (member.id | user | async)?.name }}
+            {{ (member.id | user | async)?.name }}
           </mat-checkbox>
         </li>
       }
     </ul>
   </span>
-        </section>
+    </section>
 
-        <section class="example-section">
-            <p class="title">Tags</p>
-            <span class="example-list-section">
+    <section class="example-section">
+      <p class="title">Tags</p>
+      <span class="example-list-section">
     <ul>
       @for (tag of tags(); track tag; let i = $index) {
-          <li>
+        <li>
           <mat-checkbox [checked]="tag.isChecked" (change)="updateTags($event.checked, tag.id!)">
             {{ tag.name }}
           </mat-checkbox>
@@ -32,7 +32,8 @@
       }
     </ul>
   </span>
-        </section>
-    </mat-dialog-content>
+    </section>
+    <button (click)="clearFilter()" mat-button>Clear filters</button>
+  </mat-dialog-content>
 
 </div>

@@ -117,8 +117,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
         console.log('lists in kanban');
         console.log(lists);
         if (lists.isFiltering) {
-          this.lists = lists.filterLists!;
-        }else {
+          this.lists = lists.filterLists.filter(
+            (list) => list.cards?.length !== 0,
+          );
+        } else {
           this.lists = lists.lists;
         }
       }),
@@ -127,9 +129,9 @@ export class KanbanComponent implements OnInit, OnDestroy {
           this.boardId = board.id!;
         }
       }),
-      this.store.select('list','isFiltering').subscribe((isFiltering) => {
+      this.store.select('list', 'isFiltering').subscribe((isFiltering) => {
         this.isFiltering = isFiltering;
-      })
+      }),
     );
     this.board$ = this.store.select('board', 'board');
     this.isUpdatingCard$ = this.store.select('list', 'isUpdatingCard');
@@ -164,6 +166,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       );
       this.listName.reset();
       this.isAddingList = false;
+      this.store.dispatch(listActions.clearFilterArrays());
     } else {
       this._snackBar.openFromComponent(ShareSnackbarComponent, {
         data: 'Please fill in the form',
@@ -302,6 +305,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       }
       return list;
     });
+    this.cardName.reset();
   }
 
   onEnterPress(event: any, listId: string) {
@@ -328,6 +332,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       this.cardName.reset();
     }
     this.isAddingList = true;
+    this.store.dispatch(listActions.clearFilterArrays());
   }
 
   removeList(listId: string) {

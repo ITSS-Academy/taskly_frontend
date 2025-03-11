@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { NotiSocketService } from '../notiSocket/noti-socket.service';
-import { NotificationsModel } from '../../../../../../donezo_frontend/src/app/models/notifications.model';
 import { UserModel } from '../../models/user.model';
 
 @Injectable({
