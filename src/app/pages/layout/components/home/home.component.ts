@@ -39,6 +39,7 @@ import {NgxSkeletonLoaderComponent} from 'ngx-skeleton-loader';
 export class HomeComponent implements OnInit {
   isSlideBarVisible = false;
   boards$!: Observable<BoardModel[] | null>;
+  invitedBoards$!: Observable<BoardModel[] | null>;
   isGettingBoards!: boolean;
 
   constructor(private backgroundService: BackgroundColorService,
@@ -52,6 +53,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.boards$ = this.store.select('board', 'boards');
+    this.invitedBoards$ = this.store.select('board', 'invitedBoards');
     this.store.select('board', 'isBoardsGetting').subscribe(isGettingBoards => {
       this.isGettingBoards = isGettingBoards;
       console.log("isGettingBoards", isGettingBoards);
