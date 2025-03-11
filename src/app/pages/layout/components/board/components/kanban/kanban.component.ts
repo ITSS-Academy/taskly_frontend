@@ -93,6 +93,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
   cardName = new FormControl('', [Validators.required]);
   listName = new FormControl('', [Validators.required]);
 
+  isFiltering = false;
+
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -111,16 +113,23 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.store.select('list', 'lists').subscribe((lists) => {
+      this.store.select('list').subscribe((lists) => {
         console.log('lists in kanban');
         console.log(lists);
-        this.lists = lists;
+        if (lists.isFiltering) {
+          this.lists = lists.filterLists!;
+        }else {
+          this.lists = lists.lists;
+        }
       }),
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
           this.boardId = board.id!;
         }
       }),
+      this.store.select('list','isFiltering').subscribe((isFiltering) => {
+        this.isFiltering = isFiltering;
+      })
     );
     this.board$ = this.store.select('board', 'board');
     this.isUpdatingCard$ = this.store.select('list', 'isUpdatingCard');

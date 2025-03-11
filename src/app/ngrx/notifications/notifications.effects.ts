@@ -4,7 +4,7 @@ import * as listActions from '../list/list.actions';
 import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 import { NotificationsService } from '../../services/notifications-api/notifications.service';
 import * as notificationsActions from './notifications.actions';
-import { NotificationsModel } from '../../models/notifications.model';
+import { NotificationsModel } from '../../../../../../donezo_frontend/src/app/models/notifications.model';
 import * as boardActions from '../board/board.actions';
 
 export const inviteUser$ = createEffect(

@@ -3,7 +3,7 @@ import * as commentActions from './comment.actions';
 import {inject} from '@angular/core';
 import {CommentService} from '../../services/comment/comment.service';
 import {catchError, map, mergeMap, of, switchMap} from 'rxjs';
-import {CommentModel} from '../../models/comment.model';
+import {CommentModel} from '../../../../../../donezo_frontend/src/app/models/comment.model';
 import * as listActions from '../list/list.actions';
 
 //create Comment Effect

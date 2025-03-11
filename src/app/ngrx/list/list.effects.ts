@@ -181,3 +181,28 @@ export const deleteCard$ = createEffect(
     functional: true,
   },
 );
+
+export const filterCards$ = createEffect(
+  (action$ = inject(Actions), listService = inject(ListService)) => {
+    return action$.pipe(
+      ofType(listActions.getFilteredCards),
+      switchMap(({ labels, userIds,boardId }) => {
+        return listService.filterCards(labels, userIds,boardId).pipe(
+          map((cards: any) => {
+            return listActions.getFilteredCardsSuccess({ cards });
+          }),
+          catchError((error) =>
+            of(
+              listActions.getFilteredCardsFailure({
+                error: error.message || 'Unknown error',
+              }),
+            ),
+          ),
+        );
+      }),
+    );
+  },
+  {
+    functional: true,
+  },
+);

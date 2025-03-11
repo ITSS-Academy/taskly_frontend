@@ -31,7 +31,7 @@ import * as labelActions from '../../ngrx/label/label.actions';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {TextFieldModule} from '@angular/cdk/text-field';
-import {CommentModel} from '../../models/comment.model';
+import {CommentModel} from '../../../../../../donezo_frontend/src/app/models/comment.model';
 import {ChecklistItemModel} from '../../models/checklistItem.model';
 import {CardModel} from '../../models/card.model';
 import {CardState} from '../../ngrx/card/card.state';

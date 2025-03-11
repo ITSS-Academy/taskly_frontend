@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CommentModel } from '../../models/comment.model';
+import { CommentModel } from '../../../../../../donezo_frontend/src/app/models/comment.model';
 
 export const getComment = createAction(
   '[Comment] Get Comment',

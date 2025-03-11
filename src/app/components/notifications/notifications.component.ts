@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
 import { NotificationsService } from '../../services/notification/notifications.service';
 import { forkJoin, Observable, Subscription } from 'rxjs';
-import { NotificationsModel } from '../../models/notifications.model';
+import { NotificationsModel } from '../../../../../../donezo_frontend/src/app/models/notifications.model';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { UserPipe } from '../../shared/pipes/user.pipe';
 import { BoardPipe } from '../../shared/pipes/board.pipe';

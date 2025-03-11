@@ -1,4 +1,4 @@
-import { NotificationsModel } from '../../models/notifications.model';
+import { NotificationsModel } from '../../../../../../donezo_frontend/src/app/models/notifications.model';
 
 export interface NotificationsState {
   notifications: NotificationsModel[];

@@ -1,6 +1,6 @@
 import {ChecklistItemModel} from './checklistItem.model';
 import {LabelModel} from './label.model';
-import {CommentModel} from './comment.model';
+import {CommentModel} from '../../../../../donezo_frontend/src/app/models/comment.model';
 import {UserModel} from './user.model';
 
 export interface CardModel {

@@ -33,6 +33,16 @@ const initialState: ListState = {
   isDeletingCard: false,
   isDeletingCardSuccess: false,
   deleteCardError: '',
+
+  filterLists: [],
+  isFiltering: false,
+
+  isGettingFilteringCards: false,
+  isGettingFilteringCardsSuccess: false,
+  getFilteringCardsError: '',
+
+  filterMembers: [],
+  filterLabels: [],
 };
 
 export const listReducer = createReducer(
@@ -549,5 +559,72 @@ export const listReducer = createReducer(
         };
       }),
     };
-  })
+  }),
+  on(listActions.getFilteredCards, (state) => {
+    return {
+      ...state,
+      isGettingFilteringCards: true,
+      isGettingFilteringCardsSuccess: false,
+      getFilteringCardsError: '',
+    };
+  }),
+  on(listActions.getFilteredCardsSuccess, (state, {cards}) => {
+    const cardIds = new Set(cards.map(card => card.id))
+    return {
+      ...state,
+      filterLists: state.lists.map(list => ({
+        ...list,
+        cards: list.cards!.filter(card => cardIds.has(card.id))
+      })),
+      isGettingFilteringCards: false,
+      isGettingFilteringCardsSuccess: true,
+      getFilteringCardsError: '',
+    };
+  }),
+  on(listActions.getFilteredCardsFailure, (state, {error}) => {
+    return {
+      ...state,
+      isGettingFilteringCards: false,
+      isGettingFilteringCardsSuccess: false,
+      getFilteringCardsError: error,
+    };
+  }),
+  on(listActions.checkIsFiltering, (state,{isFiltering}) => {
+    return {
+      ...state,
+      isFiltering: isFiltering,
+    };
+  }),
+  on(listActions.addMemberIdToFilterArray, (state, {userId}) => {
+    return {
+      ...state,
+      filterMembers: state.filterMembers.concat(userId),
+    }
+  }),
+  on(listActions.addLabelIdToFilterArray, (state, {labelId}) => {
+    return {
+      ...state,
+      filterLabels: state.filterLabels.concat(labelId),
+    }
+  }),
+  on(listActions.removeLabelIdFromFilterArray, (state, {labelId}) => {
+    return {
+      ...state,
+      filterLabels: state.filterLabels.filter(id => id !== labelId),
+    }
+  }),
+  on(listActions.removeUserIdFromFilterArray, (state, {userId}) => {
+    return {
+      ...state,
+      filterMembers: state.filterMembers.filter(id => id !== userId),
+    }
+  }),
+  on(listActions.clearFilterArrays, (state) => {
+    return {
+      ...state,
+      filterMembers: [],
+      filterLabels: [],
+      isFiltering: false,
+    }
+  }),
 );

@@ -23,6 +23,9 @@ import { BoardState } from '../../ngrx/board/board.state';
 import { LogoutButtonComponent } from '../logout-button/logout-button.component';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
 import { NotificationsState } from '../../ngrx/notifications/notifications.state';
+import * as labelActions from '../../ngrx/label/label.actions';
+import {LabelState} from '../../ngrx/label/label.state';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -58,20 +61,33 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     private store: Store<{
       board: BoardState;
       notifications: NotificationsState;
+      label: LabelState
     }>,
   ) {}
 
+  subscriptions: Subscription[] = [];
+
   ngOnInit(): void {
-    this.backgroundColorService.textColor$.subscribe((color) => {
-      this.textColor = color;
-    });
+   this.subscriptions.push(
+     this.backgroundColorService.textColor$.subscribe((color) => {
+       this.textColor = color;
+     }),
     this.store.select('board', 'board').subscribe((board) => {
       if (board) {
         console.log(board);
         this.id = board.id!;
         this.inputValue = board.name!;
       }
-    });
+    }),
+    this.store.select('label','isGetLabelsInBoardSuccess').subscribe((success) => {
+      if (success){
+        this.filterDialog.open(FilterComponent, {
+          enterAnimationDuration: '0.1s',
+          exitAnimationDuration: '0.1s',
+        });
+      }
+    }),
+   )
   }
 
   ngAfterViewInit() {
@@ -132,11 +148,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     enterAnimationDuration: string,
     exitAnimationDuration: string,
   ): void {
-    this.filterDialog.open(FilterComponent, {
-      // width: '250px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
+
+    this.store.dispatch(labelActions.getLabelsInBoard({id: this.id}));
+
   }
 
   routeKanban() {
