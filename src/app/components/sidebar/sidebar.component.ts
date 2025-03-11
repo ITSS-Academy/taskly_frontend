@@ -1,7 +1,7 @@
 import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {MatSidenav} from '@angular/material/sidenav';
-import {RouterLink, RouterLinkActive} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {AsyncPipe, NgStyle} from '@angular/common';
 import {BackgroundColorService} from '../../services/background-color/background-color.service';
 import {Store} from '@ngrx/store';
@@ -42,6 +42,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       board: BoardState;
       user: UserState;
     }>,
+    private router: Router
   ) {
     this.store.dispatch(boardActions.getBoards());
     this.store.dispatch(boardActions.getInvitedBoards());
@@ -55,6 +56,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
     });
+  }
+
+  navigateToHome() {
+    this.router.navigate(['/home']);
   }
 
   logoImage!: string;
