@@ -1,0 +1,64 @@
+<div class="task-card" (click)="openDialog()">
+  <div class="task-header">
+    <div class="left">
+      <div class="task-date">
+        {{ (task$ | async)?.dueDate | date:'d MMM yyyy' }}
+      </div>
+
+      <div class="task-title">
+        {{ (task$ | async)?.title }}
+      </div>
+    </div>
+
+    <div class="task-actions">
+      <button mat-icon-button class="more-button" (click)="openDialog(); $event.stopPropagation()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="tags-container">
+    @for (label of (task$ | async)?.labels; track $index) {
+      <div class="tag" [ngStyle]="{ backgroundColor: label.color, color: this.getContrastTextColor(label.color!) }">
+        {{ label.name }}
+      </div>
+    }
+  </div>
+
+  <div class="task-footer">
+    @if (totalSubtasks > 0 || totalComments != 0 ||
+    (Array.isArray((task$ | async)?.members) && (task$ | async)!.members!.length > 0)) {
+      <div class="footer-divider"></div>
+      <div class="footer-content">
+        <div class="footer-left">
+          @if (Array.isArray((task$ | async)?.members) && (task$ | async)!.members!.length > 0) {
+            <div class="assignees">
+              @for (user of (task$ | async)?.members; track $index) {
+                <div class="avatar" [style.z-index]="100-$index" matTooltip="{{user.name}}">
+                  <img [src]="user.photoUrl" alt="(user.user_id | user | async)?.name"
+                       style="width: 100%; height: 100%; border-radius: 100%">
+                </div>}
+            </div>}
+        </div>
+
+        <div class="footer-right">
+          @if (totalSubtasks > 0) {
+            <div class="task-status">
+              <mat-checkbox [checked]="this.completedSubtasks === this.totalSubtasks" [disabled]="true"></mat-checkbox>
+              <span>{{ completedSubtasks }}/{{ totalSubtasks }}</span>
+            </div>
+          }
+          @if (totalComments != 0) {
+            <div class="task-comments" style="display: flex; align-items: center; gap: 3px">
+              <mat-icon style="transform: scale(0.8)">chat_bubble</mat-icon>
+              {{ totalComments }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
