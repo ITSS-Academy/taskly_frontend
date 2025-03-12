@@ -2,7 +2,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { BoardService } from '../../services/board/board.service';
 import * as boardActions from './board.actions';
-import { catchError, exhaustMap, forkJoin, map, of, switchMap } from 'rxjs';
+import {catchError, exhaustMap, forkJoin, map, mergeMap, of, switchMap} from 'rxjs';
 import { BoardModel } from '../../models/board.model';
 import { ListService } from '../../services/list/list.service';
 import { ListModel } from '../../models/list.model';
@@ -48,7 +48,7 @@ export const getBoard$ = createEffect(
   (actions$ = inject(Actions), boardService = inject(BoardService)) => {
     return actions$.pipe(
       ofType(boardActions.getBoard),
-      exhaustMap(({ boardId }) => {
+      mergeMap(({ boardId }) => {
         return boardService.getBoard(boardId).pipe(
           map((board: any) => {
             // console.log(board);
