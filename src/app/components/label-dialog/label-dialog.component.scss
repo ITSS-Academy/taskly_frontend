@@ -2,6 +2,19 @@
   width: 100%;
 }
 
+.close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 10;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .label-list {
   margin-top: 10px;
   max-height: 400px; /* Giới hạn chiều cao */

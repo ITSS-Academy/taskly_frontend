@@ -5,24 +5,24 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MaterialModule } from '../../shared/modules/material.module';
-import { MatDialogRef } from '@angular/material/dialog';
-import { BackgroundColorService } from '../../services/background-color/background-color.service';
+import {MaterialModule} from '../../shared/modules/material.module';
+import {MatDialogRef} from '@angular/material/dialog';
+import {BackgroundColorService} from '../../services/background-color/background-color.service';
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { BoardModel } from '../../models/board.model';
-import { Store } from '@ngrx/store';
-import { AuthState } from '../../ngrx/auth/auth.state';
+import {BoardModel} from '../../models/board.model';
+import {Store} from '@ngrx/store';
+import {AuthState} from '../../ngrx/auth/auth.state';
 import * as boardActions from '../../ngrx/board/board.actions';
-import { BoardState } from '../../ngrx/board/board.state';
-import { NgForOf, NgStyle } from '@angular/common';
-import { Subscription } from 'rxjs';
+import {BoardState} from '../../ngrx/board/board.state';
+import {NgForOf, NgStyle} from '@angular/common';
+import {Subscription} from 'rxjs';
 import * as backgroundActions from '../../ngrx/background/background.actions';
-import { BackgroundState } from '../../ngrx/background/background.state';
+import {BackgroundState} from '../../ngrx/background/background.state';
 
 @Component({
   selector: 'app-background',
@@ -32,7 +32,7 @@ import { BackgroundState } from '../../ngrx/background/background.state';
   styleUrl: './background.component.scss',
 })
 export class BackgroundComponent implements OnInit, OnDestroy {
-  @ViewChild('previewImage', { static: false })
+  @ViewChild('previewImage', {static: false})
   previewImage!: ElementRef<HTMLImageElement>;
   imageUrl!: string;
   file: File | null = null;
@@ -87,6 +87,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
   onImageUpload(event: Event): void {
     const input = event.target as HTMLInputElement;
+    console.log('Selected file:', input.files);
     if (input.files && input.files.length > 0) {
       this.file = input.files[0];
       const reader = new FileReader();

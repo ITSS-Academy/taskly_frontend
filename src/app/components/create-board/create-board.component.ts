@@ -30,6 +30,8 @@ export class CreateBoardComponent implements OnInit {
     fileLocation: string;
   }[] = [];
 
+  imageUrl!: string;
+
   colorBackgrounds = ['#D3D3D3', '#A8E6CF', '#377D6A', '#1D4F73', '#1D4F73'];
   boardForm = new FormGroup({
     title: new FormControl('', [Validators.required]),

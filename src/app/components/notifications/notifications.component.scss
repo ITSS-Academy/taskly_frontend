@@ -68,3 +68,6 @@ mat-list {
 ::ng-deep.mdc-list-item--with-leading-icon .mdc-list-item__start {
   margin-inline-start: unset;
 }
+::ng-deep.mat-mdc-dialog-container .mat-mdc-dialog-title+.mat-mdc-dialog-content{
+  background-color: white;
+}

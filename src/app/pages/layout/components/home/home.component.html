@@ -16,7 +16,8 @@
     <!--    </div>-->
     <div class="workspaces">
       <div class="titles">
-        <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
+<!--        <mat-icon class="material-symbols-outlined">account_circle</mat-icon>-->
+        <img class="icon" src="/assets/images/your board.png"/>
         <p class="title">Your boards</p>
       </div>
       @if (isGettingBoards) {
@@ -30,6 +31,15 @@
                    [ngStyle]="{'background-image': 'url(' + (board.backgroundId! | background | async) + ')'}">
                 <div class="overlay"></div>
                 <p class="board-name">{{ board.name }}</p>
+                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="deleteBoard(board.id!, $event)">
+                    <mat-icon>delete</mat-icon>
+                    Delete
+                  </button>
+                </mat-menu>
               </div>
             }
           } @else {
@@ -42,7 +52,7 @@
 
     <div class="workspaces">
       <div class="titles">
-        <mat-icon class="material-symbols-outlined">account_circle</mat-icon>
+        <img class="icon-invited" src="/assets/images/Invited boards.png"/>
         <p class="title">Invited boards</p>
       </div>
       @if (isGettingBoards) {

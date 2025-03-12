@@ -12,7 +12,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
 .background-image {
@@ -36,16 +36,22 @@
   gap: 16px;
   width: 100%;
 
-  .background-images,
-  .background-colors {
+  .background-title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .background-images {
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
-    gap: 10px;
+    justify-content: space-between;
     width: 100%;
+    flex-wrap: wrap;
+    gap: 12px 0;
 
     .background {
       width: 70px;
+      height: 50px;
       border-radius: 8px;
     }
 
@@ -58,12 +64,13 @@
       align-items: center;
       cursor: pointer;
     }
-
-    .add-color {
-      background-color: var(--md-sys-color-outline-variant);
-    }
   }
 }
+
+//
+//.add-color {
+//  background-color: var(--md-sys-color-outline-variant);
+//}
 
 .background-image-1 {
   //background-image: url(public/assets/images/background1.jpg);
@@ -188,6 +195,7 @@ h2[mat-dialog-title] {
   position: relative;
   overflow: hidden;
   border-radius: 8px;
+  margin-bottom: 16px;
 
   img {
     width: 40px;
@@ -218,4 +226,22 @@ h2[mat-dialog-title] {
   height: 60px;
   background-size: cover;
   border-radius: 10px;
+}
+
+.image-box {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+
+  img {
+    width: 85%;
+    height: auto;
+    object-fit: cover;
+  }
 }

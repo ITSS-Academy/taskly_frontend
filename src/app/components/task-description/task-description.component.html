@@ -153,10 +153,40 @@
           </div>
         </div>
 
-
         <!-- Comments Section -->
         <div class="form-group">
           <label>Comments</label>
+          <!-- Add Comment - Moved to the top -->
+          <div class="add-comment-container">
+            <div class="comment-input-wrapper">
+              <div class="user-avatar">
+                <img src="{{ (this.currentUser | user | async)?.photoUrl}}"
+                     alt="">
+              </div>
+              <div class="comment-field-container">
+                <mat-form-field appearance="outline" class="full-width">
+          <textarea
+            matInput
+            [(ngModel)]="newComment"
+            placeholder="Add your comment..."
+            #autosize="cdkTextareaAutosize"
+            [cdkTextareaAutosize]="false"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+            (keydown)="handleCommentKeydown($event)"></textarea>
+                  <div class="send-button-wrapper">
+                    <button
+                      mat-icon-button
+                      class="send-button"
+                      [disabled]="!newComment.trim()"
+                      (click)="addComment()">
+                      <mat-icon>send</mat-icon>
+                    </button>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
 
           <!-- Comments List -->
           <div class="comments-list-container">
@@ -183,38 +213,6 @@
                   </div>
                 </div>
               }
-            </div>
-          </div>
-
-          <!-- Add Comment -->
-          <div class="add-comment-container">
-            <div class="comment-input-wrapper">
-              <div class="user-avatar">
-                <img src="{{ (this.currentUser | user | async)?.photoUrl}}"
-                     alt="">
-              </div>
-              <div class="comment-field-container">
-                <mat-form-field appearance="outline" class="full-width">
-                  <textarea
-                    matInput
-                    [(ngModel)]="newComment"
-                    placeholder="Add your comment..."
-                    #autosize="cdkTextareaAutosize"
-                    [cdkTextareaAutosize]="false"
-                    cdkAutosizeMinRows="1"
-                    cdkAutosizeMaxRows="5"
-                    (keydown)="handleCommentKeydown($event)"></textarea>
-                  <div class="send-button-wrapper">
-                    <button
-                      mat-icon-button
-                      class="send-button"
-                      [disabled]="!newComment.trim()"
-                      (click)="addComment()">
-                      <mat-icon>send</mat-icon>
-                    </button>
-                  </div>
-                </mat-form-field>
-              </div>
             </div>
           </div>
         </div>
