@@ -10,7 +10,6 @@
             </div>
           }
         </div>
-
         <div class="task-title">
           {{ (task$ | async)?.title }}
         </div>
@@ -18,10 +17,10 @@
 
       <div class="task-actions">
         <button mat-icon-button class="more-button" (click)="openDialog(); $event.stopPropagation()">
-          <mat-icon>more_vert</mat-icon>
+          <span class="material-symbols-outlined">more_vert</span>
         </button>
         <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
-          <mat-icon>close</mat-icon>
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
     </div>
@@ -33,27 +32,22 @@
 
       <div class="task-actions">
         <button mat-icon-button class="more-button" (click)="openDialog(); $event.stopPropagation()">
-          <mat-icon>more_vert</mat-icon>
+          <span class="material-symbols-outlined">more_vert</span>
         </button>
         <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
-          <mat-icon>close</mat-icon>
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
     </div>
   }
-
-
 
   <div class="tags-container">
     @for (label of (task$ | async)?.labels; track $index) {
       <div class="tag" [ngStyle]="{ backgroundColor: label.color, color: this.getContrastTextColor(label.color!) }">
         {{ label.name }}
       </div>
-
     }
-
   </div>
-
 
   <div class="task-footer">
     <div class="task-date">
@@ -63,16 +57,15 @@
       @if (totalSubtasks > 0) {
         <div class="task-status">
           <mat-checkbox [checked]="this.completedSubtasks === this.totalSubtasks" [disabled]="true"></mat-checkbox>
-          {{ completedSubtasks }}/{{ totalSubtasks }}
+          <span style="margin-left: -8px;">{{ completedSubtasks }}/{{ totalSubtasks }}</span>
         </div>
       }
       @if (totalComments != 0) {
         <div class="task-comments" style="display: flex; align-items: center; gap: 3px">
-          <mat-icon style="transform: scale(0.8)">chat_bubble</mat-icon>
+          <span class="material-symbols-outlined" style="transform: scale(0.8)">chat_bubble</span>
           {{ totalComments }}
         </div>
       }
     </div>
   </div>
 </div>
-

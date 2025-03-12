@@ -30,7 +30,7 @@
           margin-left: 0;
         }
 
-        mat-icon {
+        .material-symbols-outlined {
           font-size: 20px;
           width: 20px;
           height: 20px;
@@ -68,7 +68,7 @@
         z-index: 10;
         margin-left: 4px;
 
-        mat-icon {
+        .material-symbols-outlined {
           font-size: 16px;
           width: 16px;
           height: 16px;
@@ -79,7 +79,7 @@
         &:hover {
           background-color: rgba(0, 0, 0, 0.1);
 
-          mat-icon {
+          .material-symbols-outlined {
             color: #616161;
           }
         }
@@ -110,20 +110,6 @@
       text-transform: uppercase;
       color: white;
     }
-
-    .priority-tag {
-      &.critical {
-        background-color: #F44336; // Red
-      }
-
-      &.priority {
-        background-color: #FFA726; // Yellow/Orange
-      }
-
-      &.normal {
-        background-color: #66BB6A; // Green
-      }
-    }
   }
 
   .task-footer {
@@ -140,16 +126,36 @@
     .task-status {
       display: flex;
       align-items: center;
+      gap: 2px;
 
       mat-checkbox {
-        margin-right: 4px;
+        margin-right: 0;
+        transform: scale(0.8);
+      }
+
+      ng-star-inserted {
+        display: flex !important;
+        align-items: center !important;
+        gap: -5px;
+      }
+
+      ng-star-inserted mat-checkbox {
+        margin: 0 !important;
+      }
+
+      ng-star-inserted .mat-checkbox-layout {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    .task-comments {
+      .material-symbols-outlined {
         transform: scale(0.8);
       }
     }
   }
 }
 
-/* These hover rules will make the buttons appear only on hover */
 .task-card:hover {
   .more-button, .close-button {
     display: flex !important;
@@ -166,4 +172,8 @@
 
 ::ng-deep.mat-mdc-checkbox {
   margin-right: 0 !important;
+}
+
+::ng-deep mdc-checkbox {
+  padding-right: 0 !important;
 }
