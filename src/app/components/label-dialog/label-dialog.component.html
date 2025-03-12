@@ -1,4 +1,4 @@
-<button mat-icon-button mat-dialog-close style="position: absolute; right: 10px; top:10px;z-index: 10">
+<button mat-icon-button mat-dialog-close class="close-button">
   <mat-icon>close</mat-icon>
 </button>
 <h2 mat-dialog-title>Label</h2>
@@ -10,15 +10,17 @@
 
   <div class="label-list">
     <mat-selection-list #selectionColor>
-      <mat-list-option [value]="label" [selected]="label.selected" *ngFor="let label of filteredLabels()">
-        <div class="label-item">
-          <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
+      <div class="label-item" *ngFor="let label of filteredLabels()">
+        <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
+
+        <mat-list-option [value]="label" [selected]="label.selected">
           {{ label.name }}
-          <!--          <button mat-icon-button (click)="editLabel(label)">-->
-          <!--            <mat-icon>edit</mat-icon>-->
-          <!--          </button>-->
-        </div>
-      </mat-list-option>
+        </mat-list-option>
+
+        <button mat-icon-button color="warn" (click)="deleteLabel(label)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </mat-selection-list>
   </div>
 </mat-dialog-content>

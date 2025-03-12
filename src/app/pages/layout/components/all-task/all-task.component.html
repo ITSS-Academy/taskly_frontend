@@ -1,57 +1,61 @@
 <div class="content">
   <app-home-nav></app-home-nav>
   <div class="table">
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
       <!-- Title Column -->
       <ng-container matColumnDef="title">
-        <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.title }}</mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Title </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.title }} </mat-cell>
       </ng-container>
 
       <!-- Board Column -->
       <ng-container matColumnDef="board">
-        <mat-header-cell *matHeaderCellDef> Board</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Board </mat-header-cell>
         <mat-cell class="board-hover" *matCellDef="let element">
-          {{ element.board }}
+          {{ element.board.name }}
         </mat-cell>
       </ng-container>
 
       <!-- List Column -->
       <ng-container matColumnDef="list">
-        <mat-header-cell *matHeaderCellDef> List</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> List </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.list }}
+          {{ element.list.title }}
         </mat-cell>
       </ng-container>
 
       <!-- Member Column -->
       <ng-container matColumnDef="members">
-        <mat-header-cell *matHeaderCellDef> Members</mat-header-cell>
-        <mat-cell class="members-hover" *matCellDef="let element"> {{ element.members }}
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Members </mat-header-cell>
+        <mat-cell class="members-hover" *matCellDef="let element">
+          <ng-container *ngIf="element.members?.length > 0; else noMembers">
+            <mat-chip *ngFor="let member of element.list.name" class="member-chip">
+              {{ member }}
+            </mat-chip>
+          </ng-container>
+          <ng-template #noMembers> No members </ng-template>
         </mat-cell>
       </ng-container>
 
       <!-- Label Column -->
       <ng-container matColumnDef="tags">
-        <mat-header-cell *matHeaderCellDef> Label</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Label </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <mat-chip aria-label="tags">
-            {{ element.tags }}
-          </mat-chip>
+          <ng-container *ngIf="element.labels?.length > 0; else noTags">
+            <span *ngFor="let tag of element.labels" class="tag-chip" [ngStyle]="{'background-color': tag.color, 'color': getContrastTextColor(tag.color), 'padding': '4px 8px', 'border-radius': '4px', 'display': 'inline-block', 'margin': '2px'}">
+              {{ tag.name }}
+            </span>
+          </ng-container>
+          <ng-template #noTags> No tags </ng-template>
         </mat-cell>
       </ng-container>
 
-      <mat-header-row class="mat-header-fixed" *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
     </mat-table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
+    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
-
-
-
-
