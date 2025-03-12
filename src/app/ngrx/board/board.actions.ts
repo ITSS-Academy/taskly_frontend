@@ -1,5 +1,5 @@
-import { createAction, props } from '@ngrx/store';
-import { BoardModel } from '../../models/board.model';
+import {createAction, props} from '@ngrx/store';
+import {BoardModel} from '../../models/board.model';
 
 export const createBoard = createAction(
   '[Board] Create Board',
@@ -117,3 +117,19 @@ export const changeBoardNameFail = createAction(
 );
 
 export const clearBoardBackground = createAction('[Board] Clear Board State');
+
+export const deleteBoard = createAction(
+  '[Board] Delete Board',
+  props<{ boardId: string }>(),
+);
+
+export const deleteBoardFail = createAction(
+  '[Board] Delete Board Fail',
+  props<{ error: string }>(),
+);
+
+export const deleteBoardSuccess = createAction(
+  '[Board] Delete Board Success',
+  props<{ boardId: string }>(),
+);
+

@@ -2,8 +2,6 @@
   <h2 mat-dialog-title>Change background</h2>
   <mat-dialog-content>
     <div class="image-container">
-      <input type="file" #fileInput accept="image/*" style="display: none;">
-
       @if (imagePreview) {
         <div class="image-box"
              [style.background-image]="'url(' + imagePreview + ')'">
@@ -16,19 +14,17 @@
 
     <div class="background-container">
       <div class="backgrounds">
-        <p class="background-title">Backgrounds</p>
+        <p class="background-title">Background</p>
         <div class="background-images">
           @for (background of imageBackgrounds; track $index) {
-            <div
-              class="color-box"
-              [ngStyle]="{'background-image': 'url(' + background?.fileLocation + ')'}"
-              [class.selected]="this.imageUrl === background.fileLocation"
-              (click)="onBackgroundSelected(background.fileLocation)">
-            </div>
+            <img class="background"
+                 [src]="background.fileLocation"
+                 [class.selected]="this.imageUrl === background.fileLocation"
+                 (click)="onBackgroundSelected(background.fileLocation)"
+                 alt="Background image">
           }
         </div>
       </div>
-
       <div class="custom">
         <p class="background-title">Custom</p>
 
@@ -43,23 +39,10 @@
     </div>
 
     <div class="actions">
-      <button mat-button mat-dialog-close (click)="closeDialog()">Cancel</button>
-      <button mat-button color="primary" (click)="onAccept()">Save</button>
+      <button mat-stroked-button mat-dialog-close (click)="closeDialog()">Cancel</button>
+      <button mat-flat-button color="primary" (click)="onAccept()">Save</button>
     </div>
 
   </mat-dialog-content>
 </div>
 
-
-<!--<img class="background"-->
-<!--     src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"-->
-<!--     alt="Background image">-->
-<!--<img class="background"-->
-<!--     src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"-->
-<!--     alt="Background image">-->
-<!--<img class="background"-->
-<!--     src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"-->
-<!--     alt="Background image">-->
-<!--<img class="background"-->
-<!--     src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"-->
-<!--     alt="Background image">-->

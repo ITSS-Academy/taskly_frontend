@@ -27,12 +27,9 @@
           @for (background of imageBackgrounds; track $index) {
             <img class="background"
                  [src]="background.fileLocation"
+                 [class.selected]="this.imageUrl === background.fileLocation"
+                 
                  alt="Background image">
-          }
-        </div>
-        <div class="background-colors">
-          @for (color of colorBackgrounds; track $index) {
-            <div class="color-box" [style.background]="color" (click)="selectBackground(color)"></div>
           }
         </div>
       </div>
@@ -40,7 +37,7 @@
 
     <mat-dialog-actions align="end">
       <button mat-flat-button (click)="createBoard()">Create</button>
-      <button mat-stroked-button color="primary">Continue with template</button>
+      <!--      <button mat-stroked-button color="primary">Continue with template</button>-->
     </mat-dialog-actions>
   </form>
 
