@@ -39,8 +39,9 @@
   .background-images,
   .background-colors {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 10px;
     width: 100%;
 
     .background {

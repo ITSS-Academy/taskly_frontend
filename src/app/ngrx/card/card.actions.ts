@@ -25,6 +25,11 @@ export const updateLabel = createAction(
   }>(),
 );
 
+export const deleteLabelFormCard = createAction(
+  '[Card] Delete Label From Card',
+  props<{ labelIds: string[] }>(),
+);
+
 export const updateCardDetail = createAction(
   '[Card] Update  Card Detail',
   props<{

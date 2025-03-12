@@ -4,8 +4,8 @@ import * as listActions from '../list/list.actions';
 import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 import { NotificationsService } from '../../services/notifications-api/notifications.service';
 import * as notificationsActions from './notifications.actions';
-import { NotificationsModel } from '../../models/notifications.model';
 import * as boardActions from '../board/board.actions';
+import { NotificationsModel } from '../../models/notifications.model';
 
 export const inviteUser$ = createEffect(
   (

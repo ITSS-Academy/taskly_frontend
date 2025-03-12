@@ -1,7 +1,8 @@
-import { BoardState } from './board.state';
+import { BoardModel } from '../../models/board.model';
+
 import { createReducer, on } from '@ngrx/store';
 import * as boardActions from './board.actions';
-import { clearBoardBackground } from './board.actions';
+import { BoardState } from './board.state';
 
 const initialState: BoardState = {
   board: null,
@@ -31,6 +32,10 @@ const initialState: BoardState = {
   searchedBoards: null,
   searchBoardsError: null,
   isSearchBoardsSuccess: false,
+
+  isChangingBoardName: false,
+  changeBoardNameError: null,
+  isChangeBoardNameSuccess: false,
 };
 
 export const boardReducer = createReducer(
@@ -252,6 +257,47 @@ export const boardReducer = createReducer(
             return board;
           })
         : [],
+    };
+  }),
+  on(boardActions.changeBoardName, (state) => {
+    return {
+      ...state,
+      isChangingBoardName: true,
+      changeBoardNameError: null,
+      isChangeBoardNameSuccess: false,
+    };
+  }),
+  on(boardActions.changeBoardNameSuccess, (state, { boardId, name }) => {
+    return {
+      ...state,
+      board: state.board
+        ? {
+            ...state.board,
+            name: name,
+          }
+        : null,
+      boards: state.boards
+        ? state.boards.map((board: BoardModel) => {
+            if (board.id === boardId) {
+              return {
+                ...board,
+                name: name,
+              };
+            }
+            return board;
+          })
+        : [],
+      isChangingBoardName: false,
+      changeBoardNameError: null,
+      isChangeBoardNameSuccess: true,
+    };
+  }),
+  on(boardActions.changeBoardNameFail, (state, { error }) => {
+    return {
+      ...state,
+      isChangingBoardName: false,
+      changeBoardNameError: error,
+      isChangeBoardNameSuccess: false,
     };
   }),
 );

@@ -1,44 +1,76 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {MaterialModule} from '../../shared/modules/material.module';
-import {MatDialogRef} from '@angular/material/dialog';
-import {BackgroundColorService} from '../../services/background-color/background-color.service';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {BoardModel} from '../../models/board.model';
-import {Store} from '@ngrx/store';
-import {AuthState} from '../../ngrx/auth/auth.state';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { MaterialModule } from '../../shared/modules/material.module';
+import { MatDialogRef } from '@angular/material/dialog';
+import { BackgroundColorService } from '../../services/background-color/background-color.service';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { BoardModel } from '../../models/board.model';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../../ngrx/auth/auth.state';
 import * as boardActions from '../../ngrx/board/board.actions';
-import {BoardState} from '../../ngrx/board/board.state';
-import {NgForOf, NgStyle} from '@angular/common';
+import { BoardState } from '../../ngrx/board/board.state';
+import { NgForOf, NgStyle } from '@angular/common';
+import { Subscription } from 'rxjs';
+import * as backgroundActions from '../../ngrx/background/background.actions';
+import { BackgroundState } from '../../ngrx/background/background.state';
 
 @Component({
   selector: 'app-background',
   standalone: true,
   imports: [MaterialModule, FormsModule, ReactiveFormsModule, NgForOf, NgStyle],
   templateUrl: './background.component.html',
-  styleUrl: './background.component.scss'
+  styleUrl: './background.component.scss',
 })
-export class BackgroundComponent implements OnInit {
-  @ViewChild('previewImage', {static: false}) previewImage!: ElementRef<HTMLImageElement>;
+export class BackgroundComponent implements OnInit, OnDestroy {
+  @ViewChild('previewImage', { static: false })
+  previewImage!: ElementRef<HTMLImageElement>;
   imageUrl!: string;
   file: File | null = null;
   boardId!: string;
 
   constructor(
     private backgroundColorService: BackgroundColorService,
-    private dialogRef: MatDialogRef<BackgroundComponent>,// Inject MatDialogRef
+    private dialogRef: MatDialogRef<BackgroundComponent>, // Inject MatDialogRef
     private store: Store<{
       auth: AuthState;
-      board: BoardState
+      board: BoardState;
+      background: BackgroundState;
     }>,
   ) {
+    this.store.dispatch(backgroundActions.getBackgrounds());
   }
 
+  subscribtions: Subscription[] = [];
+
   ngOnInit() {
-    this.store.select('board', 'board').subscribe((board) => {
-      if (board) {
-        this.boardId = board.id!;
-      }
-    })
+    this.subscribtions.push(
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+          this.boardId = board.id!;
+        }
+      }),
+      this.store
+        .select('background', 'backgrounds')
+        .subscribe((backgrounds) => {
+          if (backgrounds) {
+            this.imageBackgrounds = backgrounds;
+          }
+        }),
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscribtions.forEach((sub) => sub.unsubscribe());
   }
 
   imageBackgrounds: {
@@ -47,13 +79,11 @@ export class BackgroundComponent implements OnInit {
     fileLocation: string;
   }[] = [];
 
-
   // colorBackgrounds = ['#D3D3D3', '#A8E6CF', '#377D6A', '#1D4F73'];
   imagePreview: string | null = null;
   form = new FormGroup({
-      image: new FormControl<File | null>(null),
-    }
-  );
+    image: new FormControl<File | null>(null),
+  });
 
   onImageUpload(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -63,9 +93,8 @@ export class BackgroundComponent implements OnInit {
 
       reader.onload = () => {
         this.imagePreview = reader.result as string;
-      }
+      };
       reader.readAsDataURL(input.files[0]);
-
     }
     this.imageUrl = '';
   }
@@ -73,7 +102,7 @@ export class BackgroundComponent implements OnInit {
   extractPrimaryColor(imageUrl: string): void {
     const image = new Image();
     image.src = imageUrl;
-    image.crossOrigin = "Anonymous";
+    image.crossOrigin = 'Anonymous';
 
     image.onload = () => {
       const canvas = document.createElement('canvas');
@@ -85,8 +114,16 @@ export class BackgroundComponent implements OnInit {
       canvas.height = image.naturalHeight;
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-      let r = 0, g = 0, b = 0, count = 0;
+      const imageData = ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      ).data;
+      let r = 0,
+        g = 0,
+        b = 0,
+        count = 0;
 
       for (let i = 0; i < imageData.length; i += 4 * 100) {
         r += imageData[i];
@@ -111,13 +148,14 @@ export class BackgroundComponent implements OnInit {
   }
 
   onAccept() {
-
     if (!this.imageUrl) {
       if (this.file) {
-        this.store.dispatch(boardActions.changeBoardBackground({
-          boardId: this.boardId,
-          background: this.file,
-        }))
+        this.store.dispatch(
+          boardActions.changeBoardBackground({
+            boardId: this.boardId,
+            background: this.file,
+          }),
+        );
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -133,13 +171,17 @@ export class BackgroundComponent implements OnInit {
       }
     } else {
       //find id of image
-      const id = this.imageBackgrounds.find((image) => image.fileLocation === this.imageUrl)?.id;
+      const id = this.imageBackgrounds.find(
+        (image) => image.fileLocation === this.imageUrl,
+      )?.id;
 
       if (id) {
-        this.store.dispatch(boardActions.changeBoardBackground({
-          boardId: this.boardId,
-          backgroundId: id,
-        }))
+        this.store.dispatch(
+          boardActions.changeBoardBackground({
+            boardId: this.boardId,
+            backgroundId: id,
+          }),
+        );
       }
 
       setTimeout(() => {

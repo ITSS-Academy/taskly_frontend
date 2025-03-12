@@ -241,7 +241,7 @@ export class BoardComponent implements OnInit, OnDestroy {
             )
             .subscribe(),
           this.store
-            .select('label', 'isAddLabelToTaskSuccess')
+            .select('label', 'isUpdateLabelSuccess')
             .subscribe((isAddLabelToTaskSuccess) => {
               if (isAddLabelToTaskSuccess) {
                 this.gateway.onListChange(this.boardId, this.lists);
@@ -382,6 +382,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
     this.store.dispatch(boardActions.clearBoardBackground());
     this.store.dispatch(listActions.clearListStore());
+    this.store.dispatch(cardActions.clearCardState());
+    this.store.dispatch(commentActions.clearCommentState());
+    this.store.dispatch(checklistItemActions.clearChecklistItemState());
+    this.store.dispatch(labelActions.clearLabelState());
     this.routeSubscription.unsubscribe();
     this.gateway.disconnect();
   }

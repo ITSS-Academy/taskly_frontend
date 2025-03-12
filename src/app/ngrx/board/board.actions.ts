@@ -100,4 +100,20 @@ export const searchBoardsFail = createAction(
   '[Board] Search Boards Fail',
   props<{ error: string }>(),
 );
+
+export const changeBoardName = createAction(
+  '[Board] Change Board Name',
+  props<{ boardId: string; name: string }>(),
+);
+
+export const changeBoardNameSuccess = createAction(
+  '[Board] Change Board Name Success',
+  props<{ boardId: string; name: string }>(),
+);
+
+export const changeBoardNameFail = createAction(
+  '[Board] Change Board Name Fail',
+  props<{ error: string }>(),
+);
+
 export const clearBoardBackground = createAction('[Board] Clear Board State');
