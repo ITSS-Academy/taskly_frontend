@@ -24,18 +24,11 @@
       <div class="backgrounds">
         <p class="background-title">Background</p>
         <div class="background-images">
-          <img class="background"
-               src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
-               alt="Background image">
-          <img class="background"
-               src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
-               alt="Background image">
-          <img class="background"
-               src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
-               alt="Background image">
-          <img class="background"
-               src="https://static.chotot.com/storage/chotot-kinhnghiem/c2c/2019/10/nuoi-meo-can-gi-0-1024x713.jpg"
-               alt="Background image">
+          @for (background of imageBackgrounds; track $index) {
+            <img class="background"
+                 [src]="background.fileLocation"
+                 alt="Background image">
+          }
         </div>
         <div class="background-colors">
           @for (color of colorBackgrounds; track $index) {

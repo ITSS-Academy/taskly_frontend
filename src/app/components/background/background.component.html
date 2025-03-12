@@ -1,21 +1,8 @@
 <div class="container">
   <h2 mat-dialog-title>Change background</h2>
   <mat-dialog-content>
-    <!--  <h2>Backgrounds</h2>-->
-
-    <div class="background-container">
-      <div class="backgrounds">
-        <p class="background-title">Backgrounds</p>
-        <div class="background-images">
-          <div
-            *ngFor="let background of imageBackgrounds"
-            class="color-box"
-            [ngStyle]="{'background-image': 'url(' + background?.fileLocation + ')'}"
-            [class.selected]="this.imageUrl === background.fileLocation"
-            (click)="onBackgroundSelected(background.fileLocation)">
-          </div>
-        </div>
-      </div>
+    <div class="image-container">
+      <input type="file" #fileInput accept="image/*" style="display: none;">
 
       @if (imagePreview) {
         <div class="image-box"
@@ -25,6 +12,22 @@
       } @else {
         <img src="/assets/images/add-image.png" alt="">
       }
+    </div>
+
+    <div class="background-container">
+      <div class="backgrounds">
+        <p class="background-title">Backgrounds</p>
+        <div class="background-images">
+          @for (background of imageBackgrounds; track $index) {
+            <div
+              class="color-box"
+              [ngStyle]="{'background-image': 'url(' + background?.fileLocation + ')'}"
+              [class.selected]="this.imageUrl === background.fileLocation"
+              (click)="onBackgroundSelected(background.fileLocation)">
+            </div>
+          }
+        </div>
+      </div>
 
       <div class="custom">
         <p class="background-title">Custom</p>
