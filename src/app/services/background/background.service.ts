@@ -26,4 +26,10 @@ export class BackgroundService {
       responseType: 'text',
     });
   }
+
+  getAllBackgrounds(): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/background/all`, {
+      headers: { Authorization: this.accessToken },
+    });
+  }
 }

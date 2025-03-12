@@ -107,6 +107,9 @@ export class ShareComponent implements OnInit, OnDestroy {
             this.openSnackBar(failure);
           }
         }),
+      this.store.select('user', 'isSearchingUsers').subscribe((loading) => {
+        this.isSearchUserLoading = loading;
+      }),
     );
     this.owner = this.userService.getUserById(this.owener);
     forkJoin(
@@ -118,6 +121,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 
   readonly dialog = inject(MatDialog);
 
+  isSearchUserLoading!: boolean;
   userName!: string;
 
   onUserNameChange() {
@@ -130,6 +134,7 @@ export class ShareComponent implements OnInit, OnDestroy {
   add(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       if (this.searchUser) {
+        console.log(this.searchUser);
         //check is in this.users()
         for (let i = 0; i < this.users().length; i++) {
           if (this.users()[i].email === this.searchUser.email) {
@@ -141,11 +146,13 @@ export class ShareComponent implements OnInit, OnDestroy {
         const updatedUsers = [...this.users(), this.searchUser];
         this.users.set(updatedUsers);
         this.announcer.announce(`Added ${this.searchUser.email}`);
+        this.userName = '';
+        this.store.dispatch(userActions.clearSearchUsers());
+      } else if (this.isSearchUserLoading) {
+        this.openSnackBar('Searching for user');
       } else {
-        this.announcer.announce(`User not found`);
+        this.openSnackBar('Please enter a valid email');
       }
-      this.userName = '';
-      this.store.dispatch(userActions.clearSearchUsers());
     }
   }
 
@@ -176,15 +183,20 @@ export class ShareComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subcriptions.forEach((sub) => sub.unsubscribe());
     this.subcriptions = [];
-    // this.store.dispatch();
+    this.store.dispatch(userActions.clearSearchUsers());
   }
 
   inviteUsers() {
-    this.store.dispatch(
-      notificationsActions.inviteUser({
-        invitedUser: this.users(),
-        boardId: this.data,
-      }),
-    );
+    if (this.users().length === 0) {
+      this.openSnackBar('Please add users to invite');
+      return;
+    } else {
+      this.store.dispatch(
+        notificationsActions.inviteUser({
+          invitedUser: this.users(),
+          boardId: this.data,
+        }),
+      );
+    }
   }
 }

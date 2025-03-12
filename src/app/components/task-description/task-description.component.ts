@@ -20,34 +20,44 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
-import {MaterialModule} from '../../shared/modules/material.module';
-import {LabelDialogComponent} from '../label-dialog/label-dialog.component';
-import {Store} from '@ngrx/store';
-import {BoardState} from '../../ngrx/board/board.state';
-import {forkJoin, Observable, Subscription} from 'rxjs';
-import {LabelState} from '../../ngrx/label/label.state';
+import {
+  AsyncPipe,
+  DatePipe,
+  NgClass,
+  NgForOf,
+  NgIf,
+  NgStyle,
+} from '@angular/common';
+import { MaterialModule } from '../../shared/modules/material.module';
+import { LabelDialogComponent } from '../label-dialog/label-dialog.component';
+import { Store } from '@ngrx/store';
+import { BoardState } from '../../ngrx/board/board.state';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { LabelState } from '../../ngrx/label/label.state';
 import * as labelActions from '../../ngrx/label/label.actions';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {TextFieldModule} from '@angular/cdk/text-field';
-import {CommentModel} from '../../models/comment.model';
-import {ChecklistItemModel} from '../../models/checklistItem.model';
-import {CardModel} from '../../models/card.model';
-import {CardState} from '../../ngrx/card/card.state';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { ChecklistItemModel } from '../../models/checklistItem.model';
+import { CardModel } from '../../models/card.model';
+import { CardState } from '../../ngrx/card/card.state';
 import * as cardActions from '../../ngrx/card/card.actions';
-import {UserState} from '../../ngrx/user/user.state';
-import {LabelPipe} from '../../shared/pipes/label.pipe';
+import { UserState } from '../../ngrx/user/user.state';
+import { LabelPipe } from '../../shared/pipes/label.pipe';
 import * as checklistItemActions from '../../ngrx/checklistItem/checklistItem.actions';
-import {MatMenuTrigger} from '@angular/material/menu';
-import {ChecklistItemState} from '../../ngrx/checklistItem/checklistItem.state';
-import {GatewayService} from '../../services/gateway/gateway.service';
-import {UserModel} from '../../models/user.model';
-import {UserService} from '../../services/user/user.service';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { ChecklistItemState } from '../../ngrx/checklistItem/checklistItem.state';
+import { GatewayService } from '../../services/gateway/gateway.service';
+import { UserModel } from '../../models/user.model';
+import { UserService } from '../../services/user/user.service';
 import * as notiActions from '../../ngrx/notifications/notifications.actions';
 import * as commentActions from '../../ngrx/comment/comment.actions';
-import {CommentState} from '../../ngrx/comment/comment.state';
-import {UserPipe} from '../../shared/pipes/user.pipe';
+import { CommentState } from '../../ngrx/comment/comment.state';
+import { UserPipe } from '../../shared/pipes/user.pipe';
+import { CommentModel } from '../../models/comment.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ShareComponent } from '../share/share.component';
+import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.component';
 
 @Component({
   selector: 'app-task-description',
@@ -99,6 +109,8 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
   // Data for tasks
   currentUser!: string;
 
+  currentUserModel!: UserModel;
+
   readonly dialog = inject(MatDialog);
 
   boardId!: string;
@@ -111,12 +123,22 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
 
   isGettingCard!: Observable<boolean>;
 
+  private _snackBar = inject(MatSnackBar);
+
   ngOnInit() {
     this.subscriptions.push(
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
           this.boardId = board.id!;
           this.memberIds = board.members!;
+        }
+      }),
+      this.store.select('card', 'isAddNewMemberFailure').subscribe((error) => {
+        if (error) {
+          this._snackBar.openFromComponent(ShareSnackbarComponent, {
+            duration: 2000,
+            data: error,
+          });
         }
       }),
       this.store
@@ -150,6 +172,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       }),
       this.store.select('user', 'user').subscribe((user) => {
         this.currentUser = user!.id;
+        this.currentUserModel = user!;
       }),
     );
     this.isGettingCard = this.store.select('card', 'isGettingCard');
@@ -167,12 +190,12 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       card: CardState;
       user: UserState;
       checklistItem: ChecklistItemState;
-      comment: CommentState,
+      comment: CommentState;
     }>,
     private userSerivce: UserService,
   ) {
-    this.store.dispatch(cardActions.getCard({cardId: this.cardId}));
-    this.store.dispatch(commentActions.getComment({cardId: this.cardId}));
+    this.store.dispatch(cardActions.getCard({ cardId: this.cardId }));
+    this.store.dispatch(commentActions.getComment({ cardId: this.cardId }));
   }
 
   ngOnDestroy() {
@@ -204,11 +227,9 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
     }
   }
 
-  addTag() {
-  }
+  addTag() {}
 
-  removeTag(tag: string) {
-  }
+  removeTag(tag: string) {}
 
   addSubtask() {
     if (this.subTaskForm.valid) {
@@ -228,7 +249,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
 
   removeSubtask(id: string) {
     this.store.dispatch(
-      checklistItemActions.deleteChecklistItem({checklistItemId: id}),
+      checklistItemActions.deleteChecklistItem({ checklistItemId: id }),
     );
   }
 
@@ -251,19 +272,20 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
 
   addComment() {
     if (this.newComment.trim()) {
-
-      this.store.dispatch(commentActions.createComment({
-        comment: {
-          cardId: this.task.id,
-          text: this.newComment,
-        }
-      }));
+      this.store.dispatch(
+        commentActions.createComment({
+          comment: {
+            cardId: this.task.id,
+            text: this.newComment,
+          },
+        }),
+      );
       this.newComment = '';
     }
   }
 
   deleteComment(id: string) {
-    this.store.dispatch(commentActions.deleteComment({commentId: id}));
+    this.store.dispatch(commentActions.deleteComment({ commentId: id }));
   }
 
   isCurrentUserAuthor(comment: CommentModel): boolean {
@@ -278,12 +300,12 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
       }),
     );
     this.store.dispatch(
-      notiActions.addAddedToCardUsers({userIds: [memberId]}),
+      notiActions.addAddedToCardUsers({ userIds: [memberId] }),
     );
   }
 
   openLabelDialog() {
-    this.store.dispatch(labelActions.getLabelsInBoard({id: this.boardId}));
+    this.store.dispatch(labelActions.getLabelsInBoard({ id: this.boardId }));
   }
 
   addNewMemberToCard(userId: string) {
@@ -293,7 +315,7 @@ export class TaskDescriptionComponent implements OnInit, OnDestroy {
         userId: userId,
       }),
     );
-    this.store.dispatch(notiActions.addAddedToCardUsers({userIds: [userId]}));
+    this.store.dispatch(notiActions.addAddedToCardUsers({ userIds: [userId] }));
   }
 
   handleCommentKeydown(event: KeyboardEvent): void {

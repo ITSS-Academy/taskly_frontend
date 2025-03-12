@@ -37,25 +37,44 @@
       </mat-icon>
     </p>
     <mat-selection-list>
-      @for (board of (boards$ | async); track $index) {
-        <mat-list-item [routerLink]="['board','kanban', board.id]" routerLinkActive="active-link">
-          <img
-            src="{{ board.backgroundId !| background | async }}"
-            alt="" class="background">
-          <span [ngStyle]="{'color': sidebarTextColor}">{{ board.name }}</span>
-        </mat-list-item>
+      @if (boards$ | async; as boards) {
+        <!-- Show only the first 4 items initially -->
+        @for (board of boards.slice(0, 4); track $index) {
+          <mat-list-item [routerLink]="['board', 'kanban', board.id]" routerLinkActive="active-link">
+            <img
+              [src]="board.backgroundId! | background | async"
+              alt=""
+              class="background">
+            <span [ngStyle]="{'color': sidebarTextColor}">{{ board.name }}</span>
+          </mat-list-item>
+        }
+
+        <!-- "See More" button if boards length is greater than 4 -->
+        @if (boards.length > 4) {
+          <p class="see-more-btn" (click)="navigateToHome()">See more...</p>
+        }
       }
     </mat-selection-list>
 
+
     <p class="section-title" [ngStyle]="{'color': sidebarTextColor}">Invited boards</p>
     <mat-selection-list>
-      @for (board of (this.invitedBoards$ | async); track $index) {
-        <mat-list-item [routerLink]="['board','kanban', board.id]">
-          <img
-            src="{{ board.backgroundId!| background | async }}"
-            alt="" class="background">
-          <span [ngStyle]="{'color': sidebarTextColor}">{{ board.name }}</span>
-        </mat-list-item>
+      @if (invitedBoards$ | async; as boards) {
+        <!-- Show only the first 4 items initially -->
+        @for (board of boards.slice(0, 4); track $index) {
+          <mat-list-item [routerLink]="['board', 'kanban', board.id]" routerLinkActive="active-link">
+            <img
+              [src]="board.backgroundId! | background | async"
+              alt=""
+              class="background">
+            <span [ngStyle]="{'color': sidebarTextColor}">{{ board.name }}</span>
+          </mat-list-item>
+        }
+
+        <!-- "See More" button if boards length is greater than 4 -->
+        @if (boards.length > 4) {
+          <p class="see-more-btn" (click)="navigateToHome()">See more...</p>
+        }
       }
     </mat-selection-list>
   </div>

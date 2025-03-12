@@ -93,6 +93,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
   cardName = new FormControl('', [Validators.required]);
   listName = new FormControl('', [Validators.required]);
 
+  isFiltering = false;
+
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -111,15 +113,24 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.store.select('list', 'lists').subscribe((lists) => {
+      this.store.select('list').subscribe((lists) => {
         console.log('lists in kanban');
         console.log(lists);
-        this.lists = lists;
+        if (lists.isFiltering) {
+          this.lists = lists.filterLists.filter(
+            (list) => list.cards?.length !== 0,
+          );
+        } else {
+          this.lists = lists.lists;
+        }
       }),
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
           this.boardId = board.id!;
         }
+      }),
+      this.store.select('list', 'isFiltering').subscribe((isFiltering) => {
+        this.isFiltering = isFiltering;
       }),
     );
     this.board$ = this.store.select('board', 'board');
@@ -132,6 +143,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       this.listName.reset();
     }
     this.list.isInEditMode = true;
+    this.cardName.reset();
     // find in lists, then switch isInEditMode to true
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
@@ -155,6 +167,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       );
       this.listName.reset();
       this.isAddingList = false;
+      this.store.dispatch(listActions.clearFilterArrays());
     } else {
       this._snackBar.openFromComponent(ShareSnackbarComponent, {
         data: 'Please fill in the form',
@@ -319,6 +332,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       this.cardName.reset();
     }
     this.isAddingList = true;
+    this.store.dispatch(listActions.clearFilterArrays());
   }
 
   removeList(listId: string) {

@@ -30,4 +30,13 @@ export interface ListState {
   isDeletingCard: boolean;
   isDeletingCardSuccess: boolean;
   deleteCardError: string;
+
+  isFiltering: boolean;
+  filterLists: ListModel[];
+  filterMembers: string[];
+  filterLabels: string[];
+
+  isGettingFilteringCards: boolean;
+  isGettingFilteringCardsSuccess: boolean;
+  getFilteringCardsError: string;
 }

@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
-  Component, inject,
+  Component,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -8,22 +9,27 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import {
   MatCell,
-  MatCellDef, MatColumnDef,
+  MatCellDef,
+  MatColumnDef,
   MatHeaderCell,
   MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef,
-  MatRow, MatRowDef, MatTable,
-  MatTableDataSource
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+  MatTableDataSource,
 } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { BoardState } from '../../../../../../ngrx/board/board.state';
 import { ListState } from '../../../../../../ngrx/list/list.state';
 import { ListModel } from '../../../../../../models/list.model';
-import {MatChip} from '@angular/material/chips';
-import {NgForOf, NgIf, NgStyle} from '@angular/common';
-import {TaskDescriptionComponent} from '../../../../../../components/task-description/task-description.component';
-import {MatDialog} from '@angular/material/dialog';
+import { MatChip } from '@angular/material/chips';
+import { NgForOf, NgIf, NgStyle } from '@angular/common';
+import { TaskDescriptionComponent } from '../../../../../../components/task-description/task-description.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MaterialModule } from '../../../../../../shared/modules/material.module';
 
 @Component({
   selector: 'app-table',
@@ -37,6 +43,7 @@ import {MatDialog} from '@angular/material/dialog';
     MatHeaderCell,
     MatChip,
     MatCellDef,
+    MaterialModule,
     MatHeaderCellDef,
     MatColumnDef,
     NgForOf,
@@ -44,9 +51,9 @@ import {MatDialog} from '@angular/material/dialog';
     MatHeaderRowDef,
     MatRowDef,
     MatTable,
-    NgStyle
+    NgStyle,
   ],
-  standalone: true
+  standalone: true,
 })
 export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
@@ -62,7 +69,6 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-
   ngOnInit() {
     this.subscription.push(
       this.store.select('list', 'lists').subscribe((lists) => {
@@ -77,7 +83,7 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
         });
 
         this.dataSource.data = this.cards;
-      })
+      }),
     );
   }
 
@@ -93,6 +99,7 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
     const list = this.lists.find((l) => l.id === listId);
     return list ? list.title : 'Unknown';
   }
+
   getContrastTextColor(hexColor: string) {
     let r = parseInt(hexColor.substring(1, 3), 16);
     let g = parseInt(hexColor.substring(3, 5), 16);
@@ -103,10 +110,9 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
     return brightness > 186 ? '#000000' : '#FFFFFF';
   }
 
-
   openTaskDescription(row: any): void {
     this.dialog.open(TaskDescriptionComponent, {
-      data: row.id
+      data: row.id,
     });
   }
 }

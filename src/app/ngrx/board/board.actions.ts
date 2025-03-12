@@ -56,6 +56,38 @@ export const acceptInvitation = createAction(
   props<{ board: BoardModel }>(),
 );
 
+export const changeBoardBackground = createAction(
+  '[Board] Change Board Background',
+  props<{ boardId: string; backgroundId?: string; background?: File }>(),
+);
+
+export const changeBoardBackgroundSuccess = createAction(
+  '[Board] Change Board Background Success',
+  props<{
+    backgroundId: string;
+    background: {
+      fileLocation: string;
+    };
+    boardId: string;
+  }>(),
+);
+
+export const changeBoardBackgroundFail = createAction(
+  '[Board] Change Board Background Fail',
+  props<{ error: string }>(),
+);
+
+export const listenBackgroundChange = createAction(
+  '[Board] Listen Background Change',
+  props<{
+    boardId: string;
+    background: {
+      id: string;
+      fileLocation: string;
+    };
+  }>(),
+);
+
 export const searchBoards = createAction(
   '[Board] Search Boards',
   props<{ search: string }>(),
@@ -68,4 +100,20 @@ export const searchBoardsFail = createAction(
   '[Board] Search Boards Fail',
   props<{ error: string }>(),
 );
+
+export const changeBoardName = createAction(
+  '[Board] Change Board Name',
+  props<{ boardId: string; name: string }>(),
+);
+
+export const changeBoardNameSuccess = createAction(
+  '[Board] Change Board Name Success',
+  props<{ boardId: string; name: string }>(),
+);
+
+export const changeBoardNameFail = createAction(
+  '[Board] Change Board Name Fail',
+  props<{ error: string }>(),
+);
+
 export const clearBoardBackground = createAction('[Board] Clear Board State');
