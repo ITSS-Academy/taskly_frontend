@@ -122,9 +122,9 @@ export const searchBoardsEffect = createEffect(
       ofType(boardActions.searchBoards),
       switchMap(({search}) => {
         return boardService.searchBoards(search).pipe(
-          map((boards: any) => boardActions.getBoardsSuccess({boards})),
+          map((boards: any) => boardActions.searchBoardsSuccess({boards})),
           catchError((error) => {
-            return of(boardActions.getBoardsFail({error: error.message}));
+            return of(boardActions.searchBoardsFail({error: error.message}));
           }),
         );
       }),

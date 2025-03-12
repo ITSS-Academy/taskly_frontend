@@ -159,16 +159,17 @@ export const boardReducer = createReducer(
         : [board],
     };
   }),
-  on(boardActions.searchBoards, (state) => {
+  on(boardActions.searchBoards, (state, {type}) => {
+    console.log(type)
     return {
       ...state,
-      searchedBoards: null,
       isSearchingBoards: true,
       searchBoardsError: null,
       isSearchBoardsSuccess: false,
     };
   }),
   on(boardActions.searchBoardsSuccess, (state, {boards}) => {
+    console.log(boards)
     return {
       ...state,
       searchedBoards: boards,

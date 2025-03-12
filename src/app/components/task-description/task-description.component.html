@@ -55,11 +55,13 @@
                 Add
               </button>
               <mat-menu #menu="matMenu">
-                <button matTooltip="{{currentUserModel.name}}" mat-menu-item class="assignee-button"
-                        (click)="addNewMemberToCard(this.currentUserModel.id)">
-                  <img src="{{this.currentUserModel.photoUrl}}" alt="">
-                  <span class="assignee-name">{{ this.currentUserModel.name }}</span>
-                </button>
+                @if (isOwner()) {
+                  <button matTooltip="{{currentUserModel.name}}" mat-menu-item class="assignee-button"
+                          (click)="addNewMemberToCard(this.currentUserModel.id)">
+                    <img src="{{this.currentUserModel.photoUrl}}" alt="">
+                    <span class="assignee-name">{{ this.currentUserModel.name }}</span>
+                  </button>
+                }
                 @for (member of this.boardMembers; track $index) {
                   <button matTooltip="{{member.name}}" mat-menu-item class="assignee-button"
                           (click)="addNewMemberToCard(member.id)">
