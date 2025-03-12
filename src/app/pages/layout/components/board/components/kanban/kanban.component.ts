@@ -143,6 +143,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       this.listName.reset();
     }
     this.list.isInEditMode = true;
+    this.cardName.reset();
     // find in lists, then switch isInEditMode to true
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
@@ -305,7 +306,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
       }
       return list;
     });
-    this.cardName.reset();
   }
 
   onEnterPress(event: any, listId: string) {
