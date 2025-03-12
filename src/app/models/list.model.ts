@@ -19,4 +19,8 @@ export interface ListCard {
   checklistItems?: ChecklistItemModel[];
   commentsCount?: number;
   attachmentsCount?: number;
+  list: {
+    id: string;
+    title: string;
+  }
 }

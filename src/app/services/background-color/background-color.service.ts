@@ -9,11 +9,13 @@ export class BackgroundColorService {
   private sidebarColorSource = new BehaviorSubject<string>('#F5FFF8'); // Default: White
   private textColorSource = new BehaviorSubject<string>('#000000'); // Default: Black
   private backgroundImageSource = new BehaviorSubject<string | null>(null);
+  private navbarColorSource = new BehaviorSubject<string>('');
 
   logoImage$ = this.logoImageSource.asObservable();
   sidebarColor$ = this.sidebarColorSource.asObservable();
   textColor$ = this.textColorSource.asObservable();
   backgroundImage$ = this.backgroundImageSource.asObservable();
+  navbarColor$ = this.navbarColorSource.asObservable();
 
   private readonly defaultLogo = "/assets/images/logo-primary.png";
   private readonly blackLogo = "./assets/images/logo-black.png";
@@ -22,11 +24,15 @@ export class BackgroundColorService {
   setLogo(color: string): void {
     const logoImage = this.getContrastingColor(color) === '#ffffff' ? this.whiteLogo : this.blackLogo;
     this.logoImageSource.next(logoImage);
-    console.log('Logo Image:', logoImage);
   }
 
   setNavbarTextColor(color: string): void {
     const textColor = this.getContrastingColor(color);
+    if (textColor === '#ffffff') {
+      this.navbarColorSource.next("rgba(0, 0, 0, 0.14)");
+    } else {
+      this.navbarColorSource.next("rgba(255, 255, 255, 0.24)");
+    }
     this.textColorSource.next(textColor);
   }
 

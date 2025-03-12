@@ -1,4 +1,4 @@
-import { BoardModel } from '../../models/board.model';
+import {BoardModel} from '../../models/board.model';
 
 export interface BoardState {
   //createBoard
@@ -36,4 +36,8 @@ export interface BoardState {
   isChangingBoardName: boolean;
   changeBoardNameError: string | null;
   isChangeBoardNameSuccess: boolean;
+
+  isDeletingBoard: boolean;
+  deleteBoardError: string | null;
+  isDeleteBoardSuccess: boolean;
 }

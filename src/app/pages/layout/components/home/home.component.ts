@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SidebarComponent} from "../../../../components/sidebar/sidebar.component";
 import {HomeNavComponent} from "../home-nav/home-nav.component";
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {LoginComponent} from '../../../login/login.component';
 import {AuthState} from '../../../../ngrx/auth/auth.state';
@@ -17,6 +17,7 @@ import {AsyncPipe, NgStyle} from '@angular/common';
 import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
 import {Router, RouterLink} from '@angular/router';
 import {NgxSkeletonLoaderComponent} from 'ngx-skeleton-loader';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,11 @@ import {NgxSkeletonLoaderComponent} from 'ngx-skeleton-loader';
     NgStyle,
     BackgroundPipe,
     RouterLink,
-    NgxSkeletonLoaderComponent
+    NgxSkeletonLoaderComponent,
+    MatIconButton,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -63,6 +68,14 @@ export class HomeComponent implements OnInit {
   navigateToBoard(boardId: string): void {
     this.router.navigate(['/board/kanban', boardId]).then(r => console.log(r));
   }
+
+  deleteBoard(boardId: string, event: Event): void {
+    event.stopPropagation(); // Stop event propagation
+    console.log(`Deleting board with ID: ${boardId}`);
+    // Call your delete logic here
+    this.store.dispatch(boardActions.deleteBoard({boardId}));
+  }
+
 
   onLinkActivated(): void {
     this.isSlideBarVisible = false;
