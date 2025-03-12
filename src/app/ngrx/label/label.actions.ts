@@ -77,3 +77,13 @@ export const removeLabelFromTaskFailure = createAction(
 );
 
 export const clearLabelState = createAction('[Label] Clear Label State');
+
+export const updateLabel = createAction(
+  '[Label] Update Label',
+  props<{ label: any }>()
+);
+
+export const deleteLabel = createAction(
+  '[Label] Delete Label',
+  props<{ labelId: string }>()  // ✅ Thêm action deleteLabel
+);

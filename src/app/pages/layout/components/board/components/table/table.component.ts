@@ -25,8 +25,8 @@ import { Store } from '@ngrx/store';
 import { BoardState } from '../../../../../../ngrx/board/board.state';
 import { ListState } from '../../../../../../ngrx/list/list.state';
 import { ListModel } from '../../../../../../models/list.model';
+import {DatePipe, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { MatChip } from '@angular/material/chips';
-import { NgForOf, NgIf, NgStyle } from '@angular/common';
 import { TaskDescriptionComponent } from '../../../../../../components/task-description/task-description.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from '../../../../../../shared/modules/material.module';
@@ -52,6 +52,8 @@ import { MaterialModule } from '../../../../../../shared/modules/material.module
     MatRowDef,
     MatTable,
     NgStyle,
+    DatePipe,
+    NgClass
   ],
   standalone: true,
 })
@@ -64,7 +66,7 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
   cards: any[] = [];
   subscription: Subscription[] = [];
 
-  displayedColumns: string[] = ['title', 'list', 'members', 'labels'];
+  displayedColumns: string[] = ['title', 'list', 'members', 'labels', 'dueDate'];
   dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -79,6 +81,7 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
           return (list.cards || []).map((card) => ({
             ...card,
             listName: list.title,
+            dueDate: card.dueDate || null,
           }));
         });
 
@@ -108,6 +111,12 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
     let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
 
     return brightness > 186 ? '#000000' : '#FFFFFF';
+  }
+
+  isOverdue(dueDate: string): boolean {
+    if (!dueDate) return false;
+    const today = new Date();
+    return new Date(dueDate) < today;
   }
 
   openTaskDescription(row: any): void {

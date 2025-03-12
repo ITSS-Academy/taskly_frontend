@@ -20,14 +20,11 @@
 
 .mat-mdc-table {
   min-width: 100%;
-  max-height: calc(100vh - 150px); /* Adjust height to prevent overflow */
-  overflow: auto;
-  color: var(--md-sys-color-on-background);
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
   flex: 1;
   background-color: var(--md-sys-color-on-primary);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  height: fit-content;
+  //border-radius: 8px;
   box-shadow: none;
 }
 
@@ -38,9 +35,10 @@
 .mat-header-fixed {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
+  background-color: var(--md-sys-color-on-primary);
   font-size: 16px;
-
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .member-hover {
@@ -67,9 +65,14 @@
 }
 
 mat-row:hover {
-  background-color: rgba(0, 0, 0, 0.1) !important; /* Change color on hover */
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transition: background-color 0.3s ease;
 }
 
+.overdue {
+  color: red;
+  font-weight: bold;
+}
 
 mat-paginator {
   border-bottom-left-radius: 8px;

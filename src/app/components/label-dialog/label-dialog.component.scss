@@ -17,6 +17,8 @@
 
 .label-list {
   margin-top: 10px;
+  max-height: 400px; /* Giới hạn chiều cao */
+  overflow-y: auto;  /* Thanh cuộn nếu quá dài */
 }
 
 .label-item {
@@ -31,17 +33,22 @@
 }
 
 .label-color {
-  width: 30px;
+  width: 50px;
   height: 20px;
   border-radius: 4px;
 }
+
 .dialog-actions {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
 
-  button {
-    width: 100%;
-  }
+}
+
+.dialog-actions button {
+  width: 100%;
+}
+
+mat-list-option {
+  flex-grow: 1;
 }
