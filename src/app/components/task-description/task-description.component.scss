@@ -304,11 +304,36 @@
   }
 }
 
-.comments-list {
+.comments-list-container {
+  max-height: 300px;
+  overflow-y: auto;
   margin-bottom: 16px;
+  border-radius: 4px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+}
+
+.comments-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 4px;
 }
 
 .comment-item {
