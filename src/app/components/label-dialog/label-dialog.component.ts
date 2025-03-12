@@ -56,17 +56,18 @@ export class LabelDialogComponent implements OnInit, OnDestroy {
     private gateway: GatewayService,
   ) {}
 
+  cardLabels: Label[] = [];
+
   ngOnInit() {
     this.subscriptions.push(
       this.store.select('label', 'labels').subscribe((labels) => {
         if (labels) {
-          // Lấy danh sách nhãn từ store với selected bằng cái đầu tiên
           this.labels = labels.map((label, index) => {
             return {
               id: label.id!,
               name: label.name!,
               color: label.color!,
-              selected: index === 0,
+              selected: false,
             };
           });
         }
@@ -79,19 +80,23 @@ export class LabelDialogComponent implements OnInit, OnDestroy {
       this.store.select('card', 'card').subscribe((card) => {
         if (card) {
           this.cardId = card.id!;
+          this.labels = this.labels
+            ? this.labels.map((label) => {
+                return {
+                  ...label,
+                  selected:
+                    card.labels?.findIndex(
+                      (cardLabel) => cardLabel.id === label.id,
+                    ) !== -1,
+                };
+              })
+            : [];
         }
       }),
       this.store
-        .select('label', 'isAddLabelToTaskSuccess')
+        .select('label', 'isUpdateLabelSuccess')
         .subscribe((isAddLabelToTaskSuccess) => {
           if (isAddLabelToTaskSuccess) {
-            this.subscriptions.push(
-              this.store.select('list', 'lists').subscribe((lists) => {
-                if (lists) {
-                  this.gateway.onListChange(this.boardId, lists);
-                }
-              }),
-            );
             this.dialogRef.close();
           }
         }),
@@ -128,13 +133,47 @@ export class LabelDialogComponent implements OnInit, OnDestroy {
         (option) => option.value.id,
       ),
     );
-    this.store.dispatch(
-      labelActions.addLabelToTask({
-        taskId: this.cardId,
-        labelIds: this.selectionColor.selectedOptions.selected.map(
-          (option) => option.value.id,
-        ),
-      }),
+    console.log(this.labels);
+    // tìm ra sự thay đổi trong mảng label
+    const selectedLabelIds = this.selectionColor.selectedOptions.selected.map(
+      (option) => option.value.id,
     );
+
+    const addedLabels = this.labels.filter(
+      (label) => selectedLabelIds.includes(label.id) && !label.selected,
+    );
+
+    const removedLabels = this.labels.filter(
+      (label) => !selectedLabelIds.includes(label.id) && label.selected,
+    );
+
+    //so sánh mảng label đã chọn và mảng label đã có để thêm hoặc xóa nhãn
+    this.labels = this.labels.map((label) => ({
+      ...label,
+      selected: selectedLabelIds.includes(label.id),
+    }));
+
+    console.log('Nhãn được thêm:', addedLabels);
+    console.log('Nhãn được xóa:', removedLabels);
+
+    if (addedLabels.length === 0 && removedLabels.length === 0) {
+      return;
+    }
+    if (addedLabels.length > 0) {
+      this.store.dispatch(
+        labelActions.addLabelToTask({
+          taskId: this.cardId,
+          labelIds: addedLabels.map((label) => label.id!),
+        }),
+      );
+    }
+    if (removedLabels.length > 0) {
+      this.store.dispatch(
+        labelActions.removeLabelFromTask({
+          taskId: this.cardId,
+          labelIds: removedLabels.map((label) => label.id!),
+        }),
+      );
+    }
   }
 }

@@ -276,6 +276,7 @@ export const cardReducer = createReducer(
     };
   }),
   on(cardActions.addNewMemberFailure, (state, { error }) => {
+    console.log(error);
     return {
       ...state,
       isAddingNewMember: false,
@@ -317,6 +318,28 @@ export const cardReducer = createReducer(
       isRemovingMember: false,
       isRemoveMemberSuccess: false,
       isRemoveMemberFailure: error,
+    };
+  }),
+  on(cardActions.clearCardState, (state) => {
+    return initialState;
+  }),
+  on(cardActions.deleteLabelFormCard, (state, { labelIds }) => {
+    return {
+      ...state,
+      card: {
+        ...state.card,
+        id: state.card!.id,
+        title: state.card!.title,
+        description: state.card!.description,
+        comments: state.card!.comments,
+        attachments: state.card!.attachments,
+        dueDate: state.card!.dueDate,
+        members: state.card!.members,
+        labels: state.card!.labels!.filter(
+          (label) => !labelIds.includes(label.id!),
+        ),
+        checklistItems: state.card!.checklistItems,
+      },
     };
   }),
 );

@@ -31,6 +31,9 @@
   <div class="divider"></div>
 
   <button mat-button (click)="openFilterDialog('0ms', '0ms')" [ngStyle]="{'color': textColor}">
+    @if (isFiltering) {
+      <mat-icon class="material-symbols-outlined">check</mat-icon>
+    }
     <mat-icon class="material-symbols-outlined">filter_list</mat-icon>
     Filter
   </button>

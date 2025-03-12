@@ -23,6 +23,11 @@ import { BoardState } from '../../ngrx/board/board.state';
 import { LogoutButtonComponent } from '../logout-button/logout-button.component';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
 import { NotificationsState } from '../../ngrx/notifications/notifications.state';
+import * as labelActions from '../../ngrx/label/label.actions';
+import { LabelState } from '../../ngrx/label/label.state';
+import { Subscription } from 'rxjs';
+import * as boardActions from '../../ngrx/board/board.actions';
+import { ListState } from '../../ngrx/list/list.state';
 
 @Component({
   selector: 'app-navbar',
@@ -44,6 +49,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   isEditing: boolean = false;
   inputWidth: number = 12;
   id!: string;
+  isFiltering!: boolean;
 
   @ViewChild('textInput', { static: false })
   textInput!: ElementRef<HTMLInputElement>;
@@ -58,20 +64,39 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     private store: Store<{
       board: BoardState;
       notifications: NotificationsState;
+      label: LabelState;
+      list: ListState;
     }>,
   ) {}
 
+  subscriptions: Subscription[] = [];
+
   ngOnInit(): void {
-    this.backgroundColorService.textColor$.subscribe((color) => {
-      this.textColor = color;
-    });
-    this.store.select('board', 'board').subscribe((board) => {
-      if (board) {
-        console.log(board);
-        this.id = board.id!;
-        this.inputValue = board.name!;
-      }
-    });
+    this.subscriptions.push(
+      this.backgroundColorService.textColor$.subscribe((color) => {
+        this.textColor = color;
+      }),
+      this.store.select('board', 'board').subscribe((board) => {
+        if (board) {
+          console.log(board);
+          this.id = board.id!;
+          this.inputValue = board.name!;
+        }
+      }),
+      this.store
+        .select('label', 'isGetLabelForFilterSuccess')
+        .subscribe((success) => {
+          if (success) {
+            this.filterDialog.open(FilterComponent, {
+              enterAnimationDuration: '0.1s',
+              exitAnimationDuration: '0.1s',
+            });
+          }
+        }),
+      this.store.select('list', 'isFiltering').subscribe((isFiltering) => {
+        this.isFiltering = isFiltering;
+      }),
+    );
   }
 
   ngAfterViewInit() {
@@ -90,6 +115,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   }
 
   disableEditing(): void {
+    this.store.dispatch(
+      boardActions.changeBoardName({ boardId: this.id, name: this.inputValue }),
+    );
     this.isEditing = false;
   }
 
@@ -132,11 +160,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     enterAnimationDuration: string,
     exitAnimationDuration: string,
   ): void {
-    this.filterDialog.open(FilterComponent, {
-      // width: '250px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
+    this.store.dispatch(labelActions.getLabelForFilter({ id: this.id }));
   }
 
   routeKanban() {

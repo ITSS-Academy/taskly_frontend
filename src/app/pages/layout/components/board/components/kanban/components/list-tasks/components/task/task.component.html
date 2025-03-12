@@ -17,7 +17,7 @@
       </div>
 
       <div class="task-actions">
-        <button mat-icon-button class="more-button" (click)="showMoreOptions(); $event.stopPropagation()">
+        <button mat-icon-button class="more-button" (click)="openDialog(); $event.stopPropagation()">
           <mat-icon>more_vert</mat-icon>
         </button>
         <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
@@ -32,7 +32,7 @@
       </div>
 
       <div class="task-actions">
-        <button mat-icon-button class="more-button" (click)="showMoreOptions(); $event.stopPropagation()">
+        <button mat-icon-button class="more-button" (click)="openDialog(); $event.stopPropagation()">
           <mat-icon>more_vert</mat-icon>
         </button>
         <button mat-icon-button class="close-button" (click)="closeTask(); $event.stopPropagation()">
@@ -67,7 +67,7 @@
         </div>
       }
       @if (totalComments != 0) {
-        <div class="task-comments" style="display: flex; align-items: center; gap 3px">
+        <div class="task-comments" style="display: flex; align-items: center; gap: 3px">
           <mat-icon style="transform: scale(0.8)">chat_bubble</mat-icon>
           {{ totalComments }}
         </div>

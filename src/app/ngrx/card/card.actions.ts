@@ -25,6 +25,11 @@ export const updateLabel = createAction(
   }>(),
 );
 
+export const deleteLabelFormCard = createAction(
+  '[Card] Delete Label From Card',
+  props<{ labelIds: string[] }>(),
+);
+
 export const updateCardDetail = createAction(
   '[Card] Update  Card Detail',
   props<{
@@ -98,3 +103,5 @@ export const deleteChecklistItem = createAction(
   '[Card] Delete Checklist Item',
   props<{ checklistItemId: string }>(),
 );
+
+export const clearCardState = createAction('[Card] Clear Card State');

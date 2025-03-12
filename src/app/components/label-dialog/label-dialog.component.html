@@ -4,13 +4,13 @@
 <h2 mat-dialog-title>Label</h2>
 <mat-dialog-content>
   <mat-form-field class="full-width" appearance="outline">
-    <mat-label>Tìm nhãn...</mat-label>
+    <mat-label>Search your label...</mat-label>
     <input matInput [(ngModel)]="searchText">
   </mat-form-field>
 
   <div class="label-list">
     <mat-selection-list #selectionColor>
-      <mat-list-option [value]="label" *ngFor="let label of filteredLabels()">
+      <mat-list-option [value]="label" [selected]="label.selected" *ngFor="let label of filteredLabels()">
         <div class="label-item">
           <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
           {{ label.name }}

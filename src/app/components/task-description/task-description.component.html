@@ -39,7 +39,7 @@
             <label>Assignee</label>
             <div class="assignees-container">
               @for (assignee of this.task.members || []; track $index) {
-                <div class="assignee-chip">
+                <div class="assignee-chip" matTooltip="{{assignee.name}}">
                   <div class="assignee-avatar">
                     <mat-icon>account_circle</mat-icon>
                   </div>
@@ -55,8 +55,14 @@
                 Add
               </button>
               <mat-menu #menu="matMenu">
+                <button matTooltip="{{currentUserModel.name}}" mat-menu-item class="assignee-button"
+                        (click)="addNewMemberToCard(this.currentUserModel.id)">
+                  <img src="{{this.currentUserModel.photoUrl}}" alt="">
+                  <span class="assignee-name">{{ this.currentUserModel.name }}</span>
+                </button>
                 @for (member of this.boardMembers; track $index) {
-                  <button mat-menu-item class="assignee-button" (click)="addNewMemberToCard(member.id)">
+                  <button matTooltip="{{member.name}}" mat-menu-item class="assignee-button"
+                          (click)="addNewMemberToCard(member.id)">
                     <img src="{{member.photoUrl}}" alt="">
                     <span class="assignee-name">{{ member.name }}</span>
                   </button>
@@ -82,8 +88,10 @@
 
                 <div class="add-tag-btn">
                   <button mat-stroked-button class="create-label-button tag" (click)="openLabelDialog()">
-                    <mat-icon>add</mat-icon>
-                    Add tag
+                    <div class="aligning-container">
+                      <mat-icon>edit</mat-icon>
+                      Edit
+                    </div>
                   </button>
                 </div>
               </div>
@@ -114,7 +122,7 @@
           <!-- Subtasks List -->
           <div class="subtasks-list">
             @for (subtask of task.checklistItems; track subtask.id) {
-              <div class="subtask-item">
+              <div class="subtask-item" [ngClass]="{'completed': subtask.isCompleted}">
                 <mat-checkbox [checked]="subtask.isCompleted"
                               (change)="toggleSubtask(subtask.isCompleted, subtask.id!)">
                   {{ subtask.title }}
@@ -151,31 +159,31 @@
           <label>Comments</label>
 
           <!-- Comments List -->
-          <div class="comments-list">
-            @for (comment of this.comments; track comment.id) {
-              <div class="comment-item">
-                <div class="comment-header">
-                  <div class="comment-user">
-                    <div class="user-avatar">
-                      <img src="{{ (comment.userId! | user | async)?.photoUrl}}"
-                           alt="">
+          <div class="comments-list-container">
+            <div class="comments-list">
+              @for (comment of this.comments; track comment.id) {
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <div class="comment-user">
+                      <div class="user-avatar">
+                        <img src="{{ (comment.userId! | user | async)?.photoUrl}}"
+                             alt="">
+                      </div>
+                      <span class="user-name">{{ (comment.userId! | user | async)?.name }}</span>
                     </div>
-                    <span class="user-name">{{ (comment.userId! | user | async)?.name }}</span>
+                    <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
                   </div>
-                  <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+                  <div class="comment-content">
+                    {{ comment.text }}
+                  </div>
+                  <div class="comment-actions">
+                    <button mat-button class="comment-action-btn" *ngIf="isCurrentUserAuthor(comment)"
+                            (click)="deleteComment(comment.id!)">Delete
+                    </button>
+                  </div>
                 </div>
-                <div class="comment-content">
-                  {{ comment.text }}
-                </div>
-                <div class="comment-actions">
-                  <!--                  <button mat-button class="comment-action-btn">Reply</button>-->
-                  <!--                  <button mat-button class="comment-action-btn" *ngIf="isCurrentUserAuthor(comment)">Edit</button>-->
-                  <button mat-button class="comment-action-btn" *ngIf="isCurrentUserAuthor(comment)"
-                          (click)="deleteComment(comment.id!)">Delete
-                  </button>
-                </div>
-              </div>
-            }
+              }
+            </div>
           </div>
 
           <!-- Add Comment -->
@@ -185,25 +193,28 @@
                 <img src="{{ (this.currentUser | user | async)?.photoUrl}}"
                      alt="">
               </div>
-              <mat-form-field appearance="outline" class="full-width">
-              <textarea
-                matInput
-                [(ngModel)]="newComment"
-                placeholder="Add your comment..."
-                cdkTextareaAutosize
-                #autosize="cdkTextareaAutosize"
-                cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="5"></textarea>
-              </mat-form-field>
-            </div>
-            <div class="comment-actions">
-              <button
-                mat-raised-button
-                color="primary"
-                [disabled]="!newComment.trim()"
-                (click)="addComment()">
-                Comment
-              </button>
+              <div class="comment-field-container">
+                <mat-form-field appearance="outline" class="full-width">
+                  <textarea
+                    matInput
+                    [(ngModel)]="newComment"
+                    placeholder="Add your comment..."
+                    #autosize="cdkTextareaAutosize"
+                    [cdkTextareaAutosize]="false"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    (keydown)="handleCommentKeydown($event)"></textarea>
+                  <div class="send-button-wrapper">
+                    <button
+                      mat-icon-button
+                      class="send-button"
+                      [disabled]="!newComment.trim()"
+                      (click)="addComment()">
+                      <mat-icon>send</mat-icon>
+                    </button>
+                  </div>
+                </mat-form-field>
+              </div>
             </div>
           </div>
         </div>

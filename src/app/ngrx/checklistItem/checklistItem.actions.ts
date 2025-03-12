@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {ChecklistItemModel} from '../../models/checklistItem.model';
+import { createAction, props } from '@ngrx/store';
+import { ChecklistItemModel } from '../../models/checklistItem.model';
 
 export const addNewChecklistItem = createAction(
   '[ChecklistItem] Add New Checklist',
@@ -21,7 +21,7 @@ export const toggleChecklistItem = createAction(
     checklistItem: {
       id: string;
       isCompleted: boolean;
-    }
+    };
   }>(),
 );
 
@@ -48,3 +48,6 @@ export const deleteChecklistItemFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const clearChecklistItemState = createAction(
+  '[ChecklistItem] Clear Checklist Item State',
+);

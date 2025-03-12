@@ -10,6 +10,14 @@ mat-icon {
   font-size: 20px;
   color: var(--md-sys-color-shadow);
   margin-bottom: 2px;
+  transition: all 0.15s ease-in-out;
+  border-radius: 50%;
+  padding: 4px;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
 }
 
 mat-list {
@@ -130,7 +138,7 @@ mat-list-item {
 
     &:hover {
       cursor: pointer;
-      background-color: var(--md-sys-color-surface-container-high);
+      background-color: rgba(0, 0, 0, 0.2);
       border-radius: 4px;
     }
 
@@ -151,4 +159,17 @@ mat-toolbar {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.see-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

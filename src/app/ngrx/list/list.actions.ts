@@ -1,7 +1,7 @@
-import {createAction, props} from '@ngrx/store';
-import {ListCard, ListModel} from '../../models/list.model';
-import {ChecklistItemModel} from '../../models/checklistItem.model';
-import {UserModel} from '../../models/user.model';
+import { createAction, props } from '@ngrx/store';
+import { ListCard, ListModel } from '../../models/list.model';
+import { ChecklistItemModel } from '../../models/checklistItem.model';
+import { UserModel } from '../../models/user.model';
 
 export const addNewList = createAction(
   '[List] Add New List',
@@ -124,16 +124,67 @@ export const removeMemberFromCard = createAction(
   props<{ cardId: string; userId: string }>(),
 );
 
+export const getFilteredCards = createAction(
+  '[List] Get Filtered Cards',
+  props<{ labels: string[]; userIds: string[]; boardId: string }>(),
+);
+
+export const getFilteredCardsSuccess = createAction(
+  '[List] Get Filtered Cards Success',
+  props<{
+    cards: {
+      id: string;
+    }[];
+  }>(),
+);
+
+export const getFilteredCardsFailure = createAction(
+  '[List] Get Filtered Cards Failure',
+  props<{ error: string }>(),
+);
+
+export const checkIsFiltering = createAction(
+  '[List] Check Is Filtering',
+  props<{ isFiltering: boolean }>(),
+);
+
 ///
 export const updateLabelToCard = createAction(
   '[Card] Update Label To Card',
   props<{ cardId: string; labels: ListModel[] }>(),
 );
 
+export const removeLabelFromCard = createAction(
+  '[Card] Remove Label From Card',
+  props<{ cardId: string; labelIds: string[] }>(),
+);
+
 export const updateNewCard = createAction(
   '[Card] Update New Card',
   props<{ card: any }>(),
 );
+
+export const addMemberIdToFilterArray = createAction(
+  '[List] Add Member Id To Filter Array',
+  props<{ userId: string }>(),
+);
+
+export const addLabelIdToFilterArray = createAction(
+  '[List] Add Label Id To Filter Array',
+  props<{ labelId: string }>(),
+);
+
+export const removeLabelIdFromFilterArray = createAction(
+  '[List] Remove Label Id From Filter Array',
+  props<{ labelId: string }>(),
+);
+
+export const removeUserIdFromFilterArray = createAction(
+  '[List] Remove User Id From Filter Array',
+  props<{ userId: string }>(),
+);
+
+export const clearFilterArrays = createAction('[List] Clear Filter Arrays');
 
 export const addCSubtaskToCard = createAction(
   '[Card] Add Subtask To Card',
