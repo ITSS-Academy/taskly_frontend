@@ -83,3 +83,20 @@ export const removeMember = createEffect(
   },
   { functional: true },
 );
+
+export const getCardsByUser = createEffect(
+  (actions$ = inject(Actions), cardService = inject(CardService)) => {
+    return actions$.pipe(
+      ofType(cardActions.getCardsByUserId),
+      switchMap(() => {
+        return cardService.getCardsByUserId().pipe(
+          map((cards: any) => cardActions.getCardsByUserIdSuccess({ cards })),
+          catchError((error) =>
+            of(cardActions.getCardsByUserIdFailure({ error: error.error.message })),
+          ),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
