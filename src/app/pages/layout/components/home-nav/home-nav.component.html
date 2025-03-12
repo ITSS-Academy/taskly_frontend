@@ -18,21 +18,15 @@
     @if (showSearchItems) {
       <div class="search-items">
         <mat-list>
-          <mat-list-item class="invite-noti">
-            <!--                        <img src="https://www.pixelstalk.net/wp-content/uploads/2016/05/New-Wallpaper-Full-HD-1920x1080.jpg" alt=""-->
-            <!--                             matListItemIcon>-->
-            <!--                        <div matListItemTitle>-->
-            <!--                          Kanban board-->
-            <!--                        </div>-->
-            @for (board of boardItems; track $index) {
-              <img src="https://www.pixelstalk.net/wp-content/uploads/2016/05/New-Wallpaper-Full-HD-1920x1080.jpg"
-                   alt=""
+          @for (item of boardItems; track $index) {
+            <mat-list-item (click)="navigateToBoard(item.id)" class="search-item">
+              <img [src]="item.backgroundId! | background | async" alt=""
                    matListItemIcon>
-              <div>
-                Kanban board
+              <div matListItemTitle>
+                {{ item.name }}
               </div>
-            }
-          </mat-list-item>
+            </mat-list-item>
+          }
         </mat-list>
       </div>
     }

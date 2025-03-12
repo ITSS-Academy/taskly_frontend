@@ -25,11 +25,12 @@
         <p class="background-title">Background</p>
         <div class="background-images">
           @for (background of imageBackgrounds; track $index) {
-            <img class="background"
-                 [src]="background.fileLocation"
-                 [class.selected]="this.imageUrl === background.fileLocation"
-                 
-                 alt="Background image">
+          <img class="background"
+             [src]="background.fileLocation"
+             [class.selected]="this.imagePreview === background.fileLocation"
+             (click)="selectBackground(background.fileLocation)"
+             alt="Background image"
+             >
           }
         </div>
       </div>

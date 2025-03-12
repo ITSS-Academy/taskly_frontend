@@ -18,13 +18,12 @@
 .label-list {
   margin-top: 10px;
   max-height: 400px; /* Giới hạn chiều cao */
-  overflow-y: auto;  /* Thanh cuộn nếu quá dài */
+  overflow-y: auto; /* Thanh cuộn nếu quá dài */
 }
 
 .label-item {
   display: flex;
   align-items: center;
-  gap: 10px;
   width: 100%;
 }
 

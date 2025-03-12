@@ -11,8 +11,8 @@
   <div class="label-list">
     <mat-selection-list #selectionColor>
       <div class="label-item" *ngFor="let label of filteredLabels()">
-        <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
 
+        <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
         <mat-list-option [value]="label" [selected]="label.selected">
           {{ label.name }}
         </mat-list-option>

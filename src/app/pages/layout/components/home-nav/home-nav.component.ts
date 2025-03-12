@@ -9,6 +9,8 @@ import {BehaviorSubject, debounceTime, Subscription} from 'rxjs';
 import * as boardActions from '../../../../ngrx/board/board.actions';
 import {BoardState} from '../../../../ngrx/board/board.state';
 import {Store} from '@ngrx/store';
+import {AsyncPipe} from '@angular/common';
+import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
 
 @Component({
   selector: 'app-home-nav',
@@ -16,7 +18,9 @@ import {Store} from '@ngrx/store';
   imports: [
     MaterialModule,
     NotificationsButtonComponent,
-    LogoutButtonComponent
+    LogoutButtonComponent,
+    AsyncPipe,
+    BackgroundPipe
   ],
   templateUrl: './home-nav.component.html',
   styleUrl: './home-nav.component.scss'
@@ -82,5 +86,9 @@ export class HomeNavComponent implements OnInit {
     const target = $event.target as HTMLInputElement;
     console.log('Searching for:', target.value);
     this.searchSubject.next(target.value);
+  }
+
+  navigateToBoard(id: string) {
+    this.router.navigate(['/board/kanban', id]);
   }
 }
