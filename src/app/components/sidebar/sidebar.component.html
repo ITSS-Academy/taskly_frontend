@@ -17,6 +17,10 @@
       </div>
     }
 
+    <!--    <button (click)="openDialog()" class="btn-create" mat-flat-button>-->
+    <!--      <mat-icon fontIcon="add"></mat-icon>-->
+    <!--      Create-->
+    <!--    </button>-->
 
     <mat-selection-list>
       <mat-list-item [routerLink]="['home']" routerLinkActive="active-link">
@@ -51,7 +55,7 @@
 
         <!-- "See More" button if boards length is greater than 4 -->
         @if (boards.length > 4) {
-          <p class="see-more-btn" (click)="navigateToHome()">See more...</p>
+          <p class="see-more-btn" (click)="navigateToHome()" [ngStyle]="{'color': sidebarTextColor}">See more...</p>
         }
       }
     </mat-selection-list>
@@ -73,7 +77,7 @@
 
         <!-- "See More" button if boards length is greater than 4 -->
         @if (boards.length > 4) {
-          <p class="see-more-btn" (click)="navigateToHome()">See more...</p>
+          <p class="see-more-btn" (click)="navigateToHome()" [ngStyle]="{'color': sidebarTextColor}">See more...</p>
         }
       }
     </mat-selection-list>

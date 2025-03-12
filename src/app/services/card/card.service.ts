@@ -69,4 +69,15 @@ export class CardService {
       },
     );
   }
+
+  getCardsByUserId() {
+    console.log('get card by user');
+    console.log(this.accessToken);
+    return this.http.post(`${environment.apiUrl}/card/get-card-by-user`, {},{
+      headers: {
+        Authorization: this.accessToken,
+      },
+    });
+  }
+
 }

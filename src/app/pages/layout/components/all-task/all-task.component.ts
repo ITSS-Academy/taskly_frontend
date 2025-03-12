@@ -3,7 +3,7 @@ import {
   signal,
   ViewChild,
   OnInit,
-  AfterViewInit,
+  AfterViewInit, OnDestroy,
 } from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatTableDataSource} from '@angular/material/table';
@@ -13,6 +13,10 @@ import {NavbarComponent} from '../../../../components/navbar/navbar.component';
 import {MaterialModule} from '../../../../shared/modules/material.module';
 import {BackgroundColorService} from '../../../../services/background-color/background-color.service';
 import {HomeNavComponent} from '../home-nav/home-nav.component';
+import {Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {CardState} from '../../../../ngrx/card/card.state';
+import * as cardActions from '../../../../ngrx/card/card.actions';
 
 @Component({
   selector: 'app-all-task',
@@ -21,15 +25,30 @@ import {HomeNavComponent} from '../home-nav/home-nav.component';
   templateUrl: './all-task.component.html',
   styleUrl: './all-task.component.scss',
 })
-export class AllTaskComponent implements AfterViewInit {
+export class AllTaskComponent implements AfterViewInit,OnInit, OnDestroy {
   displayedColumns: string[] = ['title', 'board', 'list', 'members', 'tags'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<any>;
   readonly panelOpenState = signal(false);
 
-  constructor(private backgroundService: BackgroundColorService) {
+  constructor(private backgroundService: BackgroundColorService,
+              private store: Store<{ card: CardState}>) {
     this.backgroundService.setLogo('rgb(245, 255, 248)');
     this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
     this.backgroundService.setSidebarColor('rgb(245, 255, 248)');
+    this.store.dispatch(cardActions.getCardsByUserId());
+  }
+
+  subscription: Subscription[] = [];
+
+  ngOnInit() {
+    this.subscription.push(
+      this.store.select('card').subscribe((card) => {
+        this.dataSource.data = card.cards;
+      }),
+    )
+  }
+
+  ngOnDestroy() {
   }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -49,365 +68,3 @@ export interface PeriodicElement {
   tags: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-
-  {
-    title: 'Hom nay toi lau nha',
-    board: 'Note',
-    list: 'To Do',
-    members: 'Quan',
-    tags: 'Label',
-  },
-];

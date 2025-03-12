@@ -1,19 +1,20 @@
-import { Component, inject } from '@angular/core';
-import { NgForOf } from '@angular/common';
+import {Component, inject, OnInit} from '@angular/core';
+import {NgForOf} from '@angular/common';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { BoardState } from '../../ngrx/board/board.state';
+import {Store} from '@ngrx/store';
+import {BoardState} from '../../ngrx/board/board.state';
 import * as boardActions from '../../ngrx/board/board.actions';
-import { MaterialModule } from '../../shared/modules/material.module';
-import { MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.component';
+import {MaterialModule} from '../../shared/modules/material.module';
+import {MatDialogRef} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component';
+import {BackgroundState} from '../../ngrx/background/background.state';
+import * as backgroundActions from '../../ngrx/background/background.actions';
 
 @Component({
   selector: 'app-create-board',
@@ -22,13 +23,13 @@ import { ShareSnackbarComponent } from '../share-snackbar/share-snackbar.compone
   templateUrl: './create-board.component.html',
   styleUrl: './create-board.component.scss',
 })
-export class CreateBoardComponent {
-  imageBackgrounds = [
-    'assets/images/bg1.jpg',
-    'assets/images/bg2.jpg',
-    'assets/images/bg3.jpg',
-    'assets/images/bg4.jpg',
-  ];
+export class CreateBoardComponent implements OnInit {
+  imageBackgrounds: {
+    id: string;
+    fileName?: string;
+    fileLocation: string;
+  }[] = [];
+
   colorBackgrounds = ['#D3D3D3', '#A8E6CF', '#377D6A', '#1D4F73', '#1D4F73'];
   boardForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
@@ -37,8 +38,21 @@ export class CreateBoardComponent {
 
   constructor(
     public dialogRef: MatDialogRef<CreateBoardComponent>,
-    private store: Store<{ board: BoardState }>,
-  ) {}
+    private store: Store<{ board: BoardState, background: BackgroundState }>,
+  ) {
+    this.store.dispatch(backgroundActions.getBackgrounds());
+  }
+
+  ngOnInit() {
+    this.store
+      .select('background', 'backgrounds')
+      .subscribe((backgrounds) => {
+        if (backgrounds) {
+          this.imageBackgrounds = backgrounds;
+          console.log('background:', this.imageBackgrounds)
+        }
+      })
+  }
 
   selectBackground(background: string) {
     console.log('Selected background:', background);

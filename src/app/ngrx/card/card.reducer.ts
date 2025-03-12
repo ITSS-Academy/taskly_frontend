@@ -20,6 +20,11 @@ const initialState: CardState = {
   isRemovingMember: false,
   isRemoveMemberSuccess: false,
   isRemoveMemberFailure: null,
+
+  cards: [],
+  isGettingCardsByUser: false,
+  isGetCardsByUserSuccess: false,
+  isGetCardsByUserFailure: null,
 };
 
 export const cardReducer = createReducer(
@@ -340,6 +345,32 @@ export const cardReducer = createReducer(
         ),
         checklistItems: state.card!.checklistItems,
       },
+    };
+  }),
+  on(cardActions.getCardsByUserId, (state) => {
+    return {
+      ...state,
+      isGettingCardsByUser: true,
+      isGetCardsByUserSuccess: false,
+      isGetCardsByUserFailure: null,
+    };
+  }),
+  on(cardActions.getCardsByUserIdSuccess, (state, { cards }) => {
+    console.log(cards);
+    return {
+      ...state,
+      cards,
+      isGettingCardsByUser: false,
+      isGetCardsByUserSuccess: true,
+      isGetCardsByUserFailure: null,
+    };
+  }),
+  on(cardActions.getCardsByUserIdFailure, (state, { error }) => {
+    return {
+      ...state,
+      isGettingCardsByUser: false,
+      isGetCardsByUserSuccess: false,
+      isGetCardsByUserFailure: error,
     };
   }),
 );

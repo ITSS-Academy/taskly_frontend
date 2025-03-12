@@ -27,6 +27,7 @@
     align-items: center;
     justify-content: center;
     padding-top: 0;
+    gap: 16px;
 
     .full-width {
       width: 100%;
@@ -38,7 +39,6 @@
       justify-content: center;
       gap: 16px;
       width: 100%;
-      margin-top: 16px;
 
       .background-title {
         font-size: 18px;
@@ -51,9 +51,11 @@
         flex-direction: row;
         justify-content: space-between;
         width: 100%;
+        flex-wrap: wrap;
 
         .background {
           width: 70px;
+          height: 50px;
           border-radius: 8px;
         }
 
