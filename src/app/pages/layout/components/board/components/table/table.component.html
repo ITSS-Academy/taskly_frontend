@@ -40,10 +40,20 @@
       </mat-cell>
     </ng-container>
 
+    <!-- Cột Due Date -->
+    <ng-container matColumnDef="dueDate">
+      <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+       <span [ngClass]="{'overdue': isOverdue(element.dueDate)}">
+        {{ element.dueDate ? (element.dueDate | date: 'dd/MM/yyyy') : 'No due date' }}
+       </span>
+      </mat-cell>
+    </ng-container>
+
     <!-- Header & Rows -->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openTaskDescription(row)">
-    </mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openTaskDescription(row)"></mat-row>
+
   </mat-table>
 
   <!-- Phân trang -->
