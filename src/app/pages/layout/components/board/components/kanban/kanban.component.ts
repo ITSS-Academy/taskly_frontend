@@ -107,7 +107,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
       card: CardState;
       checklistItem: ChecklistItemState;
     }>,
-    private gateway: GatewayService,
   ) {}
 
   private _snackBar = inject(MatSnackBar);

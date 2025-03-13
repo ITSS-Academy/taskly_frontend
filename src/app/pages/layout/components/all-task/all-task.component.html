@@ -1,24 +1,20 @@
+<app-home-nav></app-home-nav>
+
+@if(!this.isGettingCards){
 <div class="content">
-  <app-home-nav></app-home-nav>
 
   <div class="table">
-    <div style="display: flex; justify-content: end">
-      <mat-form-field class="search-tag">
-        <mat-label>Label Name</mat-label>
-        <input matInput (keyup)="applyFilter($event)" #input placeholder="Enter label name">
-      </mat-form-field>
-    </div>
-    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
 
       <!-- Title Column -->
       <ng-container matColumnDef="title">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Title</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef > Title</mat-header-cell>
         <mat-cell *matCellDef="let element"> {{ element.title }}</mat-cell>
       </ng-container>
 
       <!-- Board Column -->
       <ng-container matColumnDef="board">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Board</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef > Board</mat-header-cell>
         <mat-cell class="board-hover" *matCellDef="let element">
           {{ element.board.name }}
         </mat-cell>
@@ -26,15 +22,15 @@
 
       <!-- List Column -->
       <ng-container matColumnDef="list">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> List</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date"> Due date</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.list.title }}
+          {{ element.dueDate | date}}
         </mat-cell>
       </ng-container>
 
       <!-- Member Column -->
       <ng-container matColumnDef="members">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Members</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef > Members</mat-header-cell>
         <mat-cell class="members-hover" *matCellDef="let element">
           <ng-container *ngIf="element.members?.length > 0; else noMembers">
             <mat-chip *ngFor="let member of element.list.name" class="member-chip">
@@ -47,7 +43,7 @@
 
       <!-- Label Column -->
       <ng-container matColumnDef="tags">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Label</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef > Label</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <ng-container *ngIf="element.labels?.length > 0; else noTags">
             <span *ngFor="let tag of element.labels" class="tag-chip"
@@ -61,13 +57,13 @@
 
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToBoard(row.board.id)"></mat-row>
 
 
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *cdkNoDataRow>
         <td class="mat-cell" colspan="4S">
-          No data matching the filter "{{ input.value }}"
+          You have not been assigned any tasks yet.
         </td>
       </tr>
 
@@ -77,3 +73,8 @@
     <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
+}@else{
+<div class="content">
+<ngx-skeleton-loader count="5" appearance="line"></ngx-skeleton-loader>
+</div>
+}

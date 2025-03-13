@@ -4,6 +4,7 @@ import {
   ViewChild,
   OnInit,
   AfterViewInit,
+  inject,
   OnDestroy,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +23,13 @@ import { TaskDescriptionComponent } from '../../../../components/task-descriptio
 import { MatDialog } from '@angular/material/dialog';
 import { CdkNoDataRow } from '@angular/cdk/table';
 import { ListCard } from '../../../../models/list.model';
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+
+
 
 @Component({
   selector: 'app-all-task',
@@ -35,6 +43,9 @@ import { ListCard } from '../../../../models/list.model';
     NgForOf,
     NgIf,
     CdkNoDataRow,
+    DatePipe,
+    MatSortModule,
+    NgxSkeletonLoaderComponent
   ],
   templateUrl: './all-task.component.html',
   styleUrl: './all-task.component.scss',
@@ -51,6 +62,7 @@ export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private backgroundService: BackgroundColorService,
     private store: Store<{ card: CardState }>,
+    private router: Router,
   ) {
     this.backgroundService.setLogo('rgb(245, 255, 248)');
     this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
@@ -75,8 +87,8 @@ export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       return data.labels
         ? data.labels.some((label: any) =>
-            label.name.toLowerCase().includes(filter),
-          )
+          label.name.toLowerCase().includes(filter),
+        )
         : false;
     };
   }
@@ -91,6 +103,7 @@ export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
+    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -109,12 +122,34 @@ export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   selected = 'option2';
+
+  navigateToBoard(id: string) {
+    this.router.navigate(['/board/kanban', id]);
+
+  }
+
+  @ViewChild(MatSort) sort!: MatSort;
+  private _liveAnnouncer = inject(LiveAnnouncer);
+
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      const sortedData = [...this.dataSource.data].sort((a, b) => {
+        const dateA = a.dueDate ? new Date(a.dueDate).getTime() : null;
+        const dateB = b.dueDate ? new Date(b.dueDate).getTime() : null;
+
+        if (dateA === null) return 1;
+        if (dateB === null) return -1;
+
+        return sortState.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+
+      this.dataSource.data = sortedData;
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this.dataSource.data = this.cards;
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
+  }
 }
 
-export interface PeriodicElement {
-  title: string;
-  board: string;
-  list: string;
-  members: string;
-  tags: string;
-}
