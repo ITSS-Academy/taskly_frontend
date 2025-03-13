@@ -19,7 +19,7 @@
           @for (background of imageBackgrounds; track $index) {
             <img class="background"
                  [src]="background.fileLocation"
-                 [class.selected]="this.imageUrl === background.fileLocation"
+                 [ngClass]="this.imageUrl === background.fileLocation ? 'selected' : ''"
                  (click)="onBackgroundSelected(background.fileLocation)"
                  alt="Background image">
           }

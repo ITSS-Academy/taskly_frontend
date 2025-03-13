@@ -1,6 +1,6 @@
 <button mat-icon-button [matMenuTriggerFor]="logoutMenu">
   <img class="avatar"
-       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4xIzlTTRJKIQB1tq1Jbs5Rfj7hU6h1UtPg&s"
+       src="{{ user?.photoUrl }}"
        alt="Profile">
 </button>
 <mat-menu #logoutMenu="matMenu">

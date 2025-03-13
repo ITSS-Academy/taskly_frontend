@@ -99,6 +99,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     );
   }
 
+  onError(event: Event) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = '/assets/images/default-avatar.png'; // Replace with a default image
+  }
+
   ngOnDestroy() {
     this.supcriptions.forEach((sub) => sub.unsubscribe());
     this.supcriptions = [];

@@ -58,7 +58,7 @@ mat-list {
   right: 20px;
   top: 47px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  border-radius: 30px;
 }
 
 ::ng-deep.mat-mdc-dialog-content {
@@ -68,6 +68,7 @@ mat-list {
 ::ng-deep.mdc-list-item--with-leading-icon .mdc-list-item__start {
   margin-inline-start: unset;
 }
-::ng-deep.mat-mdc-dialog-container .mat-mdc-dialog-title+.mat-mdc-dialog-content{
+
+::ng-deep.mat-mdc-dialog-container .mat-mdc-dialog-title + .mat-mdc-dialog-content {
   background-color: white;
 }

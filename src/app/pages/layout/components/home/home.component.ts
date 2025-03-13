@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {SidebarComponent} from "../../../../components/sidebar/sidebar.component";
 import {HomeNavComponent} from "../home-nav/home-nav.component";
 import {MatButton, MatIconButton} from '@angular/material/button';
@@ -18,6 +18,8 @@ import {BackgroundPipe} from '../../../../shared/pipes/background.pipe';
 import {Router, RouterLink} from '@angular/router';
 import {NgxSkeletonLoaderComponent} from 'ngx-skeleton-loader';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {ConfirmDialogComponent} from '../../../../components/confirm-dialog/confirm-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -69,13 +71,29 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/board/kanban', boardId]).then(r => console.log(r));
   }
 
+  readonly dialog = inject(MatDialog);
+
   deleteBoard(boardId: string, event: Event): void {
     event.stopPropagation(); // Stop event propagation
-    console.log(`Deleting board with ID: ${boardId}`);
-    // Call your delete logic here
-    this.store.dispatch(boardActions.deleteBoard({boardId}));
-  }
 
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Board',
+        message: 'Are you sure you want to delete this board?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(`Deleting board with ID: ${boardId}`);
+        this.store.dispatch(boardActions.deleteBoard({boardId})); // Dispatch delete action
+      } else {
+        console.log('Board deletion canceled');
+      }
+    });
+  }
 
   onLinkActivated(): void {
     this.isSlideBarVisible = false;
