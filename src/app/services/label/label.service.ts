@@ -71,4 +71,13 @@ export class LabelService {
       },
     ) as Observable<LabelModel>;
   }
+
+  deleteLabel(labelId: string) {
+    return this.httpClient.delete(
+      `${environment.apiUrl}/board-label/${labelId}`,
+      {
+        headers: { Authorization: this.accessToken },
+      },
+    );
+  }
 }

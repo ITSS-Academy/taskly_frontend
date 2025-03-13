@@ -21,7 +21,8 @@
                 <div matListItemLine>Accept or decline the invitation</div>
                 <div class="btns">
                   <button mat-stroked-button (click)="rejectInvitation(noti.id!)">Decline</button>
-                  <button mat-flat-button (click)="acceptInvitation(noti.id!)">Accept</button>
+                  <button mat-flat-button (click)="acceptInvitation(noti.id!,noti.boardId!,noti.senderId!)">Accept
+                  </button>
                 </div>
               </mat-list-item>
             } @else if (noti.type == 'added_to_card') {

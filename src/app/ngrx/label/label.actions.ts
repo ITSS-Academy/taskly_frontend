@@ -80,10 +80,20 @@ export const clearLabelState = createAction('[Label] Clear Label State');
 
 export const updateLabel = createAction(
   '[Label] Update Label',
-  props<{ label: any }>()
+  props<{ label: any }>(),
 );
 
 export const deleteLabel = createAction(
   '[Label] Delete Label',
-  props<{ labelId: string }>()  // ✅ Thêm action deleteLabel
+  props<{ labelId: string; cardId: string }>(),
+);
+
+export const deleteLabelSuccess = createAction(
+  '[Label] Delete Label Success',
+  props<{ labelId: string }>(),
+);
+
+export const deleteLabelFailure = createAction(
+  '[Label] Delete Label Failure',
+  props<{ error: any }>(),
 );

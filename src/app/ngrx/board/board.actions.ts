@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {BoardModel} from '../../models/board.model';
+import { createAction, props } from '@ngrx/store';
+import { BoardModel } from '../../models/board.model';
 
 export const createBoard = createAction(
   '[Board] Create Board',
@@ -46,6 +46,7 @@ export const getInvitedBoardsSuccess = createAction(
     boards: BoardModel[];
   }>(),
 );
+
 export const getInvitedBoardsFail = createAction(
   '[Board] Get Invited Boards Fail',
   props<{ error: string }>(),
@@ -128,8 +129,32 @@ export const deleteBoardFail = createAction(
   props<{ error: string }>(),
 );
 
+export const addNewMemberToBoard = createAction(
+  '[Board] Add New Member To Board',
+  props<{ boardId: string; userId: string }>(),
+);
+
+export const addUserIdsBeKicked = createAction(
+  '[Board] Add User Ids Be Kicked',
+  props<{ boardId: string; userIds: string[] }>(),
+);
+
 export const deleteBoardSuccess = createAction(
   '[Board] Delete Board Success',
   props<{ boardId: string }>(),
 );
 
+export const removeUserFromBoard = createAction(
+  '[Board] Remove Member From Board',
+  props<{ boardId: string; userId: string }>(),
+);
+
+export const removeUserFromBoardSuccess = createAction(
+  '[Board] Remove Member From Board Success',
+  props<{ boardId: string; userId: string }>(),
+);
+
+export const removeUserFromBoardFail = createAction(
+  '[Board] Remove Member From Board Fail',
+  props<{ error: string }>(),
+);

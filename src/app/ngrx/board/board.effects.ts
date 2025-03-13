@@ -152,7 +152,7 @@ export const changeBoardNameEffect = createEffect(
           map((data: any) => {
             return boardActions.changeBoardNameSuccess({
               boardId,
-              name: data.name,
+              name: name,
             });
           }),
           catchError((error) => {
@@ -179,6 +179,29 @@ export const deleteBoardEffect = createEffect(
           catchError((error) => {
             return of(
               boardActions.deleteBoardFail({ error: error.error.message }),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const removeUserFromBoardEffect = createEffect(
+  (actions$ = inject(Actions), boardService = inject(BoardService)) => {
+    return actions$.pipe(
+      ofType(boardActions.removeUserFromBoard),
+      switchMap(({ boardId, userId }) => {
+        return boardService.removeMember(boardId, userId).pipe(
+          map(() => {
+            return boardActions.removeUserFromBoardSuccess({ userId, boardId });
+          }),
+          catchError((error) => {
+            return of(
+              boardActions.removeUserFromBoardFail({
+                error: error.error.message,
+              }),
             );
           }),
         );

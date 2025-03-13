@@ -86,3 +86,7 @@ export const addAddedToCardUsers = createAction(
 export const clearAddNewMember = createAction(
   '[Notifications] Clear Add New Member',
 );
+
+export const clearNotificationsState = createAction(
+  '[Notifications] Clear Notifications State',
+);

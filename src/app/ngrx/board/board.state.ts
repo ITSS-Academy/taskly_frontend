@@ -1,4 +1,4 @@
-import {BoardModel} from '../../models/board.model';
+import { BoardModel } from '../../models/board.model';
 
 export interface BoardState {
   //createBoard
@@ -40,4 +40,11 @@ export interface BoardState {
   isDeletingBoard: boolean;
   deleteBoardError: string | null;
   isDeleteBoardSuccess: boolean;
+
+  kickedBoard: string;
+  kickedUserIds: string[];
+
+  isRemovingUser: boolean;
+  removeUserError: string | null;
+  isRemoveUserSuccess: boolean;
 }

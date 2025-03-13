@@ -1,8 +1,8 @@
-import {BoardModel} from '../../models/board.model';
+import { BoardModel } from '../../models/board.model';
 
-import {createReducer, on} from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import * as boardActions from './board.actions';
-import {BoardState} from './board.state';
+import { BoardState } from './board.state';
 
 const initialState: BoardState = {
   board: null,
@@ -40,6 +40,13 @@ const initialState: BoardState = {
   isDeletingBoard: false,
   deleteBoardError: null,
   isDeleteBoardSuccess: false,
+
+  kickedBoard: '',
+  kickedUserIds: [],
+
+  isRemovingUser: false,
+  removeUserError: null,
+  isRemoveUserSuccess: false,
 };
 
 export const boardReducer = createReducer(
@@ -52,7 +59,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: false,
     };
   }),
-  on(boardActions.createBoardSuccess, (state, {board}) => {
+  on(boardActions.createBoardSuccess, (state, { board }) => {
     console.log(board);
     return {
       ...state,
@@ -62,7 +69,7 @@ export const boardReducer = createReducer(
       isCreateBoardSuccess: true,
     };
   }),
-  on(boardActions.createBoardFail, (state, {error}) => {
+  on(boardActions.createBoardFail, (state, { error }) => {
     return {
       ...state,
       isBoardCreating: false,
@@ -75,9 +82,11 @@ export const boardReducer = createReducer(
     return {
       ...state,
       isBoardsGetting: true,
+      boardsGettingError: null,
+      isGetBoardsSuccess: false,
     };
   }),
-  on(boardActions.getBoardsSuccess, (state, {boards}) => {
+  on(boardActions.getBoardsSuccess, (state, { boards }) => {
     console.log(boards);
     return {
       ...state,
@@ -87,7 +96,7 @@ export const boardReducer = createReducer(
       isGetBoardsSuccess: true,
     };
   }),
-  on(boardActions.getBoardsFail, (state, {error}) => {
+  on(boardActions.getBoardsFail, (state, { error }) => {
     return {
       ...state,
       isBoardsGetting: false,
@@ -105,7 +114,7 @@ export const boardReducer = createReducer(
       getBoardError: '',
     };
   }),
-  on(boardActions.getBoardSuccess, (state, {type, board}) => {
+  on(boardActions.getBoardSuccess, (state, { type, board }) => {
     console.log(type);
     console.log(board);
     return {
@@ -116,7 +125,7 @@ export const boardReducer = createReducer(
       getBoardError: '',
     };
   }),
-  on(boardActions.getBoardFailure, (state, {errorMessage}) => {
+  on(boardActions.getBoardFailure, (state, { errorMessage }) => {
     return {
       ...state,
       isGettingBoard: false,
@@ -133,7 +142,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: false,
     };
   }),
-  on(boardActions.getInvitedBoardsSuccess, (state, {boards}) => {
+  on(boardActions.getInvitedBoardsSuccess, (state, { boards }) => {
     return {
       ...state,
       invitedBoards: boards,
@@ -142,7 +151,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: true,
     };
   }),
-  on(boardActions.getInvitedBoardsFail, (state, {error}) => {
+  on(boardActions.getInvitedBoardsFail, (state, { error }) => {
     return {
       ...state,
       isInvitedBoardsGetting: false,
@@ -150,7 +159,7 @@ export const boardReducer = createReducer(
       isGetInvitedBoardsSuccess: false,
     };
   }),
-  on(boardActions.acceptInvitation, (state, {board}) => {
+  on(boardActions.acceptInvitation, (state, { board }) => {
     console.log(board);
     return {
       ...state,
@@ -159,8 +168,8 @@ export const boardReducer = createReducer(
         : [board],
     };
   }),
-  on(boardActions.searchBoards, (state, {type}) => {
-    console.log(type)
+  on(boardActions.searchBoards, (state, { type }) => {
+    console.log(type);
     return {
       ...state,
       isSearchingBoards: true,
@@ -168,8 +177,8 @@ export const boardReducer = createReducer(
       isSearchBoardsSuccess: false,
     };
   }),
-  on(boardActions.searchBoardsSuccess, (state, {boards}) => {
-    console.log(boards)
+  on(boardActions.searchBoardsSuccess, (state, { boards }) => {
+    console.log(boards);
     return {
       ...state,
       searchedBoards: boards,
@@ -178,7 +187,7 @@ export const boardReducer = createReducer(
       isSearchBoardsSuccess: true,
     };
   }),
-  on(boardActions.searchBoardsFail, (state, {error}) => {
+  on(boardActions.searchBoardsFail, (state, { error }) => {
     return {
       ...state,
       isSearchingBoards: false,
@@ -202,28 +211,28 @@ export const boardReducer = createReducer(
   }),
   on(
     boardActions.changeBoardBackgroundSuccess,
-    (state, {boardId, backgroundId, background}) => {
+    (state, { boardId, backgroundId, background }) => {
       return {
         ...state,
         board: state.board
           ? {
-            ...state.board,
-            backgroundId: backgroundId,
-            background: background
-              ? {fileLocation: background.fileLocation}
-              : null,
-          }
+              ...state.board,
+              backgroundId: backgroundId,
+              background: background
+                ? { fileLocation: background.fileLocation }
+                : null,
+            }
           : null,
         boards: state.boards
           ? state.boards.map((board) => {
-            if (board.id === boardId) {
-              return {
-                ...board,
-                backgroundId: backgroundId,
-              };
-            }
-            return board;
-          })
+              if (board.id === boardId) {
+                return {
+                  ...board,
+                  backgroundId: backgroundId,
+                };
+              }
+              return board;
+            })
           : [],
         isChangingBoardBackground: false,
         changeBoardBackgroundError: null,
@@ -231,7 +240,7 @@ export const boardReducer = createReducer(
       };
     },
   ),
-  on(boardActions.changeBoardBackgroundFail, (state, {error}) => {
+  on(boardActions.changeBoardBackgroundFail, (state, { error }) => {
     return {
       ...state,
       isChangingBoardBackground: false,
@@ -239,28 +248,28 @@ export const boardReducer = createReducer(
       isChangeBoardBackgroundSuccess: false,
     };
   }),
-  on(boardActions.listenBackgroundChange, (state, {background, boardId}) => {
+  on(boardActions.listenBackgroundChange, (state, { background, boardId }) => {
     console.log(background, boardId);
     console.log(state.boards);
     return {
       ...state,
       board: state.board
         ? {
-          ...state.board,
-          background: background,
-        }
+            ...state.board,
+            background: background,
+          }
         : null,
       boards: state.boards
         ? state.boards.map((board) => {
-          if (board.id === boardId) {
-            return {
-              ...board,
-              background: background,
-              backgroundId: background.id,
-            };
-          }
-          return board;
-        })
+            if (board.id === boardId) {
+              return {
+                ...board,
+                background: background,
+                backgroundId: background.id,
+              };
+            }
+            return board;
+          })
         : [],
     };
   }),
@@ -272,32 +281,32 @@ export const boardReducer = createReducer(
       isChangeBoardNameSuccess: false,
     };
   }),
-  on(boardActions.changeBoardNameSuccess, (state, {boardId, name}) => {
+  on(boardActions.changeBoardNameSuccess, (state, { boardId, name }) => {
     return {
       ...state,
       board: state.board
         ? {
-          ...state.board,
-          name: name,
-        }
+            ...state.board,
+            name: name,
+          }
         : null,
       boards: state.boards
         ? state.boards.map((board: BoardModel) => {
-          if (board.id === boardId) {
-            return {
-              ...board,
-              name: name,
-            };
-          }
-          return board;
-        })
+            if (board.id === boardId) {
+              return {
+                ...board,
+                name: name,
+              };
+            }
+            return board;
+          })
         : [],
       isChangingBoardName: false,
       changeBoardNameError: null,
       isChangeBoardNameSuccess: true,
     };
   }),
-  on(boardActions.changeBoardNameFail, (state, {error}) => {
+  on(boardActions.changeBoardNameFail, (state, { error }) => {
     return {
       ...state,
       isChangingBoardName: false,
@@ -313,7 +322,7 @@ export const boardReducer = createReducer(
       isDeleteBoardSuccess: false,
     };
   }),
-  on(boardActions.deleteBoardSuccess, (state, {boardId}) => {
+  on(boardActions.deleteBoardSuccess, (state, { boardId }) => {
     return {
       ...state,
       boards: state.boards
@@ -324,12 +333,90 @@ export const boardReducer = createReducer(
       isDeleteBoardSuccess: true,
     };
   }),
-  on(boardActions.deleteBoardFail, (state, {error}) => {
+  on(boardActions.deleteBoardFail, (state, { error }) => {
     return {
       ...state,
       isDeletingBoard: false,
       deleteBoardError: error,
       isDeleteBoardSuccess: false,
+    };
+  }),
+  on(boardActions.addNewMemberToBoard, (state, { boardId, userId }) => {
+    console.log(boardId, userId);
+    return {
+      ...state,
+      board: state.board
+        ? {
+            ...state.board,
+            members: state.board.members
+              ? [...state.board.members, userId]
+              : [userId],
+          }
+        : null,
+      boards: state.boards
+        ? state.boards.map((board: BoardModel) => {
+            if (board.id === boardId) {
+              return {
+                ...board,
+                members: board.members ? [...board.members, userId] : [userId],
+              };
+            }
+            return board;
+          })
+        : [],
+    };
+  }),
+  on(boardActions.addUserIdsBeKicked, (state, { userIds, boardId }) => {
+    return {
+      ...state,
+      kickedBoard: boardId,
+      kickedUserIds: userIds,
+    };
+  }),
+  on(boardActions.removeUserFromBoard, (state) => {
+    return {
+      ...state,
+      isRemovingUser: true,
+      removeUserError: null,
+      isRemoveUserSuccess: false,
+    };
+  }),
+  on(boardActions.removeUserFromBoardSuccess, (state, { boardId, userId }) => {
+    console.log(boardId, userId);
+    return {
+      ...state,
+      board: state.board
+        ? {
+            ...state.board,
+            members: state.board.members
+              ? state.board.members.filter((id) => id !== userId)
+              : [],
+          }
+        : null,
+      boards: state.boards
+        ? state.boards.map((board: BoardModel) => {
+            if (board.id === boardId) {
+              return {
+                ...board,
+                members: board.members
+                  ? board.members.filter((id) => id !== userId)
+                  : [],
+              };
+            }
+            return board;
+          })
+        : [],
+      isRemovingUser: false,
+      removeUserError: null,
+      isRemoveUserSuccess: true,
+    };
+  }),
+  on(boardActions.removeUserFromBoardFail, (state, { error }) => {
+    return {
+      ...state,
+      isRemovingUser: false,
+      removeUserError: error,
+      isRemoveUserSuccess: false,
     };
   }),
 );

@@ -10,6 +10,7 @@ import * as labelActions from '../../ngrx/label/label.actions';
 import { LabelModel } from '../../models/label.model';
 import * as listActions from '../../ngrx/list/list.actions';
 import { ListState } from '../../ngrx/list/list.state';
+import { UserState } from '../../ngrx/user/user.state';
 
 @Component({
   selector: 'app-filter',
@@ -42,6 +43,7 @@ export class FilterComponent implements OnInit, OnDestroy {
       board: BoardState;
       label: LabelState;
       list: ListState;
+      user: UserState;
     }>,
   ) {}
 
@@ -63,16 +65,18 @@ export class FilterComponent implements OnInit, OnDestroy {
           });
         }
       }),
+
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
-          this.members.set(
-            board.members!.map((member) => {
+          this.members.set([
+            { id: board.ownerId!, isChecked: false },
+            ...board.members!.map((member) => {
               return {
                 id: member,
                 isChecked: false,
               };
             }),
-          );
+          ]);
           this.boardId = board.id!;
         }
       }),

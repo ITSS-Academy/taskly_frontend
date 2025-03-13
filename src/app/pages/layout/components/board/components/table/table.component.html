@@ -1,5 +1,12 @@
+@if (this.isGettingCards) {
+  <div class="table-container">
+    <div style="border-radius: 0 0 10px 10px; background: white; padding: 10px; height: 100%">
+      <ngx-skeleton-loader count="5" appearance="line"></ngx-skeleton-loader>
+    </div>
+  </div>
+}
 <div class="table-container">
-  <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
 
     <!-- Cột Title -->
     <ng-container matColumnDef="title">
@@ -30,19 +37,23 @@
 
     <!-- Cột Labels -->
     <ng-container matColumnDef="labels">
-      <mat-header-cell *matHeaderCellDef>Label</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Label</mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <span *ngFor="let label of element.labels"
-              [ngStyle]="{'background-color': label.color, 'color': getContrastTextColor(label.color), 'padding': '4px 8px', 'border-radius': '4px', 'display': 'inline-block', 'margin': '2px'}">
-              {{ label.name }}
-        </span>
-
+        <ng-container *ngIf="element.labels?.length > 0; else noTags">
+          <div class="tag-container">
+            <span *ngFor="let tag of element.labels" class="tag-chip"
+                  [ngStyle]="{'background-color': tag.color, 'color': getContrastTextColor(tag.color), 'padding': '4px 8px', 'border-radius': '4px', 'display': 'inline-block', 'margin': '2px'}">
+              {{ tag.name }}
+            </span>
+          </div>
+        </ng-container>
+        <ng-template #noTags> No tags</ng-template>
       </mat-cell>
     </ng-container>
 
     <!-- Cột Due Date -->
     <ng-container matColumnDef="dueDate">
-      <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">Due Date</mat-header-cell>
       <mat-cell *matCellDef="let element">
        <span [ngClass]="{'overdue': isOverdue(element.dueDate)}">
         {{ element.dueDate ? (element.dueDate | date: 'dd/MM/yyyy') : 'No due date' }}
@@ -54,8 +65,16 @@
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openTaskDescription(row)"></mat-row>
 
+
+    <tr class="mat-row" *cdkNoDataRow>
+      <td class="mat-cell" colspan="4S">
+        No data
+      </td>
+    </tr>
   </mat-table>
 
   <!-- Phân trang -->
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
+
+

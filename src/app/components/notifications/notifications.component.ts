@@ -14,6 +14,8 @@ import { BoardService } from '../../services/board/board.service';
 import { UserService } from '../../services/user/user.service';
 import * as boardActions from '../../ngrx/board/board.actions';
 import { NotificationsModel } from '../../models/notifications.model';
+import { UserState } from '../../ngrx/user/user.state';
+import { UserModel } from '../../models/user.model';
 
 @Component({
   selector: 'app-notifications-api',
@@ -36,11 +38,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   isGettingNotifications!: boolean;
   canGetMoreNotifications = true;
+  user!: UserModel;
 
   subcriptions: Subscription[] = [];
 
   constructor(
-    private store: Store<{ notifications: NotificationsState }>,
+    private store: Store<{
+      notifications: NotificationsState;
+      user: UserState;
+    }>,
     private notificationsSocket: NotificationsService,
     private boardService: BoardService,
     private userService: UserService,
@@ -66,6 +72,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
             };
           });
         }),
+      this.store.select('user', 'user').subscribe((user) => {
+        if (user) {
+          this.user = user;
+        }
+      }),
       this.store
         .select('notifications', 'isGettingNotifications')
         .subscribe((isGettingNotifications) => {
@@ -159,13 +170,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     // this.store.dispatch(notificationsActions.checkNewNotifications());
   }
 
-  acceptInvitation(notificationId: string) {
+  acceptInvitation(
+    notificationId: string,
+    boardId: string,
+    receiverId: string,
+  ) {
     this.store.dispatch(
       notificationsActions.replyInviteBoard({
         notificationId,
         isAccepted: true,
       }),
     );
+
+    console.log('acceptInvitation', boardId, receiverId, this.user.id);
+
+    this.notificationsSocket.acceptBoard(boardId, this.user.id, receiverId);
   }
 
   rejectInvitation(notificationId: string) {

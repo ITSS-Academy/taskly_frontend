@@ -124,3 +124,27 @@ export const deleteLabelFromTask = createEffect(
   },
   { functional: true },
 );
+
+export const deleteLabelEffect = createEffect(
+  (actions$ = inject(Actions), labelService = inject(LabelService)) => {
+    return actions$.pipe(
+      ofType(labelActions.deleteLabel),
+      switchMap(({ labelId, cardId }) => {
+        return labelService.deleteLabel(labelId).pipe(
+          mergeMap(() => [
+            listActions.removeLabelFromCard({
+              cardId: cardId,
+              labelIds: [labelId],
+            }),
+            cardActions.deleteLabelFormCard({ labelIds: [labelId] }),
+            labelActions.deleteLabelSuccess({ labelId: labelId }),
+          ]),
+          catchError((error) =>
+            of(labelActions.deleteLabelFailure({ error: error.message })),
+          ),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);

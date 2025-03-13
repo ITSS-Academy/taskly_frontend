@@ -82,14 +82,14 @@ export class LabelDialogComponent implements OnInit, OnDestroy {
           this.cardId = card.id!;
           this.labels = this.labels
             ? this.labels.map((label) => {
-              return {
-                ...label,
-                selected:
-                  card.labels?.findIndex(
-                    (cardLabel) => cardLabel.id === label.id,
-                  ) !== -1,
-              };
-            })
+                return {
+                  ...label,
+                  selected:
+                    card.labels?.findIndex(
+                      (cardLabel) => cardLabel.id === label.id,
+                    ) !== -1,
+                };
+              })
             : [];
         }
       }),
@@ -157,6 +157,7 @@ export class LabelDialogComponent implements OnInit, OnDestroy {
     console.log('Nhãn được xóa:', removedLabels);
 
     if (addedLabels.length === 0 && removedLabels.length === 0) {
+      this.dialogRef.close();
       return;
     }
     if (addedLabels.length > 0) {
@@ -176,12 +177,13 @@ export class LabelDialogComponent implements OnInit, OnDestroy {
       );
     }
   }
+
   deleteLabel(labelToDelete: any) {
-    if (confirm(`Are you sure you want to delete label "${labelToDelete.name}"?`)) {
-      this.labels = this.labels.filter(label => label !== labelToDelete);
-      if (labelToDelete.id) {
-        this.store.dispatch(labelActions.deleteLabel({ labelId: labelToDelete.id }));
-      }
-    }
+    this.store.dispatch(
+      labelActions.deleteLabel({
+        labelId: labelToDelete.id,
+        cardId: this.cardId,
+      }),
+    );
   }
 }

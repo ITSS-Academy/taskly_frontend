@@ -25,11 +25,15 @@ import { Store } from '@ngrx/store';
 import { BoardState } from '../../../../../../ngrx/board/board.state';
 import { ListState } from '../../../../../../ngrx/list/list.state';
 import { ListModel } from '../../../../../../models/list.model';
-import {DatePipe, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
+import { DatePipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
 import { MatChip } from '@angular/material/chips';
 import { TaskDescriptionComponent } from '../../../../../../components/task-description/task-description.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from '../../../../../../shared/modules/material.module';
+import { CdkNoDataRow } from '@angular/cdk/table';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import { MatSort, Sort } from '@angular/material/sort';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-table',
@@ -53,12 +57,15 @@ import { MaterialModule } from '../../../../../../shared/modules/material.module
     MatTable,
     NgStyle,
     DatePipe,
-    NgClass
+    NgClass,
+    CdkNoDataRow,
+    NgxSkeletonLoaderComponent,
   ],
   standalone: true,
 })
 export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
+  isGettingCards!: boolean;
 
   constructor(private store: Store<{ board: BoardState; list: ListState }>) {}
 
@@ -66,13 +73,24 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
   cards: any[] = [];
   subscription: Subscription[] = [];
 
-  displayedColumns: string[] = ['title', 'list', 'members', 'labels', 'dueDate'];
+  displayedColumns: string[] = [
+    'title',
+    'list',
+    'members',
+    'labels',
+    'dueDate',
+  ];
   dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit() {
     this.subscription.push(
+      this.store
+        .select('list', 'isGettingLists')
+        .subscribe((isGettingLists) => {
+          this.isGettingCards = isGettingLists;
+        }),
       this.store.select('list', 'lists').subscribe((lists) => {
         this.lists = lists;
 
@@ -123,5 +141,28 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
     this.dialog.open(TaskDescriptionComponent, {
       data: row.id,
     });
+  }
+
+  @ViewChild(MatSort) sort!: MatSort;
+  private _liveAnnouncer = inject(LiveAnnouncer);
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      const sortedData = [...this.dataSource.data].sort((a, b) => {
+        const dateA = a.dueDate ? new Date(a.dueDate).getTime() : null;
+        const dateB = b.dueDate ? new Date(b.dueDate).getTime() : null;
+
+        if (dateA === null) return 1;
+        if (dateB === null) return -1;
+
+        return sortState.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+
+      this.dataSource.data = sortedData;
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this.dataSource.data = this.cards;
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 }

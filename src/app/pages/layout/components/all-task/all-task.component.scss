@@ -77,8 +77,22 @@ mat-row:hover {
   background-color: rgba(0, 0, 0, 0.1) !important; /* Change color on hover */
 }
 
+.overdue {
+  color: red;
+  font-weight: bold;
+}
+
 
 mat-paginator {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+}
+
+.tag-container {
+  max-width: 60%; /* Chiếm 80% chiều rộng của cột */
+  white-space: nowrap; /* Ngăn xuống dòng */
+  overflow: hidden; /* Ẩn nội dung bị tràn */
+  text-overflow: ellipsis; /* Hiển thị "..." nếu nội dung quá dài */
+  display: flex;
+  gap: 4px;
 }
