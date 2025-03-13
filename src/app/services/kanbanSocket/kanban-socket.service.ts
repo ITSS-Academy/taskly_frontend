@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Socket} from 'ngx-socket-io';
+import {environment} from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class KanbanSocketService extends Socket {
 
   constructor() {
     super({
-      url: 'http://localhost:80',
+      url: `${environment.wsUrl}`,
       options: {
         transports: ['websocket'],
       }
