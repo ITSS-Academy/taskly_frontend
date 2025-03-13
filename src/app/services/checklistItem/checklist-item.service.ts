@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import {AuthState} from '../../ngrx/auth/auth.state';
+import {environment} from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class ChecklistItemService {
     isCompleted: boolean;
   }) {
     return this.httpClient.post(
-      `http://localhost:3000/checklist-item`,
+      `${environment.apiUrl}/checklist-item`,
       subTask,
       {
         headers: {Authorization: this.accessToken}
@@ -40,7 +41,7 @@ export class ChecklistItemService {
     isCompleted: boolean;
   }) {
     return this.httpClient.put(
-      `http://localhost:3000/checklist-item/toogle`,
+      `${environment.apiUrl}/checklist-item/toogle`,
       subTask,
       {
         headers: {Authorization: this.accessToken}
@@ -50,7 +51,7 @@ export class ChecklistItemService {
 
   deleteSubTask(checklistItemId: string) {
     return this.httpClient.delete(
-      `http://localhost:3000/checklist-item/${checklistItemId}`,
+      `${environment.apiUrl}/checklist-item/${checklistItemId}`,
       {
         headers: {Authorization: this.accessToken}
       })
