@@ -17,8 +17,10 @@
   overflow: hidden;
   flex-direction: column;
   justify-content: space-between;
+}
 
-
+.search-tag {
+  max-width: 200px;
 }
 
 .mat-mdc-table {

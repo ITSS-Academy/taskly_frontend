@@ -3,38 +3,55 @@ import {
   signal,
   ViewChild,
   OnInit,
-  AfterViewInit, OnDestroy,
+  AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {NgForOf, NgIf, NgStyle} from '@angular/common';
-import {NavbarComponent} from '../../../../components/navbar/navbar.component';
-import {MaterialModule} from '../../../../shared/modules/material.module';
-import {BackgroundColorService} from '../../../../services/background-color/background-color.service';
-import {HomeNavComponent} from '../home-nav/home-nav.component';
-import {Subscription} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {CardState} from '../../../../ngrx/card/card.state';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { NgForOf, NgIf, NgStyle } from '@angular/common';
+import { NavbarComponent } from '../../../../components/navbar/navbar.component';
+import { MaterialModule } from '../../../../shared/modules/material.module';
+import { BackgroundColorService } from '../../../../services/background-color/background-color.service';
+import { HomeNavComponent } from '../home-nav/home-nav.component';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { CardState } from '../../../../ngrx/card/card.state';
 import * as cardActions from '../../../../ngrx/card/card.actions';
-import {TaskDescriptionComponent} from '../../../../components/task-description/task-description.component';
-import {MatDialog} from '@angular/material/dialog';
+import { TaskDescriptionComponent } from '../../../../components/task-description/task-description.component';
+import { MatDialog } from '@angular/material/dialog';
+import { CdkNoDataRow } from '@angular/cdk/table';
+import { ListCard } from '../../../../models/list.model';
 
 @Component({
   selector: 'app-all-task',
   standalone: true,
-  imports: [NavbarComponent, MaterialModule, ReactiveFormsModule, NgStyle, HomeNavComponent, NgForOf, NgIf],
+  imports: [
+    NavbarComponent,
+    MaterialModule,
+    ReactiveFormsModule,
+    NgStyle,
+    HomeNavComponent,
+    NgForOf,
+    NgIf,
+    CdkNoDataRow,
+  ],
   templateUrl: './all-task.component.html',
   styleUrl: './all-task.component.scss',
 })
-export class AllTaskComponent implements AfterViewInit,OnInit, OnDestroy {
+export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
   displayedColumns: string[] = ['title', 'board', 'list', 'members', 'tags'];
-  dataSource = new MatTableDataSource<any>;
+  dataSource = new MatTableDataSource<any>();
   readonly panelOpenState = signal(false);
   private dialog: any;
 
-  constructor(private backgroundService: BackgroundColorService,
-              private store: Store<{ card: CardState}>) {
+  isGettingCards!: boolean;
+  cards!: ListCard[];
+
+  constructor(
+    private backgroundService: BackgroundColorService,
+    private store: Store<{ card: CardState }>,
+  ) {
     this.backgroundService.setLogo('rgb(245, 255, 248)');
     this.backgroundService.setNavbarTextColor('rgb(0, 0, 0)');
     this.backgroundService.setSidebarColor('rgb(245, 255, 248)');
@@ -46,21 +63,39 @@ export class AllTaskComponent implements AfterViewInit,OnInit, OnDestroy {
   ngOnInit() {
     this.subscription.push(
       this.store.select('card').subscribe((cardState) => {
-        this.dataSource.data = cardState.cards
+        this.dataSource.data = cardState.cards;
+        this.cards = cardState.cards;
       }),
+      this.store
+        .select('card', 'isGettingCardsByUser')
+        .subscribe((isGettingCards) => {
+          this.isGettingCards = isGettingCards;
+        }),
     );
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      return data.labels
+        ? data.labels.some((label: any) =>
+            label.name.toLowerCase().includes(filter),
+          )
+        : false;
+    };
   }
-
 
   ngOnDestroy() {
-    this.subscription.forEach(sub => sub.unsubscribe());
+    this.subscription.forEach((sub) => sub.unsubscribe());
   }
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   getContrastTextColor(hexColor: string) {
@@ -73,7 +108,6 @@ export class AllTaskComponent implements AfterViewInit,OnInit, OnDestroy {
     return brightness > 186 ? '#000000' : '#FFFFFF';
   }
 
-
   selected = 'option2';
 }
 
@@ -84,4 +118,3 @@ export interface PeriodicElement {
   members: string;
   tags: string;
 }
-

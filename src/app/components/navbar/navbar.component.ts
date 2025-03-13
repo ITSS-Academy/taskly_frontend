@@ -4,30 +4,31 @@ import {
   Component,
   ElementRef,
   inject,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {MaterialModule} from '../../shared/modules/material.module';
-import {FormsModule} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {NotificationsComponent} from '../notifications/notifications.component';
-import {NotificationsButtonComponent} from '../notifications-button/notifications-button.component';
-import {ShareComponent} from '../share/share.component';
-import {BackgroundComponent} from '../background/background.component';
-import {BackgroundColorService} from '../../services/background-color/background-color.service';
-import {NgStyle} from '@angular/common';
-import {FilterComponent} from '../filter/filter.component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {BoardState} from '../../ngrx/board/board.state';
-import {LogoutButtonComponent} from '../logout-button/logout-button.component';
+import { MaterialModule } from '../../shared/modules/material.module';
+import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationsComponent } from '../notifications/notifications.component';
+import { NotificationsButtonComponent } from '../notifications-button/notifications-button.component';
+import { ShareComponent } from '../share/share.component';
+import { BackgroundComponent } from '../background/background.component';
+import { BackgroundColorService } from '../../services/background-color/background-color.service';
+import { NgStyle } from '@angular/common';
+import { FilterComponent } from '../filter/filter.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { BoardState } from '../../ngrx/board/board.state';
+import { LogoutButtonComponent } from '../logout-button/logout-button.component';
 import * as notificationsActions from '../../ngrx/notifications/notifications.actions';
-import {NotificationsState} from '../../ngrx/notifications/notifications.state';
+import { NotificationsState } from '../../ngrx/notifications/notifications.state';
 import * as labelActions from '../../ngrx/label/label.actions';
-import {LabelState} from '../../ngrx/label/label.state';
-import {Subscription} from 'rxjs';
+import { LabelState } from '../../ngrx/label/label.state';
+import { Subscription } from 'rxjs';
 import * as boardActions from '../../ngrx/board/board.actions';
-import {ListState} from '../../ngrx/list/list.state';
+import { ListState } from '../../ngrx/list/list.state';
 
 @Component({
   selector: 'app-navbar',
@@ -42,7 +43,7 @@ import {ListState} from '../../ngrx/list/list.state';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent implements OnInit, AfterViewInit {
+export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   textColor: string = '#000000';
   navbarColor: string = '';
   inputValue: string = 'Board Name';
@@ -52,9 +53,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   id!: string;
   isFiltering!: boolean;
 
-  @ViewChild('textInput', {static: false})
+  @ViewChild('textInput', { static: false })
   textInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('textMeasurer', {static: true})
+  @ViewChild('textMeasurer', { static: true })
   textMeasurer!: ElementRef<HTMLSpanElement>;
 
   constructor(
@@ -68,8 +69,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       label: LabelState;
       list: ListState;
     }>,
-  ) {
-  }
+  ) {}
 
   subscriptions: Subscription[] = [];
 
@@ -80,7 +80,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       }),
       this.backgroundColorService.navbarColor$.subscribe((color) => {
         this.navbarColor = color;
-        console.log('navbarColor', this.navbarColor)
+        console.log('navbarColor', this.navbarColor);
       }),
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
@@ -105,6 +105,10 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     );
   }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
   ngAfterViewInit() {
     this.adjustWidth();
   }
@@ -122,7 +126,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
 
   disableEditing(): void {
     this.store.dispatch(
-      boardActions.changeBoardName({boardId: this.id, name: this.inputValue}),
+      boardActions.changeBoardName({ boardId: this.id, name: this.inputValue }),
     );
     this.isEditing = false;
   }
@@ -166,7 +170,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     enterAnimationDuration: string,
     exitAnimationDuration: string,
   ): void {
-    this.store.dispatch(labelActions.getLabelForFilter({id: this.id}));
+    this.store.dispatch(labelActions.getLabelForFilter({ id: this.id }));
   }
 
   routeKanban() {

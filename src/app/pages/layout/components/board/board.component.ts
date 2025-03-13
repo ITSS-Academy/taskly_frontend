@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -40,6 +40,8 @@ import * as commentActions from '../../../../ngrx/comment/comment.actions';
 import * as checklistItemActions from '../../../../ngrx/checklistItem/checklistItem.actions';
 import * as cardActions from '../../../../ngrx/card/card.actions';
 import * as labelActions from '../../../../ngrx/label/label.actions';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ShareSnackbarComponent } from '../../../../components/share-snackbar/share-snackbar.component';
 
 @Component({
   selector: 'app-board',
@@ -166,6 +168,19 @@ export class BoardComponent implements OnInit, OnDestroy {
 
           this.store.select('list', 'lists').subscribe((lists) => {
             this.lists = lists;
+          }),
+          this.store.select('board', 'getBoardError').subscribe((error) => {
+            if (error) {
+              this._snackBar.openFromComponent(ShareSnackbarComponent, {
+                data:
+                  error ==
+                  'JSON object requested, multiple (or no) rows returned'
+                    ? 'Board has been deleted'
+                    : error,
+                duration: 3 * 1000,
+              });
+              this.router.navigate(['/home']);
+            }
           }),
           this.store.select('board', 'board').subscribe((board) => {
             if (board) {
@@ -330,6 +345,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   handleOnBoardChange(boardId: string) {}
+
+  private _snackBar = inject(MatSnackBar);
 
   extractPrimaryColor(imageUrl: string): void {
     const image = new Image();

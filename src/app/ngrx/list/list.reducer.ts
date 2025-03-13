@@ -123,7 +123,7 @@ export const listReducer = createReducer(
     const newList = lists.map((list) => {
       if (state.lists) {
         const foundList = state.lists.find((l) => l.id === list.id);
-        const cards = foundList ? foundList.cards : []; // Nếu không tìm thấy, gán rỗng
+        const cards = foundList ? foundList.cards : [];
         return { ...list, cards };
       }
       return list;
@@ -563,6 +563,7 @@ export const listReducer = createReducer(
   on(listActions.getFilteredCards, (state) => {
     return {
       ...state,
+      filterLists: [],
       isGettingFilteringCards: true,
       isGettingFilteringCardsSuccess: false,
       getFilteringCardsError: '',

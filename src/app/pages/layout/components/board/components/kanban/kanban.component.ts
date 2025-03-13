@@ -50,6 +50,7 @@ import { CardState } from '../../../../../../ngrx/card/card.state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShareSnackbarComponent } from '../../../../../../components/share-snackbar/share-snackbar.component';
 import { ChecklistItemState } from '../../../../../../ngrx/checklistItem/checklistItem.state';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 interface Task {
   id: string;
@@ -81,6 +82,7 @@ interface Task {
     ReactiveFormsModule,
     CdkDragHandle,
     CdkDragPlaceholder,
+    NgxSkeletonLoaderComponent,
   ],
   styleUrls: ['./kanban.component.scss'],
 })
@@ -109,32 +111,28 @@ export class KanbanComponent implements OnInit, OnDestroy {
   ) {}
 
   private _snackBar = inject(MatSnackBar);
-  isUpdatingCard$!: Observable<boolean>;
+  isGettingList$!: Observable<boolean>;
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.store.select('list').subscribe((lists) => {
-        console.log('lists in kanban');
-        console.log(lists);
-        if (lists.isFiltering) {
-          this.lists = lists.filterLists.filter(
-            (list) => list.cards?.length !== 0,
-          );
-        } else {
-          this.lists = lists.lists;
-        }
+      combineLatest([
+        this.store.select('list', 'lists'),
+        this.store.select('list', 'filterLists'),
+        this.store.select('list', 'isFiltering'),
+      ]).subscribe(([lists, filterLists, isFiltering]) => {
+        this.isFiltering = isFiltering;
+        this.lists = isFiltering
+          ? filterLists.filter((list) => list.cards?.length !== 0)
+          : lists;
       }),
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
           this.boardId = board.id!;
         }
       }),
-      this.store.select('list', 'isFiltering').subscribe((isFiltering) => {
-        this.isFiltering = isFiltering;
-      }),
     );
     this.board$ = this.store.select('board', 'board');
-    this.isUpdatingCard$ = this.store.select('list', 'isUpdatingCard');
+    this.isGettingList$ = this.store.select('list', 'isGettingLists');
   }
 
   addTask(listId: string) {
