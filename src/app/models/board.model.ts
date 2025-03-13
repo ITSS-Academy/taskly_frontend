@@ -3,7 +3,7 @@ export interface BoardModel {
   name: string;
   ownerId?: string;
   backgroundId?: string;
-  background:
+  background?:
     | {
         color?: string | null;
         fileName?: string | null;

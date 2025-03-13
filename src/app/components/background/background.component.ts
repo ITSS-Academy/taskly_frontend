@@ -3,6 +3,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  inject,
   ViewChild,
 } from '@angular/core';
 import {MaterialModule} from '../../shared/modules/material.module';
@@ -23,6 +24,9 @@ import {NgForOf, NgStyle} from '@angular/common';
 import {Subscription} from 'rxjs';
 import * as backgroundActions from '../../ngrx/background/background.actions';
 import {BackgroundState} from '../../ngrx/background/background.state';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component';
+
 
 @Component({
   selector: 'app-background',
@@ -148,7 +152,15 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     };
   }
 
+  private _snackBar = inject(MatSnackBar);
+
   onAccept() {
+    if (!this.imageUrl && !this.file) {
+      this._snackBar.openFromComponent(ShareSnackbarComponent, {
+        data: 'Please select a background',
+      });
+      return;
+    }
     if (!this.imageUrl) {
       if (this.file) {
         this.store.dispatch(

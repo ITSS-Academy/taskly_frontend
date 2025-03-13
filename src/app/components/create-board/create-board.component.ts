@@ -16,6 +16,7 @@ import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component
 import {BackgroundState} from '../../ngrx/background/background.state';
 import * as backgroundActions from '../../ngrx/background/background.actions';
 
+
 @Component({
   selector: 'app-create-board',
   standalone: true,
@@ -31,6 +32,7 @@ export class CreateBoardComponent implements OnInit {
   }[] = [];
 
   imageUrl!: string;
+  backgroundId!: string;
 
   colorBackgrounds = ['#D3D3D3', '#A8E6CF', '#377D6A', '#1D4F73', '#1D4F73'];
   boardForm = new FormGroup({
@@ -56,13 +58,31 @@ export class CreateBoardComponent implements OnInit {
       })
   }
 
-  selectBackground(background: string) {
-    console.log('Selected background:', background);
+  selectBackground(background: string, id: string) {
+    this.imagePreview = background
+    this.imageUrl = background
+    this.boardForm.get('image')?.setValue(null)
+    this.backgroundId = id
   }
 
   createBoard() {
+    if (!this.boardForm.get('title')?.valid) {
+      this._snackBar.openFromComponent(ShareSnackbarComponent, {
+        data: 'Please fill in the title',
+        duration: 2000,
+      })
+      return
+    }
+
+    if (!this.imagePreview || this.imagePreview == '') {
+      this._snackBar.openFromComponent(ShareSnackbarComponent, {
+        data: 'Please select a background',
+        duration: 2000,
+      })
+      return
+    }
+
     if (
-      this.boardForm.get('title')?.valid &&
       this.boardForm.get('image')?.valid
     ) {
       console.log(
@@ -81,12 +101,15 @@ export class CreateBoardComponent implements OnInit {
 
       this.dialogRef.close();
     } else {
-      this._snackBar.openFromComponent(ShareSnackbarComponent, {
-        verticalPosition: 'bottom',
-        horizontalPosition: 'start',
-        data: 'Please fill in all required fields',
-        duration: 2000,
-      });
+      this.store.dispatch(
+        boardActions.createBoard({
+          board: {
+            name: this.boardForm.get('title')?.value ?? 'Board Name',
+            backgroundId: this.backgroundId,
+          },
+        }),
+      );
+      this.dialogRef.close();
     }
   }
 
@@ -109,6 +132,7 @@ export class CreateBoardComponent implements OnInit {
 
       reader.onload = () => {
         this.imagePreview = reader.result as string; // Gán ảnh vào biến để hiển thị
+        this.imageUrl = '';
       };
 
       reader.readAsDataURL(file);

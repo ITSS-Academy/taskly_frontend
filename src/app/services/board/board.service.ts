@@ -32,10 +32,12 @@ export class BoardService {
 
       return this.httpClient.post(`${environment.apiUrl}/board`, formData, {
         headers: {Authorization: this.accessToken},
-      });
+      })
     }
 
-    return this.httpClient.post(`${environment.apiUrl}/board`, board);
+    return this.httpClient.post(`${environment.apiUrl}/board`, board, {
+      headers: {Authorization: this.accessToken},
+    });
   }
 
   getAllBoards() {

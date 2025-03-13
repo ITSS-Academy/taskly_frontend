@@ -28,7 +28,7 @@
           <img class="background"
              [src]="background.fileLocation"
              [class.selected]="this.imagePreview === background.fileLocation"
-             (click)="selectBackground(background.fileLocation)"
+             (click)="selectBackground(background.fileLocation, background.id)"
              alt="Background image"
              >
           }
