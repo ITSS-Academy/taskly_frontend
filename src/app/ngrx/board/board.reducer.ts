@@ -419,4 +419,28 @@ export const boardReducer = createReducer(
       isRemoveUserSuccess: false,
     };
   }),
+  on(boardActions.checkActiveBoard, (state, { boardId }) => {
+    // Kiểm tra xem board có tồn tại không
+    const currentBoardIndex = state.boards
+      ? state.boards.findIndex((board) => board.id === boardId)
+      : -1;
+
+    if (currentBoardIndex === -1 || currentBoardIndex < 4) {
+      return { ...state };
+    } else {
+      // Lấy board hiện tại
+      const currentBoard = state.boards![currentBoardIndex];
+
+      if (!currentBoard) return { ...state };
+
+      const newBoards = [...state.boards!];
+      newBoards.splice(currentBoardIndex, 1);
+      newBoards.unshift(currentBoard);
+
+      return {
+        ...state,
+        boards: newBoards,
+      };
+    }
+  }),
 );

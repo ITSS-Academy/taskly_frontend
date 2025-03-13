@@ -154,6 +154,11 @@ export const removeUserFromBoardSuccess = createAction(
   props<{ boardId: string; userId: string }>(),
 );
 
+export const checkActiveBoard = createAction(
+  '[Board] Check Active Board',
+  props<{ boardId: string }>(),
+);
+
 export const removeUserFromBoardFail = createAction(
   '[Board] Remove Member From Board Fail',
   props<{ error: string }>(),

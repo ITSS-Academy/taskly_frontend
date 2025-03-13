@@ -119,6 +119,9 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.store.dispatch(checklistItemActions.clearChecklistItemState());
         this.store.dispatch(labelActions.clearLabelState());
 
+        this.store.dispatch(
+          boardActions.checkActiveBoard({ boardId: this.boardId }),
+        );
         this.store.dispatch(boardActions.getBoard({ boardId: this.boardId }));
         this.store.dispatch(listActions.getLists({ boardId: this.boardId }));
         this.subscriptions.push(
