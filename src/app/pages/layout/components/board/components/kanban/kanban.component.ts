@@ -30,27 +30,27 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { TaskComponent } from './components/list-tasks/components/task/task.component';
+import {TaskComponent} from './components/list-tasks/components/task/task.component';
 
-import { ForDirective } from '../../../../../../shared/for.directive';
-import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
-import { BoardState } from '../../../../../../ngrx/board/board.state';
-import { Store } from '@ngrx/store';
+import {ForDirective} from '../../../../../../shared/for.directive';
+import {AsyncPipe, NgClass, NgForOf} from '@angular/common';
+import {ActivatedRoute, RouterOutlet} from '@angular/router';
+import {BoardState} from '../../../../../../ngrx/board/board.state';
+import {Store} from '@ngrx/store';
 import * as boardActions from '../../../../../../ngrx/board/board.actions';
-import { NavbarComponent } from '../../../../../../components/navbar/navbar.component';
-import { BoardModel } from '../../../../../../models/board.model';
-import { ListModel } from '../../../../../../models/list.model';
+import {NavbarComponent} from '../../../../../../components/navbar/navbar.component';
+import {BoardModel} from '../../../../../../models/board.model';
+import {ListModel} from '../../../../../../models/list.model';
 import * as listActions from '../../../../../../ngrx/list/list.actions';
-import { ListState } from '../../../../../../ngrx/list/list.state';
-import { MaterialModule } from '../../../../../../shared/modules/material.module';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { GatewayService } from '../../../../../../services/gateway/gateway.service';
-import { CardState } from '../../../../../../ngrx/card/card.state';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ShareSnackbarComponent } from '../../../../../../components/share-snackbar/share-snackbar.component';
-import { ChecklistItemState } from '../../../../../../ngrx/checklistItem/checklistItem.state';
-import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import {ListState} from '../../../../../../ngrx/list/list.state';
+import {MaterialModule} from '../../../../../../shared/modules/material.module';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {GatewayService} from '../../../../../../services/gateway/gateway.service';
+import {CardState} from '../../../../../../ngrx/card/card.state';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ShareSnackbarComponent} from '../../../../../../components/share-snackbar/share-snackbar.component';
+import {ChecklistItemState} from '../../../../../../ngrx/checklistItem/checklistItem.state';
+import {NgxSkeletonLoaderComponent} from 'ngx-skeleton-loader';
 
 interface Task {
   id: string;
@@ -81,6 +81,8 @@ interface Task {
   styleUrls: ['./kanban.component.scss'],
 })
 export class KanbanComponent implements OnInit, OnDestroy {
+  @ViewChild('columnInput') columnInput!: ElementRef;
+  @ViewChild('taskInput') taskInput!: ElementRef;
   board$!: Observable<BoardModel | null>;
   lists: (ListModel & { isInEditMode?: boolean })[] = [];
   boardId!: string;
@@ -101,7 +103,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
       card: CardState;
       checklistItem: ChecklistItemState;
     }>,
-  ) {}
+  ) {
+  }
 
   private _snackBar = inject(MatSnackBar);
   isGettingList$!: Observable<boolean>;
@@ -138,14 +141,19 @@ export class KanbanComponent implements OnInit, OnDestroy {
     // find in lists, then switch isInEditMode to true
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
-        return { ...list, isInEditMode: true };
+        return {...list, isInEditMode: true};
       }
       if (list.isInEditMode) {
         this.cardName.reset();
-        return { ...list, isInEditMode: false };
+        return {...list, isInEditMode: false};
       }
       return list;
     });
+    setTimeout(() => {
+      if (this.taskInput) {
+        this.taskInput.nativeElement.focus();
+      }
+    }, 0);
   }
 
   addNewList() {
@@ -222,7 +230,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       if (this.lists && this.lists[previousIndex].cards) {
         console.log(this.lists[previousIndex]);
         const updatedColumns = [
-          ...this.lists[previousIndex].cards.map((card: any) => ({ ...card })),
+          ...this.lists[previousIndex].cards.map((card: any) => ({...card})),
         ];
         moveItemInArray(
           updatedColumns,
@@ -231,18 +239,18 @@ export class KanbanComponent implements OnInit, OnDestroy {
         );
         this.lists = this.lists.map((col, index) => {
           if (index === previousIndex) {
-            return { ...col, cards: [...updatedColumns] };
+            return {...col, cards: [...updatedColumns]};
           }
           return col;
         });
       }
     } else {
       const previousContainer = [
-        ...event.previousContainer.data.map((item: any) => ({ ...item })),
+        ...event.previousContainer.data.map((item: any) => ({...item})),
       ];
       console.log(event.container!.data);
       const container = [
-        ...event.container!.data!.map((item: any) => ({ ...item })),
+        ...event.container!.data!.map((item: any) => ({...item})),
       ];
       transferArrayItem(
         previousContainer,
@@ -253,10 +261,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
       this.lists = this.lists.map((col, index) => {
         if (index === previousIndex) {
-          return { ...col, cards: [...previousContainer] };
+          return {...col, cards: [...previousContainer]};
         }
         if (index === currentIndex) {
-          return { ...col, cards: [...container] };
+          return {...col, cards: [...container]};
         }
         return col;
       });
@@ -278,12 +286,12 @@ export class KanbanComponent implements OnInit, OnDestroy {
       return;
     }
     this.store.dispatch(
-      listActions.addCard({ card: this.cardName.value!, listId }),
+      listActions.addCard({card: this.cardName.value!, listId}),
     );
     this.cardName.reset();
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
-        return { ...list, isInEditMode: false };
+        return {...list, isInEditMode: false};
       }
       return list;
     });
@@ -293,7 +301,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.list.isInEditMode = false;
     this.lists = this.lists.map((list) => {
       if (list.id === listId) {
-        return { ...list, isInEditMode: false };
+        return {...list, isInEditMode: false};
       }
       return list;
     });
@@ -318,22 +326,25 @@ export class KanbanComponent implements OnInit, OnDestroy {
   onBtnAddList() {
     if (this.list.isInEditMode) {
       this.lists = this.lists.map((list) => {
-        return { ...list, isInEditMode: false };
+        return {...list, isInEditMode: false};
       });
       this.cardName.reset();
     }
     this.isAddingList = true;
     this.store.dispatch(listActions.clearFilterArrays());
+
+    setTimeout(() => {
+      if (this.columnInput) {
+        this.columnInput.nativeElement.focus();
+      }
+    }, 0);
   }
 
   removeList(listId: string) {
-    this.store.dispatch(listActions.deleteList({ listId }));
+    this.store.dispatch(listActions.deleteList({listId}));
   }
 
-  @ViewChild('columnInput') columnInput!: ElementRef;
-  @ViewChild('taskInput') taskInput!: ElementRef;
-
-  list = { isInEditMode: false }; // Simulated list object, replace with actual logic
+  list = {isInEditMode: false};
 
   // ngAfterViewChecked() {
   //   if (this.isAddingList && this.columnInput) {

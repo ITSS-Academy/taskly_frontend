@@ -1,108 +1,64 @@
 <div class="container">
   <h2 mat-dialog-title>Notifications</h2>
   <mat-dialog-content class="mat-typography notifications" (scroll)="onScroll($event)">
-
     <mat-list>
-      @for (noti of notiArray; track $index) {
-        @if (noti.type == 'invite_board') {
-          <mat-list-item class="invite-noti">
-            <mat-icon matListItemIcon>group_add</mat-icon>
-            <div matListItemTitle matTooltip="{{ noti.senderName }} Invitation to join {{ noti.boardName }}">
-              {{ noti.senderName }} Invitation to join {{ noti.boardName }}
-            </div>
-            <div matListItemLine>Accept or decline the invitation</div>
-            <div class="btns">
-              <button mat-stroked-button (click)="this.rejectInvitation(noti.id!)">Decline</button>
-              <button mat-flat-button (click)="this.acceptInvitation(noti.id!)">Accept</button>
-            </div>
-          </mat-list-item>
-        } @else if (noti.type == 'added_to_card') {
-          <mat-list-item matTooltip="You have added to card {{ noti.cardTitle }}">
-            <mat-icon matListItemIcon>add_card</mat-icon>
-            <div matListItemTitle>You have added to card {{ noti.cardTitle }}</div>
-            <div matListItemLine>{{ noti.createdAt | date }}</div>
-          </mat-list-item>
-
-        } @else if (noti.type == 'accept_invite') {
-          <mat-list-item matTooltip="{{ noti.senderName }}  has accessed the board {{ noti.boardName }}">
-            <mat-icon matListItemIcon>library_add_check</mat-icon>
-            <div matListItemTitle>{{ noti.senderName }}  has accessed the board {{ noti.boardName }}</div>
-            <div matListItemLine>{{ noti.createdAt | date }}</div>
-          </mat-list-item>
-        } @else if (noti.type == 'removed_from_card') {
-          <mat-list-item matTooltip="{{ noti.senderName }}  has removed you from card{{ noti.cardTitle }}">
-            <mat-icon matListItemIcon>remove_circle</mat-icon>
-            <div matListItemTitle>{{ noti.senderName }}  has removed you from card{{ noti.cardTitle }}</div>
-            <div matListItemLine>{{ noti.createdAt | date }}</div>
-          </mat-list-item>
-        } @else if (noti.type == 'removed_from_board') {
-          <mat-list-item matTooltip="{{ noti.senderName }} has removed you from board{{ noti.cardTitle }}">
-            <mat-icon matListItemIcon>cancel</mat-icon>
-            <div matListItemTitle>{{ noti.senderName }} has removed you from board{{ noti.cardTitle }}</div>
-            <div matListItemLine>{{ noti.createdAt | date }}</div>
-          </mat-list-item>
-        } @else {
-          <mat-list-item matTooltip="{{ noti.senderName }} has declined your invitation">
-            <mat-icon matListItemIcon>person_remove</mat-icon>
-            <div matListItemTitle>{{ noti.senderName }} has declined your invitation</div>
-            <div matListItemLine>{{ noti.createdAt |date }}</div>
-          </mat-list-item>
-        }
-      }
-
       @if (isGettingNotifications) {
         <ngx-skeleton-loader count="2" appearance="line"/>
+      } @else {
+        @if (notiArray.length === 0) {
+          <!-- Show this message when there are no notifications -->
+          <p class="no-notifications-message">
+            No notifications yet
+          </p>
+        } @else {
+          @for (noti of notiArray; track $index) {
+            @if (noti.type == 'invite_board') {
+              <mat-list-item class="invite-noti">
+                <mat-icon matListItemIcon>group_add</mat-icon>
+                <div matListItemTitle matTooltip="{{ noti.senderName }} invited you to join {{ noti.boardName }}">
+                  {{ noti.senderName }} invited you to join {{ noti.boardName }}
+                </div>
+                <div matListItemLine>Accept or decline the invitation</div>
+                <div class="btns">
+                  <button mat-stroked-button (click)="rejectInvitation(noti.id!)">Decline</button>
+                  <button mat-flat-button (click)="acceptInvitation(noti.id!)">Accept</button>
+                </div>
+              </mat-list-item>
+            } @else if (noti.type == 'added_to_card') {
+              <mat-list-item matTooltip="You were added to card {{ noti.cardTitle }}">
+                <mat-icon matListItemIcon>add_card</mat-icon>
+                <div matListItemTitle>You were added to card {{ noti.cardTitle }}</div>
+                <div matListItemLine>{{ noti.createdAt | date }}</div>
+              </mat-list-item>
+            } @else if (noti.type == 'accept_invite') {
+              <mat-list-item
+                matTooltip="{{ noti.senderName }} has accepted the invitation to join {{ noti.boardName }}">
+                <mat-icon matListItemIcon>library_add_check</mat-icon>
+                <div matListItemTitle>{{ noti.senderName }} accepted your invitation to join {{ noti.boardName }}</div>
+                <div matListItemLine>{{ noti.createdAt | date }}</div>
+              </mat-list-item>
+            } @else if (noti.type == 'removed_from_card') {
+              <mat-list-item matTooltip="{{ noti.senderName }} removed you from card {{ noti.cardTitle }}">
+                <mat-icon matListItemIcon>remove_circle</mat-icon>
+                <div matListItemTitle>{{ noti.senderName }} removed you from card {{ noti.cardTitle }}</div>
+                <div matListItemLine>{{ noti.createdAt | date }}</div>
+              </mat-list-item>
+            } @else if (noti.type == 'removed_from_board') {
+              <mat-list-item matTooltip="{{ noti.senderName }} removed you from board {{ noti.boardName }}">
+                <mat-icon matListItemIcon>cancel</mat-icon>
+                <div matListItemTitle>{{ noti.senderName }} removed you from board {{ noti.boardName }}</div>
+                <div matListItemLine>{{ noti.createdAt | date }}</div>
+              </mat-list-item>
+            } @else {
+              <mat-list-item matTooltip="{{ noti.senderName }} declined your invitation">
+                <mat-icon matListItemIcon>person_remove</mat-icon>
+                <div matListItemTitle>{{ noti.senderName }} declined your invitation</div>
+                <div matListItemLine>{{ noti.createdAt | date }}</div>
+              </mat-list-item>
+            }
+          }
+        }
       }
-
-
     </mat-list>
-
   </mat-dialog-content>
-
 </div>
-
-
-<!--<mat-list-item class="invite-noti">-->
-<!--  <mat-icon matListItemIcon>group</mat-icon>-->
-<!--  <div matListItemTitle>Invitation to join Taskly</div>-->
-<!--  <div matListItemLine>Accept or decline the invitation</div>-->
-<!--  <div class="btns">-->
-<!--    <button mat-stroked-button>Decline</button>-->
-<!--    <button mat-flat-button>Accept</button>-->
-<!--  </div>-->
-<!--</mat-list-item>-->
-
-<!--@for (folder of notiArray; track folder) {-->
-<!--  <mat-list-item>-->
-<!--    <mat-icon matListItemIcon>folder</mat-icon>-->
-<!--    <div matListItemTitle>{{ folder.name }}</div>-->
-<!--    <div matListItemLine>{{ folder.updated }}</div>-->
-<!--  </mat-list-item>-->
-<!--}-->
-
-
-<!--@if ((noti.boardId! | board | async); as data) {-->
-<!--  @if ((noti.senderId | user | async); as sender) {-->
-<!--    @if (noti.type == 'invite_board') {-->
-<!--      <mat-list-item class="invite-noti">-->
-<!--        <mat-icon matListItemIcon>group</mat-icon>-->
-<!--        <div matListItemTitle matTooltip="{{ sender.name }} Invitation to join {{ data.name }}">-->
-<!--          {{ sender.name }} Invitation to join {{ data.name }}-->
-<!--        </div>-->
-<!--        <div matListItemLine>Accept or decline the invitation</div>-->
-<!--        <div class="btns">-->
-<!--          <button mat-stroked-button (click)="this.rejectInvitation(noti.id!)">Decline</button>-->
-<!--          <button mat-flat-button (click)="this.acceptInvitation(noti.id!)">Accept</button>-->
-<!--        </div>-->
-<!--      </mat-list-item>-->
-<!--    } @else {-->
-<!--      <mat-list-item>-->
-<!--        <mat-icon matListItemIcon>folder</mat-icon>-->
-<!--        <div matListItemTitle>card</div>-->
-<!--        <div matListItemLine>{{ noti.createdAt }}</div>-->
-<!--      </mat-list-item>-->
-<!--    }-->
-<!--  } @else {-->
-<!--    <ngx-skeleton-loader count="2" appearance="line"/>-->
-<!--  }-->
-<!--}-->

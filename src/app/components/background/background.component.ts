@@ -20,18 +20,18 @@ import {Store} from '@ngrx/store';
 import {AuthState} from '../../ngrx/auth/auth.state';
 import * as boardActions from '../../ngrx/board/board.actions';
 import {BoardState} from '../../ngrx/board/board.state';
-import {NgForOf, NgStyle} from '@angular/common';
+import {NgClass, NgForOf, NgStyle} from '@angular/common';
 import {Subscription} from 'rxjs';
 import * as backgroundActions from '../../ngrx/background/background.actions';
 import {BackgroundState} from '../../ngrx/background/background.state';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {ShareSnackbarComponent} from '../share-snackbar/share-snackbar.component';
 
 
 @Component({
   selector: 'app-background',
   standalone: true,
-  imports: [MaterialModule, FormsModule, ReactiveFormsModule, NgForOf, NgStyle],
+  imports: [MaterialModule, FormsModule, ReactiveFormsModule, NgForOf, NgStyle, NgClass],
   templateUrl: './background.component.html',
   styleUrl: './background.component.scss',
 })
@@ -68,6 +68,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         .subscribe((backgrounds) => {
           if (backgrounds) {
             this.imageBackgrounds = backgrounds;
+            this.onBackgroundSelected(backgrounds[0].fileLocation);
           }
         }),
     );
