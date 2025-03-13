@@ -163,3 +163,7 @@ export const removeUserFromBoardFail = createAction(
   '[Board] Remove Member From Board Fail',
   props<{ error: string }>(),
 );
+
+export const clearInviteRemoveUserFromBoardState = createAction(
+  '[Board] Clear Invite Remove User From Board State',
+);

@@ -43,6 +43,7 @@ import * as labelActions from '../../../../ngrx/label/label.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShareSnackbarComponent } from '../../../../components/share-snackbar/share-snackbar.component';
 import { NotificationsService } from '../../../../services/notification/notifications.service';
+import * as notificationsActions from '../../../../ngrx/notifications/notifications.actions';
 
 @Component({
   selector: 'app-board',

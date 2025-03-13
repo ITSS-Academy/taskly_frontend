@@ -3,6 +3,7 @@ import { BoardModel } from '../../models/board.model';
 import { createReducer, on } from '@ngrx/store';
 import * as boardActions from './board.actions';
 import { BoardState } from './board.state';
+import { clearInviteRemoveUserFromBoardState } from './board.actions';
 
 const initialState: BoardState = {
   board: null,
@@ -442,5 +443,17 @@ export const boardReducer = createReducer(
         boards: newBoards,
       };
     }
+  }),
+  on(boardActions.clearInviteRemoveUserFromBoardState, (state) => {
+    return {
+      ...state,
+      isRemovingUser: false,
+      removeUserError: null,
+      isRemoveUserSuccess: false,
+
+      isInvitedBoardsGetting: false,
+      invitedBoardsGettingError: null,
+      isGetInvitedBoardsSuccess: false,
+    };
   }),
 );

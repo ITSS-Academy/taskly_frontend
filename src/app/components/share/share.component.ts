@@ -198,6 +198,7 @@ export class ShareComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subcriptions.forEach((sub) => sub.unsubscribe());
     this.subcriptions = [];
+    this.store.dispatch(boardActions.clearInviteRemoveUserFromBoardState());
     this.store.dispatch(userActions.clearSearchUsers());
     this.store.dispatch(notificationsActions.clearNotificationsState());
   }

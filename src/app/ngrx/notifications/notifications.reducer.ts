@@ -1,10 +1,6 @@
 import { NotificationsState } from './notifications.state';
 import { createReducer, on } from '@ngrx/store';
 import * as notificationsActions from './notifications.actions';
-import {
-  clearAddNewMember,
-  clearNotificationsState,
-} from './notifications.actions';
 
 const initialState: NotificationsState = {
   notifications: [],
@@ -193,5 +189,7 @@ export const notificationsReducer = createReducer(
       addedToCardUsers: [],
     };
   }),
-  on(notificationsActions.clearNotificationsState, (state) => initialState),
+  on(notificationsActions.clearNotificationsState, (state) => {
+    return initialState;
+  }),
 );
