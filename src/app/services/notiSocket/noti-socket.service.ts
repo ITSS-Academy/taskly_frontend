@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment.development';
 export class NotiSocketService extends Socket {
   constructor() {
     super({
-      url: `${environment.wsUrl2}`,
+      url: `${environment.wsUrl}/noti`,
     });
   }
 }
