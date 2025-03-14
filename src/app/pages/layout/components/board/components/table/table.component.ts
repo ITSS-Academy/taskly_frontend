@@ -20,18 +20,20 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import {Subscription} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {BoardState} from '../../../../../../ngrx/board/board.state';
-import {ListState} from '../../../../../../ngrx/list/list.state';
-import {ListModel} from '../../../../../../models/list.model';
-import {DatePipe, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
-import {MatChip} from '@angular/material/chips';
-import {TaskDescriptionComponent} from '../../../../../../components/task-description/task-description.component';
-import {MatDialog} from '@angular/material/dialog';
-import {MaterialModule} from '../../../../../../shared/modules/material.module';
-import {MatSort, Sort} from '@angular/material/sort';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { BoardState } from '../../../../../../ngrx/board/board.state';
+import { ListState } from '../../../../../../ngrx/list/list.state';
+import { ListModel } from '../../../../../../models/list.model';
+import { DatePipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
+import { MatChip } from '@angular/material/chips';
+import { TaskDescriptionComponent } from '../../../../../../components/task-description/task-description.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MaterialModule } from '../../../../../../shared/modules/material.module';
+import { CdkNoDataRow } from '@angular/cdk/table';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import { MatSort, Sort } from '@angular/material/sort';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-table',
@@ -55,12 +57,15 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
     MatTable,
     NgStyle,
     DatePipe,
-    NgClass
+    NgClass,
+    CdkNoDataRow,
+    NgxSkeletonLoaderComponent,
   ],
   standalone: true,
 })
 export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
+  isGettingCards!: boolean;
 
   constructor(private store: Store<{ board: BoardState; list: ListState }>) {
   }
@@ -69,13 +74,24 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
   cards: any[] = [];
   subscription: Subscription[] = [];
 
-  displayedColumns: string[] = ['title', 'list', 'members', 'labels', 'dueDate'];
+  displayedColumns: string[] = [
+    'title',
+    'list',
+    'members',
+    'labels',
+    'dueDate',
+  ];
   dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit() {
     this.subscription.push(
+      this.store
+        .select('list', 'isGettingLists')
+        .subscribe((isGettingLists) => {
+          this.isGettingCards = isGettingLists;
+        }),
       this.store.select('list', 'lists').subscribe((lists) => {
         this.lists = lists;
 
@@ -128,7 +144,7 @@ export class TableComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
-  // @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
   private _liveAnnouncer = inject(LiveAnnouncer);
 
   announceSortChange(sortState: Sort) {

@@ -1,18 +1,14 @@
-import {Injectable} from '@angular/core';
-import {Socket} from 'ngx-socket-io';
+import { Injectable } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class KanbanSocketService extends Socket {
-
   constructor() {
     super({
-      url: 'http://localhost:80',
-      options: {
-        transports: ['websocket'],
-      }
+      url: `${environment.wsUrl}/board`,
     });
-
   }
 }

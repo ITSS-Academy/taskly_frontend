@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BoardModel} from '../../models/board.model';
-import {Store} from '@ngrx/store';
-import {AuthState} from '../../ngrx/auth/auth.state';
-import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment.development';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BoardModel } from '../../models/board.model';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../../ngrx/auth/auth.state';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -31,24 +31,24 @@ export class BoardService {
       console.log(board);
 
       return this.httpClient.post(`${environment.apiUrl}/board`, formData, {
-        headers: {Authorization: this.accessToken},
-      })
+        headers: { Authorization: this.accessToken },
+      });
     }
 
     return this.httpClient.post(`${environment.apiUrl}/board`, board, {
-      headers: {Authorization: this.accessToken},
+      headers: { Authorization: this.accessToken },
     });
   }
 
   getAllBoards() {
     return this.httpClient.get(`${environment.apiUrl}/board/get-all-by-uid`, {
-      headers: {Authorization: this.accessToken},
+      headers: { Authorization: this.accessToken },
     });
   }
 
   getBoard(id: string): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}/board/${id}`, {
-      headers: {Authorization: this.accessToken},
+      headers: { Authorization: this.accessToken },
     });
   }
 
@@ -56,7 +56,7 @@ export class BoardService {
     return this.httpClient.get(
       `${environment.apiUrl}/board/get-invited-boards`,
       {
-        headers: {Authorization: this.accessToken},
+        headers: { Authorization: this.accessToken },
       },
     );
   }
@@ -76,7 +76,7 @@ export class BoardService {
         `${environment.apiUrl}/background/upload`,
         formData,
         {
-          headers: {Authorization: this.accessToken},
+          headers: { Authorization: this.accessToken },
         },
       );
     } else {
@@ -84,7 +84,7 @@ export class BoardService {
         `${environment.apiUrl}/background/upload`,
         background,
         {
-          headers: {Authorization: this.accessToken},
+          headers: { Authorization: this.accessToken },
         },
       );
     }
@@ -93,9 +93,9 @@ export class BoardService {
   searchBoards(search: string) {
     return this.httpClient.post(
       `${environment.apiUrl}/board/search`,
-      {search},
+      { search },
       {
-        headers: {Authorization: this.accessToken},
+        headers: { Authorization: this.accessToken },
       },
     );
   }
@@ -103,16 +103,29 @@ export class BoardService {
   changeBoardName(boardId: string, name: string) {
     return this.httpClient.put(
       `${environment.apiUrl}/board/name/${boardId}`,
-      {name},
+      { name },
       {
-        headers: {Authorization: this.accessToken},
+        headers: { Authorization: this.accessToken },
       },
     );
   }
 
   deleteBoard(boardId: string) {
     return this.httpClient.delete(`${environment.apiUrl}/board/${boardId}`, {
-      headers: {Authorization: this.accessToken},
+      headers: { Authorization: this.accessToken },
     });
+  }
+
+  removeMember(boardId: string, userId: string) {
+    return this.httpClient.put(
+      `${environment.apiUrl}/board/remove-member`,
+      {
+        boardId,
+        userId,
+      },
+      {
+        headers: { Authorization: this.accessToken },
+      },
+    );
   }
 }

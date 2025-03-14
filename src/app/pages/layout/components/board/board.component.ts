@@ -42,6 +42,8 @@ import * as cardActions from '../../../../ngrx/card/card.actions';
 import * as labelActions from '../../../../ngrx/label/label.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ShareSnackbarComponent } from '../../../../components/share-snackbar/share-snackbar.component';
+import { NotificationsService } from '../../../../services/notification/notifications.service';
+import * as notificationsActions from '../../../../ngrx/notifications/notifications.actions';
 
 @Component({
   selector: 'app-board',
@@ -66,6 +68,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private gateway: GatewayService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private notificationService: NotificationsService,
     private store: Store<{
       board: BoardState;
       list: ListState;
@@ -117,6 +120,9 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.store.dispatch(checklistItemActions.clearChecklistItemState());
         this.store.dispatch(labelActions.clearLabelState());
 
+        this.store.dispatch(
+          boardActions.checkActiveBoard({ boardId: this.boardId }),
+        );
         this.store.dispatch(boardActions.getBoard({ boardId: this.boardId }));
         this.store.dispatch(listActions.getLists({ boardId: this.boardId }));
         this.subscriptions.push(
@@ -179,12 +185,14 @@ export class BoardComponent implements OnInit, OnDestroy {
                     : error,
                 duration: 3 * 1000,
               });
+              this.store.dispatch(boardActions.getInvitedBoards());
               this.router.navigate(['/home']);
             }
           }),
           this.store.select('board', 'board').subscribe((board) => {
             if (board) {
               this.backgroundId = board.backgroundId!;
+              this.boardId = board.id!;
 
               if (
                 board.background &&
@@ -396,6 +404,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('unsubscribing routeSub');
+    console.log('After unsubscribe1', this.subscriptions.length);
     this.subscriptions.forEach((sub) => sub.unsubscribe());
     this.store.dispatch(boardActions.clearBoardBackground());
     this.store.dispatch(listActions.clearListStore());
@@ -404,6 +413,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.store.dispatch(checklistItemActions.clearChecklistItemState());
     this.store.dispatch(labelActions.clearLabelState());
     this.routeSubscription.unsubscribe();
+    this.subscriptions = [];
+    console.log('After unsubscribe:', this.subscriptions.length);
     this.gateway.disconnect();
   }
 

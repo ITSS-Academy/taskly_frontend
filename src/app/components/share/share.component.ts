@@ -35,6 +35,7 @@ import { NotificationsService } from '../../services/notification/notifications.
 import { BoardState } from '../../ngrx/board/board.state';
 import { UserPipe } from '../../shared/pipes/user.pipe';
 import { UserService } from '../../services/user/user.service';
+import * as boardActions from '../../ngrx/board/board.actions';
 
 export interface Fruit {
   name: string;
@@ -60,6 +61,7 @@ export class ShareComponent implements OnInit, OnDestroy {
   owner!: Observable<UserModel>;
   memberIds!: string[];
   members!: UserModel[];
+  boardId!: string;
 
   constructor(
     private store: Store<{
@@ -82,10 +84,28 @@ export class ShareComponent implements OnInit, OnDestroy {
           this.searchUser = users[0];
         }
       }),
+      this.store.select('board', 'removeUserError').subscribe((error) => {
+        if (error) {
+          this.openSnackBar(error);
+        }
+      }),
       this.store.select('board', 'board').subscribe((board) => {
         if (board) {
+          this.boardId = board.id!;
           this.owener = board.ownerId!;
           this.memberIds = board.members!;
+          console.log('new memberids', this.memberIds);
+          if (this.memberIds.length > 0) {
+            forkJoin(
+              this.memberIds.map((member) =>
+                this.userService.getUserById(member),
+              ),
+            ).subscribe((users) => {
+              this.members = users;
+            });
+          } else {
+            this.members = [];
+          }
         }
       }),
       this.userNameSubject.pipe(debounceTime(500)).subscribe((value) => {
@@ -112,11 +132,6 @@ export class ShareComponent implements OnInit, OnDestroy {
       }),
     );
     this.owner = this.userService.getUserById(this.owener);
-    forkJoin(
-      this.memberIds.map((member) => this.userService.getUserById(member)),
-    ).subscribe((users) => {
-      this.members = users;
-    });
   }
 
   readonly dialog = inject(MatDialog);
@@ -171,7 +186,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 
   private _snackBar = inject(MatSnackBar);
 
-  durationInSeconds = 5;
+  durationInSeconds = 3;
 
   openSnackBar(content: string) {
     this._snackBar.openFromComponent(ShareSnackbarComponent, {
@@ -183,7 +198,9 @@ export class ShareComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subcriptions.forEach((sub) => sub.unsubscribe());
     this.subcriptions = [];
+    this.store.dispatch(boardActions.clearInviteRemoveUserFromBoardState());
     this.store.dispatch(userActions.clearSearchUsers());
+    this.store.dispatch(notificationsActions.clearNotificationsState());
   }
 
   inviteUsers() {
@@ -198,5 +215,21 @@ export class ShareComponent implements OnInit, OnDestroy {
         }),
       );
     }
+  }
+
+  removeMember(memberId: string) {
+    this.store.dispatch(
+      boardActions.removeUserFromBoard({
+        boardId: this.boardId,
+        userId: memberId,
+      }),
+    );
+
+    this.store.dispatch(
+      boardActions.addUserIdsBeKicked({
+        boardId: this.boardId,
+        userIds: [memberId],
+      }),
+    );
   }
 }

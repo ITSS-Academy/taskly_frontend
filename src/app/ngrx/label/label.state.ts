@@ -26,4 +26,8 @@ export interface LabelState {
   isUpdatingLabel: boolean;
   isUpdateLabelSuccess: boolean;
   isUpdateLabelFailure: any;
+
+  isDeletingLabel: boolean;
+  isDeleteLabelSuccess: boolean;
+  isDeleteLabelFailure: any;
 }

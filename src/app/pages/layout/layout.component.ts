@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NotificationsService } from '../../services/notification/notifications.service';
 import { Store } from '@ngrx/store';
@@ -12,6 +12,10 @@ import { Subscription } from 'rxjs';
 import { CardState } from '../../ngrx/card/card.state';
 import * as cardActions from '../../ngrx/card/card.actions';
 import { clearAddNewMember } from '../../ngrx/notifications/notifications.actions';
+import * as boardActions from '../../ngrx/board/board.actions';
+import { BoardState } from '../../ngrx/board/board.state';
+import { ShareSnackbarComponent } from '../../components/share-snackbar/share-snackbar.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-layout',
@@ -21,12 +25,17 @@ import { clearAddNewMember } from '../../ngrx/notifications/notifications.action
   styleUrl: './layout.component.scss',
 })
 export class LayoutComponent implements OnDestroy, OnInit {
+  boardId!: string;
+  private _snackBar = inject(MatSnackBar);
+
   constructor(
     private notification: NotificationsService,
+    private router: Router,
     private store: Store<{
       user: UserState;
       notifications: NotificationsState;
       card: CardState;
+      board: BoardState;
     }>,
   ) {
     this.store.dispatch(userActions.getUser());
@@ -36,6 +45,8 @@ export class LayoutComponent implements OnDestroy, OnInit {
   subscriptions: Subscription[] = [];
   invitingUsers: string[] = [];
   addedMembers: string[] = [];
+  kickMembers: string[] = [];
+  kickedBoard: string = '';
 
   ngOnInit() {
     this.subscriptions.push(
@@ -45,6 +56,12 @@ export class LayoutComponent implements OnDestroy, OnInit {
           this.user = user;
         }
       }),
+      this.store.select('board', 'kickedUserIds').subscribe((users) => {
+        this.kickMembers = users;
+      }),
+      this.store.select('board', 'kickedBoard').subscribe((boardId) => {
+        this.kickedBoard = boardId;
+      }),
       this.notification.onNewNoti().subscribe(() => {
         console.log('new notification');
         this.store.dispatch(
@@ -52,6 +69,25 @@ export class LayoutComponent implements OnDestroy, OnInit {
             isNewNotifications: true,
           }),
         );
+      }),
+      this.notification.onAcceptedInvite().subscribe((payload) => {
+        console.log(payload);
+        console.log('accepted invite');
+        if (payload.userId && payload.boardId) {
+          //add user to board
+          this.store.dispatch(
+            boardActions.addNewMemberToBoard({
+              userId: payload.userId,
+              boardId: payload.boardId,
+            }),
+          );
+
+          this.store.dispatch(
+            notificationsActions.updateIsNewNotifications({
+              isNewNotifications: true,
+            }),
+          );
+        }
       }),
       this.store.select('notifications', 'invitingUsers').subscribe((users) => {
         this.invitingUsers = users;
@@ -91,6 +127,35 @@ export class LayoutComponent implements OnDestroy, OnInit {
             this.store.dispatch(notificationsActions.clearAddNewMember());
           }
         }),
+      this.store
+        .select('board', 'isDeleteBoardSuccess')
+        .subscribe((success) => {
+          if (success) {
+            console.log(this.kickMembers, this.kickedBoard);
+            this.notification.deleteBoard(this.kickedBoard, this.kickMembers);
+            this.store.dispatch(
+              boardActions.addUserIdsBeKicked({ boardId: '', userIds: [] }),
+            );
+          }
+        }),
+      this.store.select('board', 'isRemoveUserSuccess').subscribe((success) => {
+        if (success) {
+          this.notification.deleteBoard(this.kickedBoard, this.kickMembers);
+          this.store.dispatch(
+            boardActions.addUserIdsBeKicked({ boardId: '', userIds: [] }),
+          );
+        }
+      }),
+      this.notification.onDeletedBoard().subscribe((payload) => {
+        this._snackBar.openFromComponent(ShareSnackbarComponent, {
+          data: payload.message,
+          duration: 3 * 1000,
+        });
+        this.store.dispatch(boardActions.getInvitedBoards());
+        if (this.router.url.includes(payload.boardId)) {
+          this.router.navigate(['/home']);
+        }
+      }),
     );
   }
 

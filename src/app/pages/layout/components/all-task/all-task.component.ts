@@ -10,7 +10,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { NgForOf, NgIf, NgStyle } from '@angular/common';
+import { NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
 import { NavbarComponent } from '../../../../components/navbar/navbar.component';
 import { MaterialModule } from '../../../../shared/modules/material.module';
 import { BackgroundColorService } from '../../../../services/background-color/background-color.service';
@@ -25,11 +25,9 @@ import { CdkNoDataRow } from '@angular/cdk/table';
 import { ListCard } from '../../../../models/list.model';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
-
-
 
 @Component({
   selector: 'app-all-task',
@@ -45,13 +43,14 @@ import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
     CdkNoDataRow,
     DatePipe,
     MatSortModule,
-    NgxSkeletonLoaderComponent
+    NgxSkeletonLoaderComponent,
+    NgClass,
   ],
   templateUrl: './all-task.component.html',
   styleUrl: './all-task.component.scss',
 })
 export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
-  displayedColumns: string[] = ['title', 'board', 'list', 'members', 'tags'];
+  displayedColumns: string[] = ['title', 'board', 'members', 'tags', 'list'];
   dataSource = new MatTableDataSource<any>();
   readonly panelOpenState = signal(false);
   private dialog: any;
@@ -87,8 +86,8 @@ export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       return data.labels
         ? data.labels.some((label: any) =>
-          label.name.toLowerCase().includes(filter),
-        )
+            label.name.toLowerCase().includes(filter),
+          )
         : false;
     };
   }
@@ -125,12 +124,10 @@ export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
 
   navigateToBoard(id: string) {
     this.router.navigate(['/board/kanban', id]);
-
   }
 
   @ViewChild(MatSort) sort!: MatSort;
   private _liveAnnouncer = inject(LiveAnnouncer);
-
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -151,5 +148,10 @@ export class AllTaskComponent implements AfterViewInit, OnInit, OnDestroy {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-}
 
+  isOverdue(dueDate: string): boolean {
+    if (!dueDate) return false;
+    const today = new Date();
+    return new Date(dueDate) < today;
+  }
+}

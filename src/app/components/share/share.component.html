@@ -48,27 +48,32 @@
 
       <h3>Owner</h3>
       <div class="members-container">
-        <img class="avatar"
-             src="{{(owner | async)?.photoUrl}}"
-             alt=""
-             matListItemIcon>
-        <div class="user-info">
-          <p class="user-name">{{ (owner | async)?.name }}</p>
-          <span class="user-email">{{ (owner| async)?.email }}</span>
+        <div style="display:flex;gap: 8px;">
+          <img class="avatar"
+               src="{{(owner | async)?.photoUrl}}"
+               alt=""
+               matListItemIcon>
+          <div class="user-info">
+            <p class="user-name">{{ (owner | async)?.name }}</p>
+            <span class="user-email">{{ (owner| async)?.email }}</span>
+          </div>
         </div>
       </div>
 
       <h3>Members</h3>
       @for (user of this.members; track $index) {
         <div class="members-container">
-          <img class="avatar"
-               src="{{user.photoUrl}}"
-               alt=""
-               matListItemIcon>
-          <div class="user-info">
-            <p class="user-name">{{ user.name }}</p>
-            <span class="user-email">{{ user.email }}</span>
+          <div style="display:flex;gap: 8px;">
+            <img class="avatar"
+                 src="{{user.photoUrl}}"
+                 alt=""
+                 matListItemIcon>
+            <div class="user-info">
+              <p class="user-name">{{ user.name }}</p>
+              <span class="user-email">{{ user.email }}</span>
+            </div>
           </div>
+          <button mat-button (click)="removeMember(user.id)">Remove</button>
         </div>
       }
     </div>

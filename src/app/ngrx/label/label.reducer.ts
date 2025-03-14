@@ -28,6 +28,10 @@ const initialState: LabelState = {
   isUpdatingLabel: false,
   isUpdateLabelSuccess: false,
   isUpdateLabelFailure: null,
+
+  isDeletingLabel: false,
+  isDeleteLabelSuccess: false,
+  isDeleteLabelFailure: null,
 };
 
 export const labelReducer = createReducer(
@@ -193,4 +197,29 @@ export const labelReducer = createReducer(
       };
     },
   ),
+  on(labelActions.deleteLabel, (state) => {
+    return {
+      ...state,
+      isDeletingLabel: true,
+      isDeleteLabelSuccess: false,
+      isDeleteLabelFailure: null,
+    };
+  }),
+  on(labelActions.deleteLabelSuccess, (state, { labelId }) => {
+    return {
+      ...state,
+      labels: state.labels.filter((label) => label.id !== labelId),
+      isDeletingLabel: false,
+      isDeleteLabelSuccess: true,
+      isDeleteLabelFailure: null,
+    };
+  }),
+  on(labelActions.deleteLabelFailure, (state, { error }) => {
+    return {
+      ...state,
+      isDeletingLabel: false,
+      isDeleteLabelSuccess: false,
+      isDeleteLabelFailure: error,
+    };
+  }),
 );
