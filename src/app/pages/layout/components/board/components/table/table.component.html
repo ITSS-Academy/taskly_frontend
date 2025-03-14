@@ -1,5 +1,5 @@
 <div class="table-container">
-  <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
 
     <!-- Cột Title -->
     <ng-container matColumnDef="title">
@@ -42,7 +42,7 @@
 
     <!-- Cột Due Date -->
     <ng-container matColumnDef="dueDate">
-      <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">Due date</mat-header-cell>
       <mat-cell *matCellDef="let element">
        <span [ngClass]="{'overdue': isOverdue(element.dueDate)}">
         {{ element.dueDate ? (element.dueDate | date: 'dd/MM/yyyy') : 'No due date' }}

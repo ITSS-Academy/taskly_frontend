@@ -2,13 +2,14 @@
      [ngStyle]="{'background-color': sidebarColor, 'color': sidebarTextColor}">
   <div [ngStyle]="{'background-color': sidebarColor, 'color': sidebarTextColor}">
     <div class="logo" [ngStyle]="{'color': sidebarTextColor}" [routerLink]="['home']">
-      <img src="{{logoImage}}" (error)="onError($event)" alt="logo" class="logo-img">
+      <img src="{{logoImage}}" alt="logo" class="logo-img">
       Taskly
     </div>
 
     @if (user) {
       <div class="profile">
         <img src="{{this.user.photoUrl}}"
+             (error)="onError($event)"
              alt="Profile">
         <div class="info">
           <p>{{ this.user.name }}</p>

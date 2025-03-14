@@ -24,7 +24,8 @@
   overflow-y: auto;
   flex: 1;
   background-color: var(--md-sys-color-on-primary);
-  //border-radius: 8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   box-shadow: none;
 }
 
@@ -50,8 +51,6 @@
   position: relative;
   cursor: pointer;
   user-select: none;
-
-
 }
 
 .material-symbols-outlined {

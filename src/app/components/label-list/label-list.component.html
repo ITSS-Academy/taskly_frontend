@@ -2,7 +2,7 @@
   <mat-icon>close</mat-icon>
 </button>
 <div class="label-container">
-  <h2>Create new label</h2>
+  <h2>Create new tag</h2>
 
 
   <form [formGroup]="createLabelForm">
@@ -33,6 +33,6 @@
   <button mat-button color="warn" (click)="removeColor()">✖ Remove color</button>
 
   <!-- Nút tạo mới -->
-  <button mat-button color="primary" (click)="createLabel()">Create</button>
+  <button mat-flat-button color="primary" (click)="createLabel()">Create</button>
 
 </div>

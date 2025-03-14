@@ -31,23 +31,45 @@
   margin-top: 4px !important;
 }
 
-.label-color {
-  width: 50px;
-  height: 20px;
-  border-radius: 4px;
-}
-
 .dialog-actions {
   display: flex;
-  flex-direction: column;
   align-items: center;
-
 }
 
 .dialog-actions button {
-  width: 100%;
+  width: 48%;
 }
 
 mat-list-option {
+  flex-grow: 1;
+  border-radius: 8px;
+}
+
+::ng-deep.mat-mdc-list-item-unscoped-content.mdc-list-item__primary-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+::ng-deep.mat-mdc-icon-button .mat-mdc-button-touch-target {
+  width: 40px;
+  height: 40px;
+}
+
+.label-option-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.label-color {
+  width: 30px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.label-name {
   flex-grow: 1;
 }

@@ -1,10 +1,10 @@
 <button mat-icon-button mat-dialog-close class="close-button">
   <mat-icon>close</mat-icon>
 </button>
-<h2 mat-dialog-title>Label</h2>
+<h2 mat-dialog-title>Tag</h2>
 <mat-dialog-content>
   <mat-form-field class="full-width" appearance="outline">
-    <mat-label>Search your label...</mat-label>
+    <mat-label>Search your tag...</mat-label>
     <input matInput [(ngModel)]="searchText">
   </mat-form-field>
 
@@ -12,8 +12,8 @@
     <mat-selection-list #selectionColor>
       <div class="label-item" *ngFor="let label of filteredLabels()">
 
-        <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
         <mat-list-option [value]="label" [selected]="label.selected">
+          <span class="label-color" [ngStyle]="{'background-color': label.color}"></span>
           {{ label.name }}
         </mat-list-option>
 
@@ -26,6 +26,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions class="dialog-actions">
-  <button mat-stroked-button color="primary" (click)="createNewLabel()">Create New Labels</button>
-  <button mat-button (click)="addLabelsToCard()">Add To Task</button>
+  <button mat-stroked-button color="primary" (click)="createNewLabel()">Create</button>
+  <button mat-flat-button (click)="addLabelsToCard()">Save</button>
 </mat-dialog-actions>

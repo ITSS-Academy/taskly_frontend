@@ -139,7 +139,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   addTask(listId: string) {
     if (this.isAddingList) {
-      this.isAddingList = !this.isAddingList;
+      this.isAddingList = false;
       this.listName.reset();
     }
     this.list.isInEditMode = true;
